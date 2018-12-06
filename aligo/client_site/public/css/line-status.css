@@ -1,0 +1,837 @@
+body {
+    min-width: 1920px !important;
+    min-height: 1080px !important;
+}
+
+.line-status-content {
+    width: 100%;
+    height: calc(100% - 112px);
+    overflow: auto;
+}
+
+#line-status-content {
+    /* Safari */
+    width: 100%;
+    padding: 15px 15px 8px 15px;
+    background-color: #97a8b1;
+    /* min-height: 625px; */
+    height: 64.5%;
+}
+
+.line-summary {
+    height: 45px;
+    display: flex;
+    display: -webkit-flex;
+    /* Safari */
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+}
+
+.box {
+    width: 100%;
+    background-color: #fff;
+    margin-right: 14px;
+    padding: 5px 30px;
+    overflow: hidden;
+}
+
+.box:last-child {
+    margin-right: 0px;
+}
+
+.box h3 {
+    float: left;
+    line-height: 35px;
+    text-align: center;
+    font-size: 18px;
+    color: #000000;
+}
+
+.box h2 {
+    float: right;
+    line-height: 35px;
+    text-align: center;
+    font-size: 30px;
+    color: #184D7A;
+}
+
+.cnc-sign {
+    margin-top: 15px;
+    width: 100%;
+    background-color: #fff;
+    overflow-x: auto;
+    height: 48px;
+}
+
+.cnc-sign>div {
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.cnc-sign .cnc-alarm {
+    float: left;
+    width: 60%;
+}
+
+.cnc-sign li h4 {
+    margin-left: 18px;
+}
+
+.cnc-sign ul li {
+    float: left;
+    margin-right: 18px;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.cnc-sign ul li span:before {
+    content: "";
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.line-layout {
+    /* Safari */
+    height: calc(100% - 152px);
+    display: flex;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.line-layout>div {
+    width: 100%;
+}
+
+.line-layout .cnc-boxes li h2 {
+    line-height: 90px;
+    vertical-align: middle;
+    color: #ffffff;
+    font-size: 24px;
+}
+
+.cnc-boxes {
+    width: 100%;
+    display: flex;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    justify-content: center;
+    padding: 0px 50px;
+    min-width: 1200px;
+}
+
+.cnc-box:hover .tooltip {
+    display: block;
+    z-index: 1;
+}
+
+.cnc-box .tooltip {
+    background-color: #ffffff;
+    border-radius: 6px;
+    position: absolute;
+    border-width: 2px;
+    border-style: solid;
+    width: 300px;
+    padding: 5px 10px;
+    /* display: none; */
+    min-height: 50px;
+    vertical-align: middle;
+    transform: translateX(-42%);
+    -webkit-transform: translateX(-42%);
+    -moz-transform: translateX(-42%);
+    -ms-transform: translateX(-42%);
+    -o-transform: translateX(-42%);
+}
+
+#l_1 .tooltip,
+#r_1 .tooltip {
+    left: 20% !important;
+}
+
+.cnc-box .arrow-down {
+    bottom: 106%;
+}
+
+.cnc-box .arrow-up {
+    top: 106%;
+}
+
+#l_1 .arrow-down:after,
+#l_1 .arrow-down:before,
+#r_1 .arrow-up:after,
+#r_1 .arrow-up:before {
+    left: 59% !important;
+}
+
+.arrow-down:after,
+.arrow-down:before,
+.arrow-up:after,
+.arrow-up:before {
+    left: 69%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    border-color: rgba(136, 183, 213, 0);
+    pointer-events: none;
+}
+
+.arrow-down:after {
+    top: 100%;
+    border-top-color: #ffffff;
+    border-width: 16px;
+    margin-left: -31px;
+}
+
+.arrow-down:before {
+    top: 100%;
+    border-width: 19px;
+    margin-left: -34px;
+}
+
+.arrow-up:after {
+    bottom: 100%;
+    border-bottom-color: #ffffff;
+    border-width: 16px;
+    margin-left: -31px;
+}
+
+.arrow-up:before {
+    bottom: 100%;
+    border-width: 19px;
+    margin-left: -34px;
+}
+
+.cnc-box .tooltip p {
+    font-size: 14px;
+}
+
+.cnc-boxes li {
+    width: 6.7%;
+    margin-right: 15px;
+    background-color: #687c85;
+    position: relative;
+}
+
+.cnc-boxes li:first-child {
+    background-color: #97a8b1;
+    width: 80px;
+}
+
+.cnc-boxes li .cnc-prod-cnt {
+    padding-top: 16px;
+    text-align: center;
+    font-size: 30px;
+    line-height: 26px;
+    background-color: #529d1e;
+    color: #ffffff;
+}
+
+.cnc-boxes li .cnc-time {
+    font-size: 12px;
+    padding-left: 14px;
+    line-height: 24.5px;
+    vertical-align: middle;
+    background-color: #529d1e;
+    color: #ffffff;
+}
+
+.cnc-boxes li .cnc-pos {
+    font-size: 16px;
+    padding-left: 14px;
+    line-height: 26.5px;
+    vertical-align: middle;
+    background-color: #37474f;
+    color: #ffffff;
+}
+
+.line-mid {
+    position: relative;
+    height: 100px;
+    margin: 20px 0px;
+    min-width: 1200px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.line-troke {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    padding: 0px 20px;
+    overflow-x: hidden;
+    */
+}
+
+.line-str {
+    height: 15px;
+    border: 1px solid #b71c1c;
+    float: left;
+    width: calc(100% - 80px);
+    position: absolute;
+    margin-right: 20px;
+    top: 50%;
+    -webkit-transform: translate(0, -50%);
+    -moz-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    background-color: #687c85;
+}
+
+.line-col {
+    width: 24px;
+    height: 60px;
+    border: 2px solid #3dc5c4;
+    background-color: #fff;
+    top: 50%;
+    -webkit-transform: translate(0, -50%);
+    -moz-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    position: absolute;
+    right: 10px;
+}
+
+.line-right .cnc-boxes li .cnc-prod-cnt {
+    padding-top: 0px;
+    padding-bottom: 16px;
+}
+
+#robot-transfer {
+    /* transform: translateX(8.5%); 
+     -webkit-transform: translateX(63.5%); 
+    -moz-transform: translateX(8.5%);
+    -o-transform: translateX(8.5%);
+    -ms-transform: translateX(8.5%); */
+    -webkit-transition: all 2s;
+    -ms-transition: all 2s;
+    -o-transition: all 2s;
+    -moz-transition: all 2s;
+    transition: all 2s;
+    color: #ffffff;
+    height: 245px;
+    display: inline-block;
+    font-size: 14px;
+    width: 20%;
+    /* transform: none !important; */
+    position: relative;
+}
+
+#robot-img {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translate(0, -50%);
+    -moz-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    width: 200px;
+    height: 245px;
+    background: url('http://107.113.193.12:3000/img/robot_top_view.png') 0px 0px;
+    float: left;
+}
+
+.robot-state {
+    float: left;
+    height: 245px;
+    min-width: 150px;
+    margin-left: 200px;
+}
+
+#trans-state {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #529d1e;
+    top: 81px;
+    position: absolute;
+}
+
+#trans-stay-time {
+    top: 142px;
+    position: absolute;
+}
+
+.cnc-summary {
+    display: flex;
+    display: -webkit-flex;
+    /* Safari */
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    height: 45px;
+}
+
+.cnc-summary .box h2 {
+    font-size: 24px;
+    color: #194e7a;
+}
+
+.robot-infor {
+    padding: 8px 15px 0px 15px;
+    background-color: #e9e9e9;
+    height: calc(100% - 625px);
+    /* min-height: 343px; */
+    height: 35.5%;
+}
+
+.robot-infor .line-bottom {
+    margin-right: 15px;
+    background-color: #ffffff;
+    float: left;
+    height: 100%;
+    overflow: auto;
+}
+
+.robot-infor .line-bottom:last-child {
+    margin-right: 0px;
+}
+
+.robot-infor .line-chart {
+    width: calc(36% - 30px);
+}
+
+.title {
+    height: 45px;
+    line-height: 45px;
+    vertical-align: middle;
+    border-bottom: 1px solid #d9dee4;
+    padding-left: 14px;
+}
+
+#d3div svg {
+    width: 100% !important;
+    height: 97% !important;
+}
+
+.robot-infor .line-owner .owner-pics li {
+    float: left;
+    width: calc(100% * 1/3 - 18px);
+    margin-left: 14px;
+    margin-top: 14px;
+}
+
+.robot-infor .line-owner .owner-pics img {
+    width: 100%;
+    height: 6.25vw;
+    margin-bottom: 10px;
+}
+
+.robot-infor .line-owner .owner-pics span {
+    font-size: 14px;
+    color: #424242;
+    display: block;
+    border: 1px solid #d9dee4;
+    padding: 2px;
+}
+
+.robot-infor .line-status {
+    width: 42%;
+}
+
+.robot-infor .line-status .line-owner {
+    width: 50%;
+    float: left;
+    height: 100%;
+}
+
+.robot-infor .line-status .robot {
+    width: 50%;
+    float: left;
+    height: 100%;
+}
+
+.bottom-content {
+    height: calc(100% - 45px);
+    overflow: auto;
+}
+
+.robot-infor .line-status .robot #line-camera {
+    width: 100%;
+    border-top: none;
+    height: calc(100% - 49px);
+    border-left: 1px solid #d9dee4;
+    border-right: 1px solid #d9dee4;
+    border-bottom: none;
+}
+
+.line-status .robot #robot-status {
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #607d8b;
+}
+
+.line-motion {
+    height: 100%;
+    width: 22%;
+}
+
+.motion {
+    height: 38%;
+}
+
+.col1 .motion>div {
+    font-size: 18px;
+    color: #194e7a;
+    background-color: #ddf0fd;
+    padding: 0 10px;
+}
+
+.col2 .motion>div {
+    width: 100%;
+    color: #252525;
+    font-size: 18px;
+    padding: 0px 10px;
+    display: inline-block;
+    white-space: nowrap;
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+}
+
+.motion>div {
+    height: calc(100% * 1/3);
+}
+
+.tray {
+    height: 54%;
+}
+
+.tray ul {
+    width: 100%;
+    height: 100%;
+}
+
+.tray ul li {
+    float: left;
+}
+
+.txt-ver-mid::before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.tray-no ul li {
+    height: 10%;
+    width: 100%;
+    text-align: center;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.tray-fill {
+    background-color: #3dc5c4;
+}
+
+.tray-pos ul li {
+    height: 50%;
+    width: calc(100% * 1/3);
+    text-align: center;
+    line-height: 85.4px;
+    color: #ffffff;
+}
+
+.tray-tit {
+    height: 8%;
+    background-color: #607d8b;
+    color: #ffffff;
+    font-size: 14px;
+    text-align: center;
+}
+
+.line-motion .col {
+    float: left;
+    height: 100%;
+}
+
+.line-motion .col1 {
+    width: 36%;
+}
+
+.line-motion .col2 {
+    width: 64%;
+}
+
+.bd {
+    border: 1px solid #d9dee4;
+}
+
+.bd-t {
+    border-top: 1px solid #d9dee4;
+}
+
+.bd-r {
+    border-right: 1px solid #d9dee4;
+}
+
+.bd-b {
+    border-bottom: 1px solid #d9dee4;
+}
+
+.bd-l {
+    border-left: 1px solid #d9dee4;
+}
+
+.cnc-sign .process:before {
+    background-color: #529d1e;
+}
+
+#line-left .process:before {
+    border-top-color: #529d1e !important;
+}
+
+#line-right .process:before {
+    border-bottom-color: #529d1e !important;
+}
+
+.process {
+    border-color: #529d1e;
+}
+
+.cnc-sign .standby:before {
+    background-color: #3dc5c4;
+}
+
+#line-left .standby:before {
+    border-top-color: #3dc5c4 !important;
+}
+
+#line-right .standby:before {
+    border-bottom-color: #3dc5c4 !important;
+}
+
+.standby {
+    border-color: #3dc5c4;
+}
+
+.cnc-sign .warmup:before {
+    background-color: #ffae00;
+}
+
+#line-left .warmup:before {
+    border-top-color: #ffae00 !important;
+}
+
+#line-right .warmup:before {
+    border-bottom-color: #ffae00 !important;
+}
+
+.warmup {
+    border-color: #ffae00;
+}
+
+.cnc-sign .tool-change:before {
+    background-color: #008bff;
+}
+
+#line-left .tool-change:before {
+    border-top-color: #008bff !important;
+}
+
+#line-right .tool-change:before {
+    border-bottom-color: #008bff !important;
+}
+
+.tool-change {
+    border-color: #008bff;
+}
+
+.cnc-sign .alarm:before {
+    background-color: #e53935;
+}
+
+#line-left .alarm:before {
+    border-top-color: #e53935 !important;
+}
+
+#line-right .alarm:before {
+    border-bottom-color: #e53935 !important;
+}
+
+.alarm {
+    border-color: #e53935;
+}
+
+.cnc-sign .robot-alarm:before {
+    background-color: #f86899;
+}
+
+#line-left .robot-alarm:before {
+    border-top-color: #f86899 !important;
+}
+
+#line-right .robot-alarm:before {
+    border-bottom-color: #f86899 !important;
+}
+
+.robot-alarm {
+    border-color: #f86899;
+}
+
+.cnc-sign .nosignal:before {
+    background-color: #607d8b;
+}
+
+#line-left .nosignal:before {
+    border-top-color: #607d8b !important;
+}
+
+#line-right .nosignal:before {
+    border-bottom-color: #607d8b !important;
+}
+
+.nosignal {
+    border-color: #607d8b;
+}
+
+.cnc-sign .jig-setup:before {
+    background-color: #00a3d5;
+}
+
+#line-left .jig-setup:before {
+    border-top-color: #00a3d5 !important;
+}
+
+#line-right .jig-setup:before {
+    border-bottom-color: #00a3d5 !important;
+}
+
+.jig-setup {
+    border-color: #00a3d5;
+}
+
+.cnc-sign .warning:before {
+    background-color: #bc52c3;
+}
+
+#line-left .warning:before {
+    border-top-color: #bc52c3 !important;
+}
+
+#line-right .warning:before {
+    border-bottom-color: #bc52c3 !important;
+}
+
+.warning {
+    border-color: #bc52c3;
+}
+
+.cnc-sign .cnc-event {
+    float: left;
+    border-left: 1px solid #d9dee4;
+    width: 40%;
+}
+
+.cnc-sign .cnc-event li {
+    float: right;
+}
+
+.cnc-sign .normal:before {
+    background-color: #37474f;
+}
+
+#line-left .normal:before {
+    border-top-color: #37474f !important;
+}
+
+#line-right .normal:before {
+    border-bottom-color: #37474f !important;
+}
+
+.normal {
+    border-color: #37474f;
+}
+
+.cnc-sign .pre-call:before {
+    background-color: #2b6205;
+}
+
+#line-left .pre-call:before {
+    border-top-color: #2b6205 !important;
+}
+
+#line-right .pre-call:before {
+    border-bottom-color: #2b6205 !important;
+}
+
+.pre-call {
+    border-color: #2b6205;
+}
+
+.cnc-sign .robot-call:before {
+    background-color: #ce6720;
+}
+
+#line-left .robot-call:before {
+    border-top-color: #ce6720 !important;
+}
+
+#line-right .robot-call:before {
+    border-bottom-color: #ce6720 !important;
+}
+
+.robot-call {
+    border-color: #ce6720;
+}
+
+.cnc-sign .probe-err:before {
+    background-color: #067091;
+}
+
+#line-left .probe-err:before {
+    border-top-color: #067091 !important;
+}
+
+#line-right .probe-err:before {
+    border-bottom-color: #067091 !important;
+}
+
+.probe-err {
+    border-color: #067091;
+}
+
+.cnc-sign .last-machin:before {
+    background-color: #a90e0e;
+}
+
+#line-left .last-machin:before {
+    border-top-color: #a90e0e !important;
+}
+
+#line-right .last-machin:before {
+    border-bottom-color: #a90e0e !important;
+}
+
+.last-machin {
+    border-color: #a90e0e;
+}
+
+.cnc-sign .nocall:before {
+    background-color: #5d1e61;
+}
+
+#line-left .nocall:before {
+    border-top-color: #5d1e61 !important;
+}
+
+#line-right .nocall:before {
+    border-bottom-color: #5d1e61 !important;
+}
+
+.nocall {
+    border-color: #5d1e61;
+}

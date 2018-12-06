@@ -1,0 +1,236 @@
+#main-container {
+    max-width: 1920px;
+    display: flex;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+}
+
+.content-container {
+    height: 100%;
+    overflow: auto;
+    flex-grow: 1;
+    -webkit-flex-grow: 1;
+    -moz-flex-grow: 1;
+    -ms-flex-grow: 1;
+    -o-flex-grow: 1;
+}
+
+#nav-menu {
+    width: 300px;
+    position: relative;
+}
+
+.top-nav {
+    height: 50px;
+    padding: 10px 10px;
+    background: #EDEDED;
+    border-bottom: 1px solid #D9DEE4;
+}
+
+#profile {
+    height: 114px;
+}
+
+.profile-pic {
+    width: 35%;
+    float: left;
+}
+
+.profile-pic img {
+    width: 70%;
+    background: #fff;
+    margin-left: 15%;
+    margin-top: 20px;
+    border: 1px solid rgba(52, 73, 94, .44);
+    padding: 4px;
+    border-radius: 50%;
+}
+
+.profile-info {
+    padding: 30px 10px 10px;
+    width: 65%;
+    float: left;
+}
+
+.profile-info span {
+    font-size: 13px;
+    line-height: 30px;
+    color: #BAB8B8;
+    display: block;
+}
+
+.profile-info a {
+    font-size: 14px;
+    color: #ECF0F1;
+    margin: 0;
+    font-weight: 300;
+    display: block;
+}
+
+#menu-toggle img {
+    width: 30px;
+    height: 30px;
+    opacity: 0.7;
+}
+
+#menu-toggle img:hover {
+    cursor: pointer;
+    opacity: 1;
+}
+
+#menu-container {
+    position: fixed;
+    height: 100vh;
+    background-color: #23282E;
+    overflow-y: auto;
+}
+
+.menu-open {
+    width: 300px;
+}
+
+.menu-open #menu img.icon {
+    width: 17px;
+    height: 17px;
+    transform: translateY(18%);
+    -webkit-transform: translateY(18%);
+    -moz-transform: translateY(18%);
+    -ms-transform: translateY(18%);
+    -o-transform: translateY(18%);
+}
+
+.menu-open .arrow-down {
+    border: solid #e1ffff;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    float: right;
+    margin-top: 10px;
+}
+
+.arrow-right {
+    border: solid #e1ffff;
+    border-width: 0 1px 1px 0;
+    display: inline-block;
+    padding: 2px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    margin-right: 5px;
+    margin-bottom: 3px;
+}
+
+#drop-down-menu>li {
+    background-color: #2E353D;
+    border-bottom: 1px solid #23282e;
+}
+
+#drop-down-menu>li.active {
+    background-color: #4F5B69;
+}
+
+#drop-down-menu>li:hover {
+    background-color: #4F5B69;
+    cursor: pointer;
+}
+
+#drop-down-menu li a {
+    color: #e1ffff;
+    line-height: 36px;
+    display: block;
+    padding: 0 15px 0 10px;
+    position: relative;
+    pointer-events: none;
+}
+
+.sub-menu {
+    height: 0px;
+    overflow: hidden;
+    transition: height 0.5s;
+    -webkit-transition: height 0.5s;
+    -moz-transition: height 0.5s;
+    -ms-transition: height 0.5s;
+    -o-transition: height 0.5s;
+}
+
+.sub-menu li {
+    background-color: #181C20;
+    border-bottom: 1px solid #23282e;
+    cursor: pointer;
+}
+
+.sub-menu li:hover a {
+    background-color: #020203;
+    color: #d19b3d !important;
+    border-color: #d19b3d !important;
+}
+
+.sub-menu li:hover a i {
+    border-color: #d19b3d !important;
+}
+
+.sub-menu a {
+    padding-left: 32px !important;
+}
+
+.sub-menu li.active a,
+.sub-menu li.active i {
+    color: #d19b3d !important;
+    border-color: #d19b3d !important;
+    background-color: #020203;
+}
+
+#drop-down-menu li ul {
+    color: #e1ffff;
+}
+
+.menu-close #menu #drop-down-menu li {
+    padding-top: 10px;
+}
+
+.menu-close #menu #drop-down-menu li a {
+    line-height: 20px;
+}
+
+.menu-close #menu img.icon {
+    width: 35px;
+    height: 35px;
+    float: left;
+}
+
+.menu-close #menu #drop-down-menu li a span {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 50px;
+}
+
+.sub-close-menu {
+    position: fixed;
+    height: auto;
+    width: 250px;
+    transform: translate(70px, -72px);
+    -webkit-transform: translate(70px, -72px);
+    -moz-transform: translate(70px, -72px);
+    -ms-transform: translate(70px, -72px);
+    -o-transform: translate(70px, -72px);
+}
+
+.sub-close-menu li {
+    padding: 0px !important;
+}
+
+.sub-close-menu li a {
+    padding-left: 10px !important;
+    line-height: 36px !important;
+}

@@ -1,0 +1,194 @@
+.cnc-sign .process:before {
+    background-color: #529d1e;
+}
+
+.cnc-sign .standby:before {
+    background-color: #3dc5c4;
+}
+
+.cnc-sign .warmup:before {
+    background-color: #ffae00;
+}
+
+.cnc-sign .tool-change:before {
+    background-color: #008bff;
+}
+
+.cnc-sign .alarm:before {
+    background-color: #e53935;
+}
+
+.cnc-sign .robot-alarm:before {
+    background-color: #f86899;
+}
+
+.cnc-sign .nosignal:before {
+    background-color: #607d8b;
+}
+
+.cnc-sign .jig-setup:before {
+    background-color: #00a3d5;
+}
+
+.cnc-sign .warning:before {
+    background-color: #bc52c3;
+}
+
+.cnc-sign .normal:before {
+    background-color: #37474f;
+}
+
+.cnc-sign .pre-call:before {
+    background-color: #2b6205;
+}
+
+.cnc-sign .robot-call:before {
+    background-color: #ce6720;
+}
+
+.cnc-sign .probe-err:before {
+    background-color: #067091;
+}
+
+.cnc-sign .last-machin:before {
+    background-color: #a90e0e;
+}
+
+.cnc-sign .nocall:before {
+    background-color: #5C1E61;
+}
+
+.cnc.process,
+.robot-state.process {
+    background-color: #529d1e;
+}
+
+.cnc.standby,
+.robot-state.standby {
+    background-color: #3dc5c4;
+}
+
+.cnc.warmup,
+.robot-state.warmup {
+    background-color: #ffae00;
+}
+
+.cnc.tool-change,
+.robot-state.tool-change {
+    background-color: #008bff;
+}
+
+.cnc.alarm,
+.robot-state.alarm {
+    background-color: #e53935;
+}
+
+.cnc.robot-alarm,
+.robot-state.robot-alarm {
+    background-color: #f86899;
+}
+
+.cnc.nosignal,
+.robot-state.nosignal {
+    background-color: #607d8b;
+}
+
+.cnc.jig-setup,
+.robot-state.jig-setup {
+    background-color: #00a3d5;
+}
+
+.cnc.warning,
+.robot-state.warning {
+    background-color: #bc52c3;
+}
+
+.cnc.normal,
+.robot-state.normal {
+    background-color: #37474f;
+}
+
+.cnc.pre-call,
+.robot-state.pre-call {
+    background-color: #2b6205;
+}
+
+.cnc.robot-call,
+.robot-state.robot-call {
+    background-color: #ce6720;
+}
+
+.cnc.probe-err,
+.robot-state.probe-err {
+    background-color: #067091;
+}
+
+.cnc.last-machin,
+.robot-state.last-machin {
+    background-color: #a90e0e;
+}
+
+.cnc.nocall,
+.robot-state.nocall {
+    background-color: #5d1e61;
+}
+
+.line-box.process {
+    border-color: #529d1e;
+}
+
+.line-box.standby {
+    border-color: #3dc5c4;
+}
+
+.line-box.warmup {
+    border-color: #ffae00;
+}
+
+.line-box.tool-change {
+    border-color: #008bff;
+}
+
+.line-box.alarm {
+    border-color: #e53935;
+}
+
+.line-box.robot-alarm {
+    border-color: #f86899;
+}
+
+.line-box.nosignal {
+    border-color: #607d8b;
+}
+
+.line-box.jig-setup {
+    border-color: #00a3d5;
+}
+
+.line-box.warning {
+    border-color: #bc52c3;
+}
+
+.line-box.normal {
+    border-color: #37474f;
+}
+
+.line-box.pre-call {
+    border-color: #2b6205;
+}
+
+.line-box.robot-call {
+    border-color: #ce6720;
+}
+
+.line-box.probe-err {
+    border-color: #067091;
+}
+
+.line-box.last-machin {
+    border-color: #a90e0e;
+}
+
+.line-box.nocall {
+    border-color: #5d1e61;
+}

@@ -1,0 +1,1065 @@
+{{#section 'head'}}
+<style>
+    .t_summary {
+        border: 2px solid #0088dd;
+        width: 99.3%;
+        height: 71px;
+        margin-top: 18px;
+        margin-bottom: 12px;
+
+        margin-left: 0.3%;
+        margin-right: auto;
+        empty-cells: show;
+        font-size: 30px;
+    }
+
+    .t_header {
+        background-color: steelblue;
+        width: 200px;
+        text-align: center;
+        font-weight: bold;
+        color: white;
+    }
+
+    .t_data {
+        background-color: rgba(204, 236, 255, 0.4);
+        text-align: right;
+        font-size: 30px;
+        font-weight: bold;
+        width: 190px;
+        padding-right: 8px;
+    }
+
+    .t_cnc_legend {
+        margin-left: 0.3%;
+        padding-bottom: 2px;
+        height: 35px;
+        font-size: 12px;
+        color: rgb(110, 110, 110);
+    }
+
+    .div_table_box {
+        padding-left: 0.3%;
+    }
+
+    .t_line_data {
+        float: left;
+        width: 19.5%;
+        margin-right: 0.5%;
+        margin-top: 2px;
+        margin-bottom: 4px;
+        height: 383px;
+        border: 10px solid gray;
+    }
+
+    .t_line_title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 25px;
+        background-color: gray;
+        height: 55px;
+        color: white;
+    }
+
+
+    .t_line_detail_header {
+        background-color: steelblue;
+        width: 130px;
+        font-size: 23px;
+        font-weight: bold;
+        color: white;
+        padding-left: 10px;
+    }
+
+    .t_line_detail_data {
+        background-color: skyblue;
+        font-size: 23px;
+        font-weight: bold;
+        color: black;
+        padding-left: 25px;
+    }
+
+    .cnc_status {
+        border: 1px solid #0088dd;
+        width: 100%;
+        height: 100%;
+        font-size: 12px;
+        text-align: center;
+        color: white;
+        background-color: black;
+    }
+
+    .width_robot_status {
+        width: 10%;
+    }
+
+    .line_button_title {
+        width: 300px;
+        height: 43px;
+        font-size: 25px;
+        font-weight: bold;
+        color: white;
+        background-color: gray;
+    }
+</style>
+{{/section}}
+
+<table class="t_summary">
+    <tr>
+        <td class="t_header">Plan</td>
+        <td id='total-plan' class="t_data">-</td>
+        <td class="t_header">Target</td>
+        <td id='total-target' class="t_data">-</td>
+        <td class="t_header">Prod</td>
+        <td id='total-prod' class="t_data">358</td>
+        <td class="t_header">Achieve</td>
+        <td id='total-achieve' class="t_data">-</td>
+        <td class="t_header">CNC Util</td>
+        <td id='total-line-op' class="t_data">-</td>
+        <td class="t_header">Robot Util</td>
+        <td id='total-robot-op' class="t_data">-</td>
+    </tr>
+</table>
+
+
+<table class="t_cnc_legend">
+    <tr>
+        <td width="70">CNC Status : </td>
+        <td width="35" bgcolor="green"></td>
+        <td width="55">PROCESS</td>
+        <td width="35" bgcolor="lightgreen"></td>
+        <td width="55">STANDBY</td>
+        <td width="35" bgcolor="orange"></td>
+        <td width="55">WARMUP</td>
+        <td width="35" bgcolor="blue"></td>
+        <td width="55">TOOL CHANGE</td>
+        <td width="35" bgcolor="red"></td>
+        <td width="55">ALARM</td>
+        <td width="35" bgcolor="hotpink"></td>
+        <td width="55">ROBOT ALARM</td>
+        <td width="35" bgcolor="gray"></td>
+        <td width="55">NOSIGNAL</td>
+        <td width="35" bgcolor="cyan"></td>
+        <td width="55">JIG SETUP</td>
+        <td width="35" bgcolor="blueviolet"></td>
+        <td width="55">WARNING</td>
+
+        <td width="500"></td>
+        <td width="80">Robot Status : </td>
+        <td width="25" bgcolor="green"></td>
+        <td width="40">RUN</td>
+        <td width="25" bgcolor="lightgreen"></td>
+        <td width="40">READY</td>
+        <td width="25" bgcolor="orange"></td>
+        <td width="40">STOP</td>
+        <td width="25" bgcolor="red"></td>
+        <td width="40">ALARM</td>
+        <td width="25" bgcolor="gray"></td>
+        <td width="40">DISCONNECT</td>
+    </tr>
+</table>
+<div class="div_table_box">
+    <table id='t1001' class="t_line_data">
+        <tr class="t_line_title">
+            <td id='t1001-title' colspan='3'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Prod </td>
+            <td id="t1001-prod" class="t_line_detail_data" colspan='2'> - </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Achieve </td>
+            <td id="t1001-achieve" class="t_line_detail_data" colspan='2'> - </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> CNC Util </td>
+            <td id="t1001-op-rate" class="t_line_detail_data" colspan='2'> - </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Robot Util </td>
+            <td id="t1001-rop-rate" class="t_line_detail_data"> - </td>
+            <td id="t1001-robot-status" class="width_robot_status"></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Run CNC </td>
+            <td id="t1001-run-cnc" class="t_line_detail_data" colspan='2'> - </td>
+        </tr>
+        <tr>
+            <td colspan='3'>
+                <table class="cnc_status">
+                    <tr>
+                        <td id="1001-1-l">--</td>
+                        <td id="1001-2-l">--</td>
+                        <td id="1001-3-l">--</td>
+                        <td id="1001-4-l">--</td>
+                        <td id="1001-5-l">--</td>
+                        <td id="1001-6-l">--</td>
+                        <td id="1001-7-l">--</td>
+                        <td id="1001-8-l">--</td>
+                        <td id="1001-9-l">--</td>
+                        <td id="1001-10-l">--</td>
+                        <td id="1001-11-l">--</td>
+                        <td id="1001-12-l">--</td>
+                    </tr>
+                    <tr>
+                        <td id="1001-1-r">--</td>
+                        <td id="1001-2-r">--</td>
+                        <td id="1001-3-r">--</td>
+                        <td id="1001-4-r">--</td>
+                        <td id="1001-5-r">--</td>
+                        <td id="1001-6-r">--</td>
+                        <td id="1001-7-r">--</td>
+                        <td id="1001-8-r">--</td>
+                        <td id="1001-9-r">--</td>
+                        <td id="1001-10-r">--</td>
+                        <td id="1001-11-r">--</td>
+                        <td id="1001-12-r">--</td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+    <table id='t1002' class="t_line_data">
+        <tr class="t_line_title">
+            <td id='t1002-title' colspan='3'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Prod </td>
+            <td id="t1002-prod" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Achieve </td>
+            <td id="t1002-achieve" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> CNC Util </td>
+            <td id="t1002-op-rate" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Robot Util </td>
+            <td id="t1002-rop-rate" class="t_line_detail_data"> </td>
+            <td id="t1002-robot-status" class="width_robot_status"></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Run CNC </td>
+            <td id="t1002-run-cnc" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td colspan='3'>
+                <table class="cnc_status">
+                    <tr>
+                        <td id="1002-1-l">--</td>
+                        <td id="1002-2-l">--</td>
+                        <td id="1002-3-l">--</td>
+                        <td id="1002-4-l">--</td>
+                        <td id="1002-5-l">--</td>
+                        <td id="1002-6-l">--</td>
+                        <td id="1002-7-l">--</td>
+                        <td id="1002-8-l">--</td>
+                        <td id="1002-9-l">--</td>
+                        <td id="1002-10-l">--</td>
+                        <td id="1002-11-l">--</td>
+                        <td id="1002-12-l">--</td>
+                    </tr>
+                    <tr>
+                        <td id="1002-1-r">--</td>
+                        <td id="1002-2-r">--</td>
+                        <td id="1002-3-r">--</td>
+                        <td id="1002-4-r">--</td>
+                        <td id="1002-5-r">--</td>
+                        <td id="1002-6-r">--</td>
+                        <td id="1002-7-r">--</td>
+                        <td id="1002-8-r">--</td>
+                        <td id="1002-9-r">--</td>
+                        <td id="1002-10-r">--</td>
+                        <td id="1002-11-r">--</td>
+                        <td id="1002-12-r">--</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <table id='t1003' class="t_line_data">
+        <tr class="t_line_title">
+            <td id='t1003-title' colspan='3'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Prod </td>
+            <td id="t1003-prod" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Achieve </td>
+            <td id="t1003-achieve" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> CNC Util </td>
+            <td id="t1003-op-rate" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Robot Util </td>
+            <td id="t1003-rop-rate" class="t_line_detail_data"> </td>
+            <td id="t1003-robot-status" class="width_robot_status"></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Run CNC </td>
+            <td id="t1003-run-cnc" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td colspan='3'>
+                <table class="cnc_status">
+                    <tr>
+                        <td id="1003-1-l">--</td>
+                        <td id="1003-2-l">--</td>
+                        <td id="1003-3-l">--</td>
+                        <td id="1003-4-l">--</td>
+                        <td id="1003-5-l">--</td>
+                        <td id="1003-6-l">--</td>
+                        <td id="1003-7-l">--</td>
+                        <td id="1003-8-l">--</td>
+                        <td id="1003-9-l">--</td>
+                        <td id="1003-10-l">--</td>
+                        <td id="1003-11-l">--</td>
+                        <td id="1003-12-l">--</td>
+                    </tr>
+                    <tr>
+                        <td id="1003-1-r">--</td>
+                        <td id="1003-2-r">--</td>
+                        <td id="1003-3-r">--</td>
+                        <td id="1003-4-r">--</td>
+                        <td id="1003-5-r">--</td>
+                        <td id="1003-6-r">--</td>
+                        <td id="1003-7-r">--</td>
+                        <td id="1003-8-r">--</td>
+                        <td id="1003-9-r">--</td>
+                        <td id="1003-10-r">--</td>
+                        <td id="1003-11-r">--</td>
+                        <td id="1003-12-r">--</td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+    <table id='t1004' class="t_line_data">
+        <tr class="t_line_title">
+            <td id='t1004-title' colspan='3'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Prod </td>
+            <td id="t1004-prod" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Achieve </td>
+            <td id="t1004-achieve" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> CNC Util </td>
+            <td id="t1004-op-rate" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Robot Util </td>
+            <td id="t1004-rop-rate" class="t_line_detail_data"> </td>
+            <td id="t1004-robot-status" class="width_robot_status"></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Run CNC </td>
+            <td id="t1004-run-cnc" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td colspan='3'>
+                <table class="cnc_status">
+                    <tr>
+                        <td id="1004-1-l">--</td>
+                        <td id="1004-2-l">--</td>
+                        <td id="1004-3-l">--</td>
+                        <td id="1004-4-l">--</td>
+                        <td id="1004-5-l">--</td>
+                        <td id="1004-6-l">--</td>
+                        <td id="1004-7-l">--</td>
+                        <td id="1004-8-l">--</td>
+                        <td id="1004-9-l">--</td>
+                        <td id="1004-10-l">--</td>
+                        <td id="1004-11-l">--</td>
+                        <td id="1004-12-l">--</td>
+                    </tr>
+                    <tr>
+                        <td id="1004-1-r">--</td>
+                        <td id="1004-2-r">--</td>
+                        <td id="1004-3-r">--</td>
+                        <td id="1004-4-r">--</td>
+                        <td id="1004-5-r">--</td>
+                        <td id="1004-6-r">--</td>
+                        <td id="1004-7-r">--</td>
+                        <td id="1004-8-r">--</td>
+                        <td id="1004-9-r">--</td>
+                        <td id="1004-10-r">--</td>
+                        <td id="1004-11-r">--</td>
+                        <td id="1004-12-r">--</td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+    <table id='t1005' class="t_line_data">
+        <tr class="t_line_title">
+            <td id='t1005-title' colspan='3'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Prod </td>
+            <td id="t1005-prod" class="t_line_detail_data" colspan='2'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Achieve </td>
+            <td id="t1005-achieve" class="t_line_detail_data" colspan='2'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> CNC Util </td>
+            <td id="t1005-op-rate" class="t_line_detail_data" colspan='2'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Robot Util </td>
+            <td id="t1005-rop-rate" class="t_line_detail_data"></td>
+            <td id="t1005-robot-status" class="width_robot_status"></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Run CNC </td>
+            <td id="t1005-run-cnc" class="t_line_detail_data" colspan='2'></td>
+        </tr>
+        <tr>
+            <td colspan='3'>
+                <table class="cnc_status">
+                    <tr>
+                        <td id="1005-1-l">--</td>
+                        <td id="1005-2-l">--</td>
+                        <td id="1005-3-l">--</td>
+                        <td id="1005-4-l">--</td>
+                        <td id="1005-5-l">--</td>
+                        <td id="1005-6-l">--</td>
+                        <td id="1005-7-l">--</td>
+                        <td id="1005-8-l">--</td>
+                        <td id="1005-9-l">--</td>
+                        <td id="1005-10-l">--</td>
+                        <td id="1005-11-l">--</td>
+                        <td id="1005-12-l">--</td>
+                    </tr>
+                    <tr>
+                        <td id="1005-1-r">--</td>
+                        <td id="1005-2-r">--</td>
+                        <td id="1005-3-r">--</td>
+                        <td id="1005-4-r">--</td>
+                        <td id="1005-5-r">--</td>
+                        <td id="1005-6-r">--</td>
+                        <td id="1005-7-r">--</td>
+                        <td id="1005-8-r">--</td>
+                        <td id="1005-9-r">--</td>
+                        <td id="1005-10-r">--</td>
+                        <td id="1005-11-r">--</td>
+                        <td id="1005-12-r">--</td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="div_table_box">
+    <table id='t1006' class="t_line_data">
+        <tr class="t_line_title">
+            <td id='t1006-title' colspan='3'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Prod </td>
+            <td id="t1006-prod" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Achieve </td>
+            <td id="t1006-achieve" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> CNC Util </td>
+            <td id="t1006-op-rate" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Robot Util </td>
+            <td id="t1006-rop-rate" class="t_line_detail_data"> </td>
+            <td id="t1006-robot-status" class="width_robot_status"></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Run CNC </td>
+            <td id="t1006-run-cnc" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td colspan='3'>
+                <table class="cnc_status">
+                    <tr>
+                        <td id="1006-1-l">--</td>
+                        <td id="1006-2-l">--</td>
+                        <td id="1006-3-l">--</td>
+                        <td id="1006-4-l">--</td>
+                        <td id="1006-5-l">--</td>
+                        <td id="1006-6-l">--</td>
+                        <td id="1006-7-l">--</td>
+                        <td id="1006-8-l">--</td>
+                        <td id="1006-9-l">--</td>
+                        <td id="1006-10-l">--</td>
+                        <td id="1006-11-l">--</td>
+                        <td id="1006-12-l">--</td>
+                    </tr>
+                    <tr>
+                        <td id="1006-1-r">--</td>
+                        <td id="1006-2-r">--</td>
+                        <td id="1006-3-r">--</td>
+                        <td id="1006-4-r">--</td>
+                        <td id="1006-5-r">--</td>
+                        <td id="1006-6-r">--</td>
+                        <td id="1006-7-r">--</td>
+                        <td id="1006-8-r">--</td>
+                        <td id="1006-9-r">--</td>
+                        <td id="1006-10-r">--</td>
+                        <td id="1006-11-r">--</td>
+                        <td id="1006-12-r">--</td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+    <table id='t1007' class="t_line_data">
+        <tr class="t_line_title">
+            <td id='t1007-title' colspan='3'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Prod </td>
+            <td id="t1007-prod" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Achieve </td>
+            <td id="t1007-achieve" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> CNC Util </td>
+            <td id="t1007-op-rate" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Robot Util </td>
+            <td id="t1007-rop-rate" class="t_line_detail_data"> </td>
+            <td id="t1007-robot-status" class="width_robot_status"></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Run CNC </td>
+            <td id="t1007-run-cnc" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td colspan='3'>
+                <table class="cnc_status">
+                    <tr>
+                        <td id="1007-1-l">--</td>
+                        <td id="1007-2-l">--</td>
+                        <td id="1007-3-l">--</td>
+                        <td id="1007-4-l">--</td>
+                        <td id="1007-5-l">--</td>
+                        <td id="1007-6-l">--</td>
+                        <td id="1007-7-l">--</td>
+                        <td id="1007-8-l">--</td>
+                        <td id="1007-9-l">--</td>
+                        <td id="1007-10-l">--</td>
+                        <td id="1007-11-l">--</td>
+                        <td id="1007-12-l">--</td>
+                    </tr>
+                    <tr>
+                        <td id="1007-1-r">--</td>
+                        <td id="1007-2-r">--</td>
+                        <td id="1007-3-r">--</td>
+                        <td id="1007-4-r">--</td>
+                        <td id="1007-5-r">--</td>
+                        <td id="1007-6-r">--</td>
+                        <td id="1007-7-r">--</td>
+                        <td id="1007-8-r">--</td>
+                        <td id="1007-9-r">--</td>
+                        <td id="1007-10-r">--</td>
+                        <td id="1007-11-r">--</td>
+                        <td id="1007-12-r">--</td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+    <table id='t1008' class="t_line_data">
+        <tr class="t_line_title">
+            <td id='t1008-title' colspan='3'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Prod </td>
+            <td id="t1008-prod" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Achieve </td>
+            <td id="t1008-achieve" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> CNC Util </td>
+            <td id="t1008-op-rate" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Robot Util </td>
+            <td id="t1008-rop-rate" class="t_line_detail_data"> </td>
+            <td id="t1008-robot-status" class="width_robot_status"></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Run CNC </td>
+            <td id="t1008-run-cnc" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td colspan='3'>
+                <table class="cnc_status">
+                    <tr>
+                        <td id="1008-1-l">--</td>
+                        <td id="1008-2-l">--</td>
+                        <td id="1008-3-l">--</td>
+                        <td id="1008-4-l">--</td>
+                        <td id="1008-5-l">--</td>
+                        <td id="1008-6-l">--</td>
+                        <td id="1008-7-l">--</td>
+                        <td id="1008-8-l">--</td>
+                        <td id="1008-9-l">--</td>
+                        <td id="1008-10-l">--</td>
+                        <td id="1008-11-l">--</td>
+                        <td id="1008-12-l">--</td>
+                    </tr>
+                    <tr>
+                        <td id="1008-1-r">--</td>
+                        <td id="1008-2-r">--</td>
+                        <td id="1008-3-r">--</td>
+                        <td id="1008-4-r">--</td>
+                        <td id="1008-5-r">--</td>
+                        <td id="1008-6-r">--</td>
+                        <td id="1008-7-r">--</td>
+                        <td id="1008-8-r">--</td>
+                        <td id="1008-9-r">--</td>
+                        <td id="1008-10-r">--</td>
+                        <td id="1008-11-r">--</td>
+                        <td id="1008-12-r">--</td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+    <table id='t1009' class="t_line_data">
+        <tr class="t_line_title">
+            <td id='t1009-title' colspan='3'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Prod </td>
+            <td id="t1009-prod" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Achieve </td>
+            <td id="t1009-achieve" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> CNC Util </td>
+            <td id="t1009-op-rate" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Robot Util </td>
+            <td id="t1009-rop-rate" class="t_line_detail_data"> </td>
+            <td id="t1009-robot-status" class="width_robot_status"></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Run CNC </td>
+            <td id="t1009-run-cnc" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td colspan='3'>
+                <table class="cnc_status">
+                    <tr>
+                        <td id="1009-1-l">--</td>
+                        <td id="1009-2-l">--</td>
+                        <td id="1009-3-l">--</td>
+                        <td id="1009-4-l">--</td>
+                        <td id="1009-5-l">--</td>
+                        <td id="1009-6-l">--</td>
+                        <td id="1009-7-l">--</td>
+                        <td id="1009-8-l">--</td>
+                        <td id="1009-9-l">--</td>
+                        <td id="1009-10-l">--</td>
+                        <td id="1009-11-l">--</td>
+                        <td id="1009-12-l">--</td>
+                    </tr>
+                    <tr>
+                        <td id="1009-1-r">--</td>
+                        <td id="1009-2-r">--</td>
+                        <td id="1009-3-r">--</td>
+                        <td id="1009-4-r">--</td>
+                        <td id="1009-5-r">--</td>
+                        <td id="1009-6-r">--</td>
+                        <td id="1009-7-r">--</td>
+                        <td id="1009-8-r">--</td>
+                        <td id="1009-9-r">--</td>
+                        <td id="1009-10-r">--</td>
+                        <td id="1009-11-r">--</td>
+                        <td id="1009-12-r">--</td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+    <table id='t1010' class="t_line_data">
+        <tr class="t_line_title">
+            <td id='t1010-title' colspan='3'></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Prod </td>
+            <td id="t1010-prod" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Achieve </td>
+            <td id="t1010-achieve" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> CNC Util </td>
+            <td id="t1010-op-rate" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Robot Util </td>
+            <td id="t1010-rop-rate" class="t_line_detail_data"> </td>
+            <td id="t1010-robot-status" class="width_robot_status"></td>
+        </tr>
+        <tr>
+            <td class="t_line_detail_header"> Run CNC </td>
+            <td id="t1010-run-cnc" class="t_line_detail_data" colspan='2'> </td>
+        </tr>
+        <tr>
+            <td colspan='3'>
+                <table class="cnc_status">
+                    <tr>
+                        <td id="1010-1-l">--</td>
+                        <td id="1010-2-l">--</td>
+                        <td id="1010-3-l">--</td>
+                        <td id="1010-4-l">--</td>
+                        <td id="1010-5-l">--</td>
+                        <td id="1010-6-l">--</td>
+                        <td id="1010-7-l">--</td>
+                        <td id="1010-8-l">--</td>
+                        <td id="1010-9-l">--</td>
+                        <td id="1010-10-l">--</td>
+                        <td id="1010-11-l">--</td>
+                        <td id="1010-12-l">--</td>
+                    </tr>
+                    <tr>
+                        <td id="1010-1-r">--</td>
+                        <td id="1010-2-r">--</td>
+                        <td id="1010-3-r">--</td>
+                        <td id="1010-4-r">--</td>
+                        <td id="1010-5-r">--</td>
+                        <td id="1010-6-r">--</td>
+                        <td id="1010-7-r">--</td>
+                        <td id="1010-8-r">--</td>
+                        <td id="1010-9-r">--</td>
+                        <td id="1010-10-r">--</td>
+                        <td id="1010-11-r">--</td>
+                        <td id="1010-12-r">--</td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+{{#section 'jquery'}}
+<script>
+    var timerID_reload;
+    var timerID_update;
+
+    $(document).ready(function () {
+        $("a#menu3").addClass("current");
+        $('#title').text('CNC Robot Line Overall Status 개발중');
+
+
+        $.ajax({
+            url: '/ajax/btn-line-group',
+            type: 'GET',
+            timeout: 60000,
+            success: function (data) {
+                // console.log(data);
+                var line_code;
+                for (var i = 0; i < data.length; i++) {
+                    if (i === 0) {
+                        line_code = '#' + data[i].line_group_code;
+                    }
+
+                    $('#btn_div').append($('<input/>', {
+                        id: data[i].id,
+                        class: "line_button",
+                        type: "button",
+                        name: "line2",
+                        value: data[i].name
+                    }));
+                }
+
+                $(line_code).css('background-color', 'green');
+
+                //var line_code = '#'+data.line_code;
+                //$(line_code).css('background-color','green');
+
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+
+        setTimeout(append_btn_title, 300);
+
+        function append_btn_title() {
+            $.ajax({
+                url: '/ajax/btn-line',
+                type: 'GET',
+                timeout: 60000,
+                success: function (data) {
+                    //console.log(data);
+
+                    var element;
+                    // var line_code;
+                    for (var i = 0; i < data.length; i++) {
+                        element = '#t' + data[i].gui_pos + '-title';
+
+                        $(element).append($('<input/>', {
+                            id: data[i].id,
+                            class: "line_button_title",
+                            type: "button",
+                            value: data[i].name
+                        }));
+                    }
+
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+
+
+        $(document).on('click', 'input.line_button', function () {
+            //console.log($(this).attr('id'));
+
+            $.ajax({
+                url: '/ajax/select-group',
+                type: 'POST',
+                timeout: 3000,
+                data: { line_group_code: $(this).attr('id') },
+                success: function (data) {
+                    //console.log(data.line_code);
+                    var url = "total-line-status";
+                    $(location).attr('href', url);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+
+        $(document).on('click', 'input.line_button_title', function () {
+            $.ajax({
+                url: '/ajax/select-line',
+                type: 'POST',
+                timeout: 3000,
+                data: { line_code: $(this).attr('id') },
+                success: function (data) {
+                    //console.log(data);
+                    var url = "line-status";
+                    $(location).attr('href', url);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+
+        timerID_reload = setTimeout(reload_view, 2 * 60 * 60 * 1000); // 2시간에 한번씩 화면 Reload
+
+        var updateView = function () {
+            var NG_def = 95;
+            clearTimeout(timerID_update);
+
+            var robotLineStatus = function (data) {
+
+                var line_data = data[0];
+                var line_data_cnc = data[1];
+                var line_data_robot = data[2];
+                var status = data[3];
+                var main_title = data[4][0];
+
+                //console.log('Persent = ' + status[0]['persent'] + '    |    ' + 'show line = ' + status[0]['showLine']);
+
+                //console.log(title);
+                $('#title').text(main_title.title);
+                $('#cur_datetime').text(main_title.cur_datetime);
+
+                var id, total_prod = 0, total_robot_op = 0;
+                var total_plan = 0, total_target = 0;
+                for (var i = 0; i < line_data.length; i++) {
+                    total_prod += line_data[i].prod_cnt;
+                    total_target += line_data[i].target_cnt;
+                    total_plan += line_data[i].plan_cnt;
+
+                    id = '#t' + line_data[i].ID;
+
+                    // $(id+'-title').text(line_data[i].LineName)
+
+                    var line_achieve_rate = 0;
+                    if (line_data[i].prod_cnt > 0) {
+                        line_achieve_rate = line_data[i].prod_cnt / line_data[i].target_cnt * 100;
+                    }
+                    else {
+                        line_achieve_rate = 0;
+                    }
+
+                    if (line_achieve_rate < NG_def) {
+                        $(id + '-achieve').css('color', 'red');
+                        $(id).css('border-color', 'orange');
+                    }
+                    else {
+                        $(id + '-achieve').css('color', 'black');
+                        $(id).css('border-color', 'green');
+                    }
+                    $(id + '-prod').text(line_data[i].prod_cnt);
+                    $(id + '-achieve').text(line_achieve_rate.toFixed(1) + '%');
+                    $(id + '-run-cnc').text(line_data[i].run_cnc + '/' + line_data[i].cnc_count + ' (' + line_data[i].maint_cnc_count + ')');
+
+                    if (line_data[i].robot_call_cnt >= 5) {
+                        $(id + '-rop-rate').css('background-color', 'lightgreen');
+                    }
+                    else {
+                        $(id + '-rop-rate').css('background-color', 'skyblue');
+                    }
+                };
+
+                var total_cnc_op = 0;
+                for (var i = 0; i < line_data_cnc.length; i++) {
+
+                    id = '#t' + line_data_cnc[i].ID;
+
+                    if (line_data_cnc[i].cnc_run_rate < NG_def) {
+                        $(id + '-op-rate').css('color', 'red');
+                        $(id).css('border-color', 'orange');
+
+                    }
+                    else {
+                        $(id + '-op-rate').css('color', 'black');
+                    }
+                    $(id + '-op-rate').text(line_data_cnc[i].cnc_run_rate + '% (' + line_data_cnc[i].cnc_run_rate_process + ')');
+
+                    total_cnc_op += line_data_cnc[i].cnc_run_rate;
+                };
+
+                var total_robot_op = 0, loop_cnt = 0;
+                for (var i = 0; i < line_data_robot.length; i++) {
+
+                    id = '#t' + line_data_robot[i].ID;
+
+                    if (line_data_robot[i].robot_run_rate < NG_def) {
+                        $(id + '-rop-rate').css('color', 'red');
+                        $(id).css('border-color', 'orange');
+                    }
+                    else {
+                        $(id + '-rop-rate').css('color', 'black');
+                    }
+
+                    $(id + '-rop-rate').text(line_data_robot[i].robot_run_rate + '%');
+
+                    var stateColor = ['green', 'lightgreen', 'orange', 'red', 'gray', 'gray'];
+                    $(id + '-robot-status').css('background-color', stateColor[line_data_robot[i].robot_status]);
+
+                    total_robot_op += line_data_robot[i].robot_run_rate;
+                    loop_cnt = loop_cnt + 1;
+                };
+
+
+                var total_achieve = total_prod / total_target * 100;
+                total_cnc_op = total_cnc_op / loop_cnt;
+                total_robot_op = total_robot_op / loop_cnt;
+
+                $('#total-plan').text(total_plan);
+                $('#total-target').text(total_target);
+                $('#total-prod').text(total_prod);
+                $('#total-achieve').text(total_achieve.toFixed(1) + '%');
+                $('#total-line-op').text((total_cnc_op).toFixed(1) + '%');
+                $('#total-robot-op').text((total_robot_op).toFixed(1) + '%');
+
+                if (total_achieve < 95) {
+                    $('#total-achieve').css('color', 'red');
+                }
+                else {
+                    $('#total-achieve').css('color', 'black');
+                }
+
+                if (total_cnc_op < 95) {
+                    $('#total-line-op').css('color', 'red');
+                }
+                else {
+                    $('#total-line-op').css('color', 'black');
+                }
+
+                if (total_robot_op < 95) {
+                    $('#total-robot-op').css('color', 'red');
+                }
+                else {
+                    $('#total-robot-op').css('color', 'black');
+                }
+
+
+
+                var status_main = ['green', 'orange', 'lightgreen', 'red', 'gray', 'hotpink', 'blue', 'cyan', 'blueviolet'];
+
+                for (var i = 0; i < status.length; i++) {
+                    
+                    id = '#' + status[i].ID;
+                    $(id).css('background-color', status_main[status[i].status_main])
+                        .text(status[i].status_main_check);
+                };
+            };
+
+            $.ajax({
+                url: '/ajax/total-line-status-get',
+                type: 'GET',
+                timeout: 60000,
+                success: function (data) {
+
+                    console.log(data);
+                    robotLineStatus(data);
+                    timerID_update = setTimeout(updateView, 1000);
+                },
+                error: function (err) {
+                    console.log(err);
+                    timerID_update = setTimeout(updateView, 10000);
+                }
+            });
+        };
+
+        updateView();
+
+
+        function reload_view() {
+            clearTimeout(timerID_reload);
+            var url = "/total-line-status";
+            $(location).attr('href', url);
+        }
+        //timerID = setInterval(updateView, 5000);
+    });
+
+    /*
+    $(window).on("beforeunload", function(){
+        clearInterval(timerID);
+    });
+    */
+
+</script>
+{{/section}}

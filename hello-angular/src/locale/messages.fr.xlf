@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="i18nTime" datatype="html">
+        <source>i18n (en)</source>
+        <target>Bonjour i18n !!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/test/i18n/i18n.component.ts</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <note priority="1" from="description">an i18n time for testing</note>
+        <note priority="1" from="meaning">i18n time</note>
+      </trans-unit>
+      <!-- <trans-unit id="6850f21e2c136bb8bbf8c968db64c3d5aeebdc33" datatype="html">
+        <source>Updated <x id="ICU" equiv-text="{count, plural, =0 {...} =1 {...} other {...}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/test/i18n/i18n.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit> -->
+      <!-- <trans-unit id="b7ad869ff9fe1b2f9165a011ff85b6c8cde05afd" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {just now} =1 {one minute ago} other {<x id="INTERPOLATION" equiv-text="{{count}}"/> minutes ago} }</source>
+        <target>{VAR_PLURAL, plural, =0 {à l'instant} =1 {il y a une minute} other {il y a <x id="INTERPOLATION" equiv-text="{{count}}"/> minutes} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/test/i18n/i18n.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit> -->
+      <!-- <trans-unit id="f99f34ac9bd4606345071bd813858dec29f3b7d1" datatype="html">
+        <source>The author is <x id="ICU" equiv-text="{gender, select, male {...} female {...} other {...}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/test/i18n/i18n.component.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit> -->
+      <!-- <trans-unit id="eff74b75ab7364b6fa888f1cbfae901aaaf02295" datatype="html">
+        <source>{VAR_SELECT, select, male {male} female {female} other {other} }</source>
+        <target>{VAR_SELECT, select, male {male} female {female} other {other} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/test/i18n/i18n.component.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit> -->
+    </body>
+  </file>
+</xliff>

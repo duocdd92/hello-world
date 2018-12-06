@@ -1,0 +1,129 @@
+{{#section 'head'}} 
+<style>
+    .process{
+        width:400px;
+        margin-top:10px;
+        margin-left: 20px;
+        padding-bottom: 25px;
+    }
+    
+    .send_button{
+        width : 130px;
+        height: 50px;
+        margin-top:10px;
+        margin-left: 20px;  
+    }
+    
+    .radio_button{
+        margin-top:15px;
+    }
+</style>
+{{/section}}
+      
+        
+        
+<fieldset class="process">
+    <legend >AM4</legend>
+    <input id="r1" class="radio_button" type="radio" name="robot_line" value="1000"><label for="r1">AM4-E/F : Robot Line 00</label><br>
+    <input id="r2" class="radio_button" type="radio" name="robot_line" value="1001"><label for="r2">AM4-A/B : Robot Line 01</label><br>
+</fieldset>
+<fieldset class="process">
+    <legend >AO4</legend>
+    <input id="r3" class="radio_button" type="radio" name="robot_line" value="1002"><label for="r3">AO4-S/T : Robot Line 02</label><br>
+    <input id="r4" class="radio_button" type="radio" name="robot_line" value="1003"><label for="r4">AO4-Q/R : Robot Line 03</label><br>
+    <input id="r5" class="radio_button" type="radio" name="robot_line" value="1004"><label for="r5">AO4-O/P : Robot Line 04</label><br>
+    <input id="r6" class="radio_button" type="radio" name="robot_line" value="1005"><label for="r6">AO4-M/N : Robot Line 05</label><br>
+    <input id="r7" class="radio_button" type="radio" name="robot_line" value="1006"><label for="r7">AO4-I/J : Robot Line 06</label><br>
+    <input id="r8" class="radio_button" type="radio" name="robot_line" value="1007"><label for="r8">AO4-G/H : Robot Line 07</label><br>
+    <input id="r9" class="radio_button" type="radio" name="robot_line" value="1008"><label for="r9">AO4-E/F : Robot Line 08</label><br>
+    <input id="r10" class="radio_button" type="radio" name="robot_line" value="1009"><label for="r10">AO4-C/D : Robot Line 09</label><br>
+    <input id="r11" class="radio_button" type="radio" name="robot_line" value="1010"><label for="r11">AO4-A/B : Robot Line 10</label><br>
+</fieldset>
+<button id="send_button" class="send_button"> Select Line</button>
+
+<br><br><br>
+<fieldset class="process">
+    <legend >Download Software</legend>
+    <a href="/download/ChromeStandaloneSetup32 eng.exe">Chrome 32bit </a>
+    <br><br>
+    <a href="/download/ChromeStandaloneSetup64 eng.exe">Chrome 64bit </a>
+    <br><br>
+    <a href="/download/Opera_41.0.2353.46_Setup.exe">Opera Browser</a>
+    <br><br>
+    <a href="/download/clientSW/publish.htm">ALIGO Client S/W </a>
+    <br><br>
+    <a href="/download/dotNetFx40_Full_x86_x64.exe">.NET Framework 4.0 </a>
+</fieldset>   
+
+
+
+{{#section 'jquery'}} 
+<script>
+    $(document).ready(function(){
+        var init=function(){
+            $('#title').text('');            
+            $('.imgsamsung').remove();
+            $('#nav').empty();
+            $("footer").remove();
+            $('#logo').css('width','170');    
+        };
+        
+        init();
+     
+        //$("#title").text('Select Robot Line');
+              
+        var url = $(location).attr('href');
+        var strArray = url.split('/');
+       // console.log(strArray[3]);
+        
+        $.ajax({
+            url: '/ajax/ClientLineSetHist_get',
+            type: 'GET',
+            timeout: 3000,
+            success:function(data){
+                
+                if(strArray[3] === '')
+                {
+                    var url = "/vision";    
+                    $(location).attr('href',url);
+                }
+                else{
+                    console.log(data);
+                   var EqpNoRobot = data.EqpNoRobot;                   
+                   $('input:radio[name=robot_line]:input[value='+EqpNoRobot+']').attr("checked", true);
+                }
+            },
+            error:function(err){
+                if(err.responseText === ""){
+                    console.log(err);
+                }
+            }
+        });
+        
+        
+        $('#send_button').click(function(){
+            var radio_val = $(':radio[name="robot_line"]:checked').val();
+            $.ajax({
+                url: '/ajax/ClientLineSetHist_add',
+                type: 'POST',
+                timeout:3000,
+                data : { EqpNoRobot : radio_val},
+                success: function(data){
+                        if(data.EqpNoRobot === 0)
+                            alert('select robot line!!!');
+                        else{
+                            var url = "/vision";    
+                            $(location).attr('href',url);
+                        }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+            console.log(radio_val);
+            
+        });
+        
+    });
+</script> 
+{{/section}}

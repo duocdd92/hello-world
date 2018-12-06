@@ -1,0 +1,22 @@
+<div class="sec">
+    <div class="titile">Read json file</div>
+    <p>{{jsonConfigData | json}}</p>
+    <br/>
+    <hr>
+    <br/>
+    <p>{{textFile}}</p>
+</div>
+
+<div class="sec">
+    <div class="titile">Search</div>
+    <input (keyup)="search($event.target.value)" id="name" placeholder="search..." />
+    <br/>
+    <hr>
+    <br/>
+    <ul>
+        <li *ngFor="let package of packages$ | async">
+            <b>{{package.name}} v.{{package.version}}</b> -
+            <i>{{package.description}}</i>
+        </li>
+    </ul>
+</div>

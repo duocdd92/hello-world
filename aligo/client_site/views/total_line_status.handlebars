@@ -1,0 +1,70 @@
+{{#section 'head'}}
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/zone-light-color.css">
+    <link rel="stylesheet" type="text/css" href="../css/zone.css">
+{{/section}}
+
+<div class="zone-content">
+    <div class="zone-head">
+        <div class="zone-summary">
+            <div class="box">
+                <h3>Plan</h3>
+                <h2 id="plan_cnt">4000</h2>
+            </div>
+            <div class="box">
+                <h3>Target</h3>
+                <h2 id="target_cnt">345</h2>
+            </div>
+            <div class="box">
+                <h3>Prod</h3>
+                <h2 id="total_prod">358</h2>
+            </div>
+            <div class="box">
+                <h3>Achieve</h3>
+                <h2 id="achieved_rate">104%</h2>
+            </div>
+            <div class="box">
+                <h3>CNC Util</h3>
+                <h2 id="cnc_run_rate">82.5%</h2>
+            </div>
+            <div class="box">
+                <h3>Robot Util</h3>
+                <h2 id="robot_util">82.5%</h2>
+            </div>
+        </div>
+
+        <div class="cnc-sign">
+            <ul class="cnc-alarm">
+                <li><h4>CNC Status</h4></li>
+                <li><span class="process">Process</span></li>
+                <li><span class="standby">Standby</span></li>
+                <li><span class="warmup">Warmup</span></li>
+                <li><span class="tool-change">Tool change</span></li>
+                <li><span class="alarm">Alarm</span></li>
+                <li><span class="robot-alarm">Rotbot Alarm</span></li>
+                <li><span class="nosignal">No Signal</span></li>
+                <li><span class="jig-setup">Jig Setup</span></li>
+                <li><span class="warning">Warning</span></li>
+            </ul>
+
+            <ul class="cnc-event">
+                <li><span class="nocall">No Call</span></li>
+                <li><span class="last-machin">Last Machining</span></li>
+                <li><span class="probe-err">Probe Error</span></li>
+                <li><span class="robot-call">Robot Call</span></li>
+                <li><span class="pre-call">PreCall</span></li>
+                <li><span class="normal">Normal</span></li>
+                <li><h4>Event</h4></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="zone-main">
+        <ul id="lines-boxes"></ul>
+    </div>
+</div>
+
+{{#section 'jquery'}}
+    <script type="text/javascript" src="../js/static-data.js"></script>
+    <script type="text/javascript" src="../js/zone.js"></script>
+{{/section}}

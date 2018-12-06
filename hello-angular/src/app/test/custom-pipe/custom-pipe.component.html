@@ -1,0 +1,7 @@
+<div class="sec">
+    <div class="titile">Customize pipe</div>
+    <input (keyup.enter)="addHero($event)" />
+    <ul>
+        <li *ngFor="let hero of (heroes | appCustomPipe)" key="hero.id">{{hero.name}}</li>
+    </ul>
+</div>

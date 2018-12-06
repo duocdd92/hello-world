@@ -1,0 +1,210 @@
+{{#section 'head'}} 
+    <link rel="stylesheet" type="text/css" href="../css/kpi.css">
+ {{/section}}
+{{!-- <table class="t_summary">
+    <tr>
+        <td class="t_header">Plan</td>  <td id="plan_cnt"  class="t_data">21012</td>
+        <td class="t_header">Target</td><td id='target_cnt' class="t_data">156</td>
+        <td class="t_header">Prod</td><td id='prod_cnt' class="t_data">13</td>
+    </tr>
+</table>
+<div id="vizcontainer" class="d3_div"> 
+    <div>
+        <div id="h_vs_mamual" class="kpi_title">vs. Manual</div> 
+        <div id="h_achieve" class="kpi_title">Achievement</div>
+        <div id="h_cnc_run_rate" class="kpi_title">CNC Util.</div> 
+        <div id="h_robot_run_rate" class="kpi_title">Robot Util.</div>
+    </div>
+    
+    <div>
+        <div id="vs_manual" class="kpi_content">121</div> 
+        <div id="achieve" class="kpi_content">98</div>
+        <div id="cnc_run_rate" class="kpi_content">96</div> 
+        <div id="robot_run_rate" class="kpi_content">97</div>
+    </div>
+</div>
+ <table class="t_summary">
+    <tr>
+        <td class="t_header">Robot on green</td>    <td id='robot_on_green'   class="t_data">79/90 (87%)</td>         
+        <td class="t_header">CNC on green</td>      <td id='cnc_on_green'     class="t_data">1272/1274 (90%)</td>      
+        <td class="t_header">Maint CNC</td>      <td id='maint_cnc_count'     class="t_data"></td>   
+    </tr>
+</table> --}}
+ 
+<div class="kpi-content">
+    <div class="content-part">
+        <div class="item">
+            <div class="name center">Plan</div>
+            <div id="plan_cnt" class="value center">66.834</div>
+        </div>
+        <div class="item">
+            <div class="name center">Target</div>
+            <div id="target_cnt" class="value center">57.430</div>
+        </div>
+        <div class="item">
+            <div class="name center">Prod</div>
+            <div id="prod_cnt" class="value center">55.160</div>
+        </div>
+    </div>
+    <div class="content-part">
+        <div class="item pos-left">
+            <div class="name center pos-left">Vs.Manual</div>
+            <div id="vs_manual" class="value center">110</div>
+        </div>
+        <div class="item pos-center">
+            <div class="name center pos-center">Achievement</div>
+            <div id="achieve" class="value center">96</div>
+        </div>
+        <div class="item pos-center">
+            <div class="name center pos-center">CNC Util</div>
+            <div id="cnc_run_rate" class="value center">93</div>
+        </div>
+        <div class="item pos-right">
+            <div class="name center pos-right">Robot Util</div>
+            <div id="robot_run_rate" class="value center">96</div>
+        </div>
+    </div>
+    <div class="content-part">
+        <div class="item">
+            <div class="name center">Robot on green</div>
+            <div id="robot_on_green" class="value center">87/87 (100%)</div>
+        </div>
+        <div class="item">
+            <div class="name center">CNC on green</div>
+            <div id="cnc_on_green" class="value center">1202/1214 (99%)</div>
+        </div>
+        <div class="item">
+            <div class="name center">Main CNC</div>
+            <div id="maint_cnc_count" class="value center">12</div>
+        </div>
+    </div>
+</div>
+
+{{#section 'jquery'}} 
+<script type="text/javascript" src="../js/kpi.js"></script>
+{{!-- <script>
+    var timerID_update, timerID_reload;
+     
+    $(document).ready(function(){
+        $("a#menu7").addClass("current");
+        $('#title').text('2016-11-27 / Day : CNC Robot Line KPI');
+        $("div.line_button_div").remove();
+        
+        timerID_reload = setTimeout(reload_view, 1*60*60*1000); // 1시간에 한번씩 화면 Reload
+        
+        updateView();
+        
+        function updateView(){
+            clearTimeout(timerID_update);
+            var ng_def = 95;
+            var achieve_def = 100;
+            var vs_manual_def = 115;
+            
+            function view_update(data){ 
+                var title = data[0][0].title;
+                var cur_datetime = data[0][0].cur_datetime;
+                var cnc_run_rate = data[0][0].cnc_run_rate;
+                var robot_run_rate = data[0][0].robot_run_rate;
+                var plan_cnt = data[0][0].plan_cnt;
+                var target_cnt = data[0][0].target_cnt;
+                var prod_cnt = data[0][0].prod_cnt;
+                var vs_manual = (data[0][0].prod_cnt/data[0][0].manual_cnt*100).toFixed(0);
+                var achieve = (prod_cnt/target_cnt*100).toFixed(0);
+                var robot_on_green = data[0][0].run_robot+'/'+data[0][0].total_robot+' ('+ (data[0][0].run_robot/data[0][0].total_robot*100).toFixed(0)+'%)';
+                var cnc_on_green = data[0][0].run_cnc+'/'+data[0][0].total_cnc+' ('+ (data[0][0].run_cnc/data[0][0].total_cnc*100).toFixed(0)+'%)';
+                var maint_cnc_count = data[0][0].maint_cnc_count;
+                
+                $('#title').text(title);
+                $('#cur_datetime').text(cur_datetime);
+                $('#plan_cnt').text(plan_cnt);
+                $('#target_cnt').text(target_cnt);
+                $('#prod_cnt').text(prod_cnt);
+                $('#vs_manual').text(vs_manual);
+                $('#achieve').text(achieve);
+                $('#cnc_run_rate').text(cnc_run_rate);
+                $('#robot_run_rate').text(robot_run_rate);
+                $('#robot_on_green').text(robot_on_green);
+                $('#cnc_on_green').text(cnc_on_green);
+                $('#maint_cnc_count').text(maint_cnc_count);
+                
+                if( vs_manual < vs_manual_def ){
+                    $('#vs_manual').css('border-color', 'orange');
+                    $('#vs_manual').css('color', 'red');
+                    $('#h_vs_mamual').css('border-color', 'orange');
+                    $('#h_vs_mamual').css('background-color', 'orange');
+                }
+                else{
+                    $('#vs_manual').css('border-color', 'green');
+                    $('#vs_manual').css('color', 'rgb(90, 90, 90)');
+                    $('#h_vs_mamual').css('border-color', 'green');
+                    $('#h_vs_mamual').css('background-color', 'green');
+                }
+                
+                if( achieve < achieve_def ){
+                    $('#achieve').css('border-color', 'orange');
+                    $('#achieve').css('color', 'red');
+                    $('#h_achieve').css('border-color', 'orange');
+                    $('#h_achieve').css('background-color', 'orange');
+                }
+                else{
+                    $('#achieve').css('border-color', 'green');
+                    $('#achieve').css('color', 'rgb(90, 90, 90)');
+                    $('#h_achieve').css('border-color', 'green');
+                    $('#h_achieve').css('background-color', 'green');
+                }
+                
+                if( cnc_run_rate < ng_def ){
+                    $('#cnc_run_rate').css('border-color', 'orange');
+                    $('#cnc_run_rate').css('color', 'red');
+                    $('#h_cnc_run_rate').css('border-color', 'orange');
+                    $('#h_cnc_run_rate').css('background-color', 'orange');
+                }
+                else{
+                    $('#cnc_run_rate').css('border-color', 'green');
+                    $('#cnc_run_rate').css('color', 'rgb(90, 90, 90)');
+                    $('#h_cnc_run_rate').css('border-color', 'green');
+                    $('#h_cnc_run_rate').css('background-color', 'green');
+                }
+                
+                if( robot_run_rate < ng_def ){
+                    $('#robot_run_rate').css('border-color', 'orange');
+                    $('#robot_run_rate').css('color', 'red');
+                    $('#h_robot_run_rate').css('border-color', 'orange');
+                    $('#h_robot_run_rate').css('background-color', 'orange');
+                }
+                else{
+                    $('#robot_run_rate').css('border-color', 'green');
+                    $('#robot_run_rate').css('color', 'rgb(90, 90, 90)');
+                    $('#h_robot_run_rate').css('border-color', 'green');
+                    $('#h_robot_run_rate').css('background-color', 'green');
+                }
+                
+                
+            }
+            
+            $.ajax({
+                   url: '/ajax/kpi',
+                   type: 'GET',
+                   timeout:60000,
+                   success: function(data){
+                      view_update(data);
+                      timerID_update = setTimeout(updateView, 20000);
+                   },
+                   error:function(err){
+                       console.log(err);
+                       timerID_update = setTimeout(updateView, 20000);
+                   }
+               });
+            
+        };
+        
+        function reload_view(){
+            clearTimeout(timerID_reload);
+            var url = "/kpi";    
+            $(location).attr('href',url);   
+        }
+    });
+</script>  --}}
+
+{{/section}}
+

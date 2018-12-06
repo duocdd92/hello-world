@@ -1,0 +1,304 @@
+{{#section 'head'}} 
+
+<style>
+    .cctv_box{
+        height: 457px;
+    }
+    .cctv{
+            float:left;
+            width: 18%;
+            margin-left: 0.8%;
+            margin-top: 20px;
+            height: 417px;
+            border: 10px solid green;  
+        }
+        
+    .motion_eye{
+        width: 99%; 
+        height: 99%;
+    }
+    
+    .motion_eye_title{
+        position: absolute;
+        width: 0px;
+        background-color: green;
+        height: 50px;
+        line-height: 50px;
+        font-size: 0px;
+        color:white;
+        z-index: 10;
+        text-align: center;
+        left: 1528px;
+        top: 621px;
+        
+    }
+</style>
+{{/section}}
+<div id="t1" class="cctv_box">
+    <!--<div id='t1001' class="cctv">
+        <div id="met1001" class="motion_eye_title">Robot Status : RUN</div>
+         <iframe  class="motion_eye" src="http://107.117.195.249:8765/" > </iframe>  
+    </div>
+    <div id='t1002' class="cctv">
+       <div id="met1002" class="motion_eye_title">Robot Status : RUN</div>
+          <iframe   class="motion_eye" src="http://107.117.197.240:8765/" > </iframe>
+    </div>
+    <div id='t1003' class="cctv">
+        <div id="met1003" class="motion_eye_title">Robot Status : RUN</div>
+          <iframe   class="motion_eye" src="http://107.117.195.251:8765/" > </iframe>
+    </div>
+    <div id='t1004' class="cctv">
+        <div id="met1004" class="motion_eye_title">Robot Status : RUN</div>
+          <iframe   class="motion_eye" src="http://107.117.196.246:8765/" > </iframe> 
+    </div>
+    <div id='t1005' class="cctv">
+        <div id="met1005" class="motion_eye_title">Robot Status : RUN</div>
+          <iframe   class="motion_eye" src="http://107.117.197.239:8765/" > </iframe> 
+    </div> -->
+</div>
+<div id="t2" class="cctv_box">
+    <!-- <div id='t1006' class="cctv">
+        <div id="met1006" class="motion_eye_title">Robot Status : RUN</div>
+         <iframe   class="motion_eye" src="http://107.117.200.214:8765/" > </iframe>
+    </div>
+     <div id='t1007' class="cctv">
+        <div id="met1007" class="motion_eye_title">Robot Status : RUN</div>
+         <iframe   class="motion_eye" src="" > </iframe>
+    </div>
+     <div id='t1008' class="cctv">
+        <div id="met1008" class="motion_eye_title">Robot Status : RUN</div>
+         <iframe   class="motion_eye" src="" > </iframe>
+    </div>
+     <div id='t1009' class="cctv">
+        <div id="met1009" class="motion_eye_title">Robot Status : RUN</div>
+         <iframe class="motion_eye" src="" > </iframe>
+    </div>
+     <div id='t1010' class="cctv">
+        <div id="met1010" class="motion_eye_title">Robot Status : RUN</div>
+         <iframe class="motion_eye" src="" > </iframe>
+    </div>-->
+</div>
+
+
+{{#section 'jquery'}} 
+<script>
+
+    menu.setActive(5);
+    var timerID_reload;
+    var timerID_update;
+    var groupId;
+
+    $(document).ready(function(){
+        var url = document.URL;
+        var urlSplit = url.split('/');
+        groupId = urlSplit[urlSplit.length - 1];
+
+        $("a#menu4").addClass("current");
+        //$('#title').text('CNC Robot Line CCTV') ;
+        header.setTitle('CNC Robot Line CCTV') ;
+       // $('#nav').empty();
+        $("footer").remove();
+        
+         $.ajax({
+                   url: '/ajax/btn-line-group/1',
+                   type: 'GET',
+                   timeout:60000,
+                   success: function(data){
+                       //console.log(data);
+                       /*var line_code;
+                       var id;
+                       for(var i = 0; i< data.length ; i++){
+                           if(i===0){
+                               line_code = '#'+data[i].line_group_code;
+                               //$('#title').text(data[i].name + ' Zone Robot Line CCTV');
+                               //header.setTitle(data[i].name + ' Zone Robot Line CCTV');
+                           }
+                           
+                           $('#btn_div').append($('<input/>',{
+                                        id: data[i].id ,
+                                        class : "line_button",
+                                        type : "button",
+                                        name : "line2",
+                                        value : data[i].name
+                                    }) );
+                           id='#t' +data[i].id;        
+                           
+                       }
+                       
+                       $(line_code).css('background-color','green'); 
+                       //console.log(line_code);
+                       */
+                   },
+                   error:function(err){
+                       console.log(err);
+                   }
+            });
+        
+        append_cctv();
+        function append_cctv (){
+
+            $.ajax({
+                    url: '/ajax/btn-line/1',
+                    type: 'GET',
+                    timeout:60000,
+                    success: function(data){
+                        //console.log(data);
+                       
+                       var pid;
+                       var id;
+                       // var line_code;
+                        for(var i = 0; i< data.length ; i++){
+                            if(i<5){
+                                pid = '#t1';
+                            }
+                            else{
+                                pid = '#t2';
+                            }
+                            
+                            id = 't'+data[i].gui_pos;
+                            $(pid).append($('<div/>',{
+                                        id : id,
+                                        class : "cctv"
+                                     }) );
+                                     
+                            $('#'+id).append($('<div/>',{
+                                        id : "met"+data[i].gui_pos,
+                                        class : "motion_eye_title"
+                                     }) );
+                            $('#'+id).append($('<iframe/>',{
+                                         class : "motion_eye",
+                                         src : 'http://'+data[i].ip+':8765/'
+                                     }) );
+                        }
+
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+             });
+        }
+        
+        $(document).on('click', 'input.line_button', function(){               
+                   //console.log($(this).attr('id'));
+                   var groupId = $(this).attr('id');
+                   
+                   $.ajax({
+                       url: '/ajax/select-group',
+                       type: 'POST',
+                       timeout:3000,
+                       data : { line_group_code : groupId},
+                       success: function(data){
+                            //console.log(data.line_code);
+                            var url = "cctv/" + groupId;    
+                            $(location).attr('href',url);
+                        },                                
+                        error:function(err){
+                            console.log(err);
+                        }
+                    });
+        });
+        
+        timerID_update = setTimeout(updateView, 500);
+        function updateView (){
+            var NG_def = 95;
+            
+            var robotLineStatus = function(data){
+                //console.log(data);
+                clearTimeout(timerID_update);
+                
+                var line_data = data[0];
+                var line_data_cnc = data[1];
+                var line_data_robot = data[2];
+                var main_title = data[4][0];
+
+                var id, total_prod=0 , total_run_time=0, total_calendar_time=0;
+                var line_achieve_rate=0;
+                for(var i=0; i<line_data.length; i++){
+                    total_prod += line_data[i].prod_cnt;
+                    total_run_time += line_data[i].RunTime;
+                    total_calendar_time += line_data[i].CalendarTime;
+
+                    line_achieve_rate = line_data[i].prod_cnt/main_title.line_target*100;
+                    id = '#t'+line_data[i].ID;
+                   
+                    
+                    $(id).css('border-width', '10px');
+                    //console.log(id + ' : '+line_achieve_rate);
+
+                    if( line_achieve_rate < NG_def ){
+                        $(id).css('border-color', 'orange');
+                    }
+                    else{
+                        $(id).css('border-color', 'green');
+                    }
+                };
+                
+                
+                for(var i=0; i<line_data_cnc.length; i++){
+                    id = '#t'+line_data_cnc[i].ID;
+                    
+
+                    if(line_data_cnc[i].cnc_run_rate < NG_def){
+                        $(id).css('border-color', 'orange');
+                    }
+                };
+                
+                
+                
+                var stateColor = ['green', 'lightgreen','orange','red','gray','gray'];
+                var stateName = ['RUN', 'READY','STOP','ALARM','DISCONNECT','DISCONNECT'];
+                for(var i=0; i<line_data_robot.length; i++){
+                    id = '#t'+line_data_robot[i].ID;
+                    
+                    var me_id = '#met'+line_data_robot[i].ID;
+                    //console.log(me_id);
+
+                    if(line_data_robot[i].robot_run_rate < NG_def){
+                        $(id).css('border-color', 'orange');
+                    }
+                    
+                    var cctv_pos =$(id).offset();
+                    var cctv_width = $(id).width();
+                    
+                    /*$(me_id).css("left", cctv_pos.left+12)
+                            .css("top",cctv_pos.top+12)
+                            .css("width", cctv_width-3)
+                            .css("font-size", 25);
+                    
+                     $(me_id).css('background-color', stateColor[line_data_robot[i].robot_status])
+                                .text(line_data_robot[i].line_name+' : '+stateName[line_data_robot[i].robot_status]);
+                     //console.log()
+                     */
+                };
+
+            } ;
+            
+            $.ajax({
+                   url: '/ajax/total-line-status-get',
+                   type: 'GET',
+                   timeout:60000,
+                   success: function(data){
+                      robotLineStatus(data);
+                      timerID_update = setTimeout(updateView, 5000);
+                   },
+                   error:function(err){
+                       console.log(err);
+                       timerID_update = setTimeout(updateView, 10000);
+                   }
+               });
+        };
+        
+        
+        timerID_reload = setTimeout(reload_view, 2*60*60*1000); // 2시간에 한번씩 화면 Reload
+        function reload_view(){
+            clearTimeout(timerID_reload);
+            var url = "/cctv";    
+            $(location).attr('href',url);
+            
+        }
+        
+        //setInterval(updateView, 5000);
+    });
+
+</script> 
+{{/section}}

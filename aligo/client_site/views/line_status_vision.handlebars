@@ -1,0 +1,672 @@
+{{#section 'head'}} 
+<style>
+    .transfer{
+        position: absolute;
+        background-image: url("../img/robot_top_view_vision.png");
+        top: 128px;    /*1번위치 128, 등간격 54*/
+        /*top: 182px;*/   
+
+        left: 86px;
+        
+        z-index: 10; 
+        width: 135px;
+        height: 112px;
+        /*시작: 140px, 간격 : 119px*/       
+       background-position: 0px 0px;
+       /*background-position: 0px -113px;*/
+        /*background-position: 0px -226px; */
+    }
+  
+     .transfer_state{
+        background-color: transparent;
+        background-image: none;
+        top: 133px;
+        z-index: 11;
+        height: 20px;
+        line-height: 20px;
+        width: auto;
+  
+        font-size: 11px;
+        text-align: center;
+        padding-left: 1px;
+        padding-right: 1px;
+        margin-left: 16px;
+        color:white
+    }
+    
+    .transfer_stay_time{
+        margin-left: 52px;
+    }
+    .add_transition {
+        -webkit-transition-duration: 7s;
+    }
+</style>
+
+<style>
+    .message{  
+        width: 470px;
+        height: 80px;
+        margin-top: 4px;
+        margin-left: 0px;
+        margin-right: 0px;
+        font-size : 13px;
+        background-color: lightgreen;
+        border : 4px;
+        border-style: solid;
+        border-color: green; 
+        overflow: auto;
+        color: navy;
+    }
+    ul#msg{
+        margin-top: 2px;
+        margin-left: -14px;
+        text-align: left;
+        line-height: 120%;
+    }
+    li.move_msg{
+        
+    }
+    li.alarm_msg{
+        color:red;
+    }
+    li.robot_alarm_msg{
+        color:hotpink;
+    }
+    li.tool_change_msg{
+        color:blue;
+    }
+    
+    .layout{
+        float:left;
+        background-image: url("../img/layout_vision.png");
+        background-repeat: no-repeat;
+        width:48%;
+        height: 802px;
+        background-color : green;
+    }  
+    
+    .t_cnc_status{
+        position: relative;
+        top: 5px;  
+        left : 3px;
+        border-spacing: 0px 0px;
+        height: auto;
+        table-layout:fixed;
+         
+    }
+    
+    .t_cnc_status_title{
+        font-size: 14px;
+        color : gray;
+        text-align: center;
+        background-color: transparent;
+    }
+      
+    .t_cnc_status_data{
+        font-size: 15px;  
+        width: 95px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+        color : white;
+        text-align: center;
+        background-color: green;
+    }
+    
+    .t_cnc_status_time{
+        font-size: 10px;  
+        width:54px;
+       
+        padding-right: 2px;
+        color : white;
+        text-align: right;
+        background-color: green;
+    }
+ 
+    .t_cnc_status_event{
+       
+        font-size: 13px;
+        font-weight: bold;
+        color : navy;
+        background-color: yellow;  
+        padding-left: 3px;
+    }
+    .space_h_cnc_status{
+        height: 3px;
+    }
+    
+    .space_v_cnc_status{
+        width :  108px;
+    }
+ </style>
+ 
+ <style>    
+    .info_box{
+       float:left;
+       
+    }
+    .worker_box{
+        background-image: -webkit-linear-gradient(#FFFFFF, lightgreen);
+        width: 308px;
+        height:auto;
+        border: 4px solid  green; 
+        margin-top: 9px;
+        margin-left: 6px;
+        margin-right: 0px;
+        padding-left: 3px;
+    }
+    .worker_img{
+        width: 95px;
+        height: 95px;
+        margin-left: 3px;
+        margin-top: 3px;
+        margin-right: 0;
+    }
+    
+</style>
+  
+<style>
+    .t_summary {
+        border: 2px solid #0088dd;
+        width : 320px;
+        height: auto;
+        margin-top: 9px;
+        margin-left: 6px;
+        margin-right: 0px;
+        empty-cells: show;
+        font-size: 22px;
+        font-weight: bold;
+    }
+    .t_header{
+        background-color: steelblue;
+        width: 140px;
+        text-align: left;
+        padding-left: 10px;
+        color:white;
+    }
+    .t_data{
+        background-color: rgba(204, 236, 255, 0.4);
+        text-align: right;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        padding-right: 8px; 
+       
+    }
+    
+     .t_cnc_summary {        
+        width : 320px;
+        height: auto;
+        empty-cells: show;
+        border: 2px solid rgb(100, 100, 100); 
+        font-size: 18px;
+        margin-top: 9px;
+        margin-left: 6px;
+        margin-right: 0px;
+    }
+    .t_cnc_summary_header{
+        width: 140px;
+        text-align: left;
+        padding-left: 10px;
+        color:white;
+        background-color: dimgray;
+    }
+    .t_cnc_summary_data{
+        background-color: rgba(204, 236, 255, 0.4);
+        text-align: right;
+        padding-top: 9px;
+        padding-bottom: 9px;
+        padding-right: 8px; 
+    }
+</style>
+
+<style>
+    .lengend_box{
+       border: 2px solid rgb(100, 100, 100);  
+       margin-top: 10px;
+       margin-left: 6px;
+       padding-bottom: 4px;
+    }
+    .t_cnc_legend{
+        border-spacing: 7px 0px;
+        margin-top: 10px;
+        margin-right: 0px;
+    }
+    
+    .legend_color{
+       height: 20px;  
+    }
+    
+    .legend_event_color{
+       height: 8px;  
+    }
+    
+    .legend_font{
+        font-size: 10px;
+        color : navy;
+        text-align: center;
+        width : 67px;
+    }
+    
+    .legend_event_font{
+        font-size: 10px;
+        color : navy;
+        text-align: center;
+        width : 52px;
+    }
+    
+    .footer_datetime {
+        clear:left;
+        text-align: right;
+        font-size: 15px;
+        padding-right: 2%;
+        background-color: steelblue;
+        border-top: solid 5px darkgrey;
+        width: 98%;
+        height: 20px;
+        padding-top:5px;
+    }
+</style>
+
+{{/section}}
+
+
+<div class="transfer"></div>
+<div id="tran_state" class="transfer transfer_state">OK</div>
+<!--<div id="tran_stay_time" class="transfer transfer_state transfer_stay_time">00:00:00</div>-->
+
+
+<div class="layout">
+     <table class="t_cnc_status" >
+        <tr ><td id='r_0_1' class="t_cnc_status_title" colspan='2'>AM4-B</td>                                       <td class="space_v_cnc_status"></td>    <td id='l_0_1' class='t_cnc_status_title' colspan='2'>AM4-A</td></tr>
+        
+        <tr ><td id='r_1' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_1' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_1_1' class="t_cnc_status_event">#12</td><td id='r_1_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_1_1' class='t_cnc_status_event'>#12</td><td id='l_1_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_2' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_2' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_2_1' class="t_cnc_status_event">#12</td><td id='r_2_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_2_1' class='t_cnc_status_event'>#12</td><td id='l_2_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_3' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_3' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_3_1' class="t_cnc_status_event">#12</td><td id='r_3_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_3_1' class='t_cnc_status_event'>#12</td><td id='l_3_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_4' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_4' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_4_1' class="t_cnc_status_event">#12</td><td id='r_4_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_4_1' class='t_cnc_status_event'>#12</td><td id='l_4_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_5' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_5' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_5_1' class="t_cnc_status_event">#12</td><td id='r_5_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_5_1' class='t_cnc_status_event'>#12</td><td id='l_5_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_6' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_6' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_6_1' class="t_cnc_status_event">#12</td><td id='r_6_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_6_1' class='t_cnc_status_event'>#12</td><td id='l_6_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_7' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_7' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_7_1' class="t_cnc_status_event">#12</td><td id='r_7_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_7_1' class='t_cnc_status_event'>#12</td><td id='l_7_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_8' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_8' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_8_1' class="t_cnc_status_event">#12</td><td id='r_8_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_8_1' class='t_cnc_status_event'>#12</td><td id='l_8_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_9' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_9' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_9_1' class="t_cnc_status_event">#12</td><td id='r_9_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_9_1' class='t_cnc_status_event'>#12</td><td id='l_9_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_10' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_10' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_10_1' class="t_cnc_status_event">#12</td><td id='r_10_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_10_1' class='t_cnc_status_event'>#12</td><td id='l_10_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_11' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_11' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_11_1' class="t_cnc_status_event">#12</td><td id='r_11_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_11_1' class='t_cnc_status_event'>#12</td><td id='l_11_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_12' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_12' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_12_1' class="t_cnc_status_event">#12</td><td id='r_12_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_12_1' class='t_cnc_status_event'>#12</td><td id='l_12_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_13' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_13' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_13_1' class="t_cnc_status_event">#12</td><td id='r_13_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_13_1' class='t_cnc_status_event'>#12</td><td id='l_13_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+        
+        <tr ><td id='r_14' class="t_cnc_status_data" colspan='2'>13</td>                                             <td class="space_v_cnc_status"></td>    <td id='l_14' class='t_cnc_status_data' colspan='2'>13</td></tr>
+        <tr ><td id='r_14_1' class="t_cnc_status_event">#12</td><td id='r_14_2' class="t_cnc_status_time">100000</td> <td class="space_v_cnc_status"></td>    <td id='l_14_1' class='t_cnc_status_event'>#12</td><td id='l_14_2' class="t_cnc_status_time">100000</td></tr>
+        <tr ><td class="space_h_cnc_status" colspan='2'></td>                                                       <td class="space_v_cnc_status"></td>    <td class="space_h_cnc_status" colspan='2'></td></tr>       
+     </table>
+</div>
+
+<div class='info_box'>
+    
+    <div class="worker_box">
+            <img id="mk0" class="worker_img"  src=""/>
+            <img id="mk1" class="worker_img"  src=""/>
+            <img id="mk2" class="worker_img"  src=""/>
+    </div>
+    
+    <!-- 생산 종합현황 -->
+    <table class="t_summary">
+        <tr><td class="t_header">Plan</td>      <td id="plan_cnt" class="t_data">4000</td></tr>
+        <tr><td class="t_header">Target</td>    <td id='target_cnt' class="t_data">345</td></tr>
+        <tr><td class="t_header">Prod</td>      <td id='total_prod' class="t_data">358</td></tr>            
+        <tr><td class="t_header">Achieve</td>   <td id='achieved_rate' class="t_data">104%</td></tr>            
+        <tr><td class="t_header">CNC Util</td>  <td id='cnc_run_rate' class="t_data">82.5%</td></tr>
+        
+    </table>
+    
+    <!-- 로봇 현황 -->
+    <table class="t_cnc_summary">
+        <tr><td class="t_cnc_summary_header">Process</td>             <td id="process" class="t_cnc_summary_data">27/28</td></tr>
+        <tr><td class="t_cnc_summary_header">Cycle Time</td>        <td id="cycle_time" class="t_cnc_summary_data">1216</td></tr>
+        <tr><td class="t_cnc_summary_header">Run CNC</td>           <td id="cnc_run" class="t_cnc_summary_data">13</td></tr>
+        <tr><td class="t_cnc_summary_header">Prod/CNC (Avg)</td>    <td id="cnc_prod" class="t_cnc_summary_data">GRACE</td></tr>
+        <tr><td class="t_cnc_summary_header">Robot Util</td>        <td id='eqp_run_rate' class="t_cnc_summary_data">82.5%</td></tr>
+        <tr><td class="t_cnc_summary_header">Robot Alarm</td>       <td id="d3title" class="t_cnc_summary_data">6</td></tr>
+    </table> 
+    
+    <div class="lengend_box">
+        <table class="t_cnc_legend">
+            <tr ><td class='legend_font' colspan='4' >CNC Status</td></tr>  
+            <tr>
+                <td class="legend_color" bgcolor = "green"></td>
+                <td class="legend_color" bgcolor = "lightgreen"></td>
+                <td class="legend_color" bgcolor = "orange"></td>
+                <td class="legend_color" bgcolor = "blue"></td>
+            </tr>
+            <tr>
+                <td class="legend_font">PROCESS</td>
+                <td class="legend_font">STANDBY</td>
+                <td class="legend_font">WARMUP</td>
+                <td class="legend_font">TOOL CHANGE</td>
+            </tr>
+            <tr>
+                <td class="legend_color" bgcolor = "red"></td>
+                <td class="legend_color" bgcolor = "hotpink"></td>
+                <td class="legend_color" bgcolor = "gray"></td>
+                <td class="legend_color" bgcolor = "cyan"></td>
+            </tr>
+            <tr>
+                <td class="legend_font">ALARM</td>
+                <td class="legend_font">ROBOT ALARM</td>
+                <td class="legend_font">NOSIGNAL</td>
+                <td class="legend_font">JIG SETUP</td>
+            </tr>
+        </table>
+    
+    
+        <table class="t_cnc_legend">
+            <tr ><td class='legend_font' colspan='5' >Event</td></tr>  
+            <tr>
+                <td class="legend_event_color" bgcolor = "aqua"></td>
+                <td class="legend_event_color" bgcolor = "yellow"></td>
+                <td class="legend_event_color" bgcolor = "mediumblue"></td>
+                <td class="legend_event_color" bgcolor = "brown"></td>
+                <td class="legend_event_color" bgcolor = "fuchsia"></td>
+            </tr>
+            <tr>
+                <td class="legend_event_font">PreCall</td>
+                <td class="legend_event_font">RobotCall</td>
+                <td class="legend_event_font">Probe Error</td>
+                <td class="legend_event_font">Last Machining</td>
+                <td class="legend_event_font">NoCall</td>
+            </tr>
+        </table>
+    </div>
+    
+    
+ </div>
+<div id="cur_datetime" class="footer_datetime">2016-07-13 18:21:32</div>
+
+
+
+{{#section 'jquery'}} 
+<!-- ajax begin-->
+<script>
+     var timerID_update, timerID_reload;
+    
+    $(document).ready(function(){
+        
+        timerID_reload = setTimeout(reload_view, 2*60*60*1000); // 2시간에 한번씩 화면 Reload
+      
+        var init=function(){
+            $('#title').text('')
+                    .css('width','auto')
+                    .append("<div class='message'><ul id='msg'><li id='mk_name'></li></ul></div>");
+            
+            $('.imgsamsung').remove();
+            $('#nav').empty().css({ 'color' : 'white' ,
+                                    'line-height': '25px',
+                                    'text-align' : 'center'
+                                })
+                              .text('Select line. Click ALIGO logo please.');
+            $("footer").remove();
+            $('#logo').css('width','156');
+        };
+        
+        var mk_photo_get = function(){
+            $.ajax({
+                    url: '/ajax/mk-photo-get-vision',
+                    type: 'GET',
+                    timeout:5000,
+                    success: function(data){
+                        
+                        //console.log(data);
+                        var mkID = '#mk';
+                        var mkName ='Machine Keeper : ';
+                        for(var i in data){
+                            //console.log(i);
+                            $(mkID+i).attr('src', 'data:image;base64,'+data[i].photo);
+                            if(i < 2) mkName += data[i].name  + ' / ';
+                            else if (i>2) break;
+                            else mkName += data[i].name;
+                        }
+                        $('#mk_name').text(mkName);
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                });
+        };
+        
+        var updateView = function(){
+            clearTimeout(timerID_update);
+            var NG_def = 95;
+            
+            var lineStatus = function(data){
+                $('#nav').text(data[0].title);
+                $('#cur_datetime').text(data[0].cur_datetime);
+                $('#plan_cnt').text(data[0].plan_cnt);
+                $('#target_cnt').text(data[0].target_cnt);
+                //$('#achieved_rate').text(data[0].achieved_rate);
+                $('#cnc_run_rate').text(data[0].cnc_run_rate+'% ('+data[0].cnc_run_rate_process+')');
+                $('#eqp_run_rate').text(data[0].eqp_run_rate+'%');
+                //$('#tray_cnt').text(data[0].tray_cnt);
+                $('#cycle_time').text(data[0].cycle_time);
+                $('#process').text(data[0].process);
+                
+                if(data[0].cnc_run_rate < NG_def){
+                    $('#cnc_run_rate').css('color', 'red');
+                }else{
+                    $('#cnc_run_rate').css('color', 'black');
+                }                
+            };
+            var transferStatus = function(data){
+                var Transfer = data[1][0];
+                
+                 var transfer_img_y = 0 -(113* Number(Transfer.robot_top_view));
+                     $('.transfer').css( 'background-position-y', transfer_img_y+'px');
+                
+                var getPos = function(index){
+                    return 128 + (index-1)*54; // 136 : 1번 위치, 119 : 등간격, db 내 index는 1번부터 시작
+                };
+                
+                var pos = getPos(Number(Transfer['Arrival']));
+                
+        
+                if(Transfer.IsMoving === 'N'){
+                    $('.transfer').removeClass('add_transition');
+                    
+                    //var robotData = data[2][0];
+                    $('.transfer').css('top', pos+'px');
+                }
+                else{      
+                   if($('.transfer').css( 'background-position-x') === '0px'){
+                        $('.transfer').addClass('add_transition')
+                            .css('top', pos+'px');
+                    }
+                    /*            
+                    $('.transfer').on('webkitTransitionEnd', function(){
+                         $('.transfer').removeClass('add_transition');
+                        /*pos = getPos(Number(Transfer['Departure']));
+                        $('.transfer').removeClass('add_transition')
+                                    .css("left", pos+"px");           */
+                   // });
+                    
+                }
+               
+                
+                var stateColor = ['green', 'lightgreen','orange','red','gray','gray'];
+                
+                var setTimeStr = function(number){
+                    var strNum;
+                    var hh, mm, ss;
+                    
+                    hh=parseInt(Transfer.tran_stay_time/3600);
+                    if(hh<10) hh = '0'+hh;
+                    mm=parseInt((Transfer.tran_stay_time%3600)/60);
+                    if(mm<10) mm = '0'+mm;
+                    ss=parseInt(Transfer.tran_stay_time%60);
+                    if(ss<10) ss = '0'+ss;
+
+                    strNum = Transfer.WorkingPos +' '+hh+':'+mm+':'+ss;
+                    
+                    return strNum;
+                };
+                
+                var stayTime = setTimeStr(Transfer.tran_stay_time);
+                
+                var state = Transfer.CurState;
+                
+                if (state === 'OK') state = 'Run';
+                 
+                $('#tran_state').css('background-color', stateColor[Transfer.CurStateCode])
+                            .text(state+' - '+stayTime);
+                //$('#tran_stay_time').text(stayTime);
+                
+                $('li.move_msg' ).remove();
+                $('li.alarm_msg' ).remove();
+                $('li.robot_alarm_msg' ).remove();
+                $('li.tool_change_msg' ).remove();
+                //$('ul[id = "msg"]').append('<li class="move_msg">'+Transfer.moving_desc+'</li>');   
+            };
+            
+            var cncStatus=function(data, target_cnt){
+                var cnc;
+                var status_main=['green', 'orange', 'lightgreen', 'red', 'gray', 'hotpink', 'blue', 'cyan'];
+                var status_sub=['brown', 'mediumblue', 'fuchsia', 'yellow', 'aqua', 'gray'];
+                var total_prod=0, cnc_total=0, cnc_run=0;
+                
+                 $('.message').css({
+                         'background-color' : 'lightgreen'
+                         });
+                
+                for( var i= 0; i<data.length; i++)
+                {
+                    cnc = data[i];
+                    
+                    $(cnc.cnc_id).text(cnc.Prod)
+                            .css('background-color', status_main[Number(cnc.status_main)]);
+                    $(cnc.cnc_id+'_2').text(cnc.OnTime)
+                            .css('background-color', status_main[Number(cnc.status_main)]);
+                    $(cnc.cnc_id+'_1').text(cnc.CNCNo)
+                            .css('background-color', status_sub[Number(cnc.status_sub)]);
+                    
+                    total_prod += Number(cnc.Prod); 
+                    cnc_total++;
+                    if(Number(cnc.status_main) === 0 || Number(cnc.status_main) === 2)cnc_run++;
+                    
+                    if(cnc.LineDir === 'r') $('#r_0_1').text(cnc.LineName);
+                    else if(cnc.LineDir === 'l') $('#l_0_1').text(cnc.LineName);
+                    
+                    /*
+                    if(cnc.model !== null){
+                        $('#model').text(cnc.model+'-03');
+                    };
+                    */
+                    if(cnc.status_main === 3 || cnc.status_main === 5 || cnc.status_main === 6 ){
+                        switch(cnc.status_main){
+                            case 3: $('ul[id="msg"]').append('<li class="alarm_msg">'+cnc.LineName+cnc.CNCNo.substring(1,3)+' : '+ cnc.alarm_msg+'</li>');
+                                    break;
+                            case 5: $('ul[id="msg"]').append('<li class="robot_alarm_msg">'+cnc.LineName+cnc.CNCNo.substring(1,3)+' : '+ cnc.alarm_msg+'</li>');
+                                    break;
+                            case 6: $('ul[id="msg"]').append('<li class="tool_change_msg">'+cnc.LineName+cnc.CNCNo.substring(1,3)+' : '+ cnc.alarm_msg+'</li>');
+                                    break;
+                        }
+                       
+                        $('.message').css({
+                                        'background-color' : 'orange'
+                                    });
+                    }
+                    
+                }
+                //$('.message').html(html_alarm_mag);
+                
+                $('#total_prod').text(total_prod);
+                
+                var achieve = total_prod/target_cnt*100;
+                $('#achieved_rate').text( achieve.toFixed(1) + '%');
+                $('#cnc_prod').text((total_prod/cnc_total).toFixed(1));
+                $('#cnc_run').text(cnc_run+'/'+cnc_total);
+                
+                if(achieve < NG_def){
+                    $('#achieved_rate').css('color', 'red');
+                }
+                else{
+                    $('#achieved_rate').css('color', 'black');
+                }
+            };    
+            
+            $.ajax({
+                url: '/ajax/line-status-get-vision',
+                type: 'GET',
+                timeout:60000,
+                success: function(data){
+                    lineStatus(data[0]);
+                    transferStatus(data);
+                    cncStatus(data[3], data[0][0].target_cnt);
+                    timerID_update = setTimeout(updateView, 3000); 
+                },
+                error:function(err){
+                    console.log(err);
+                    timerID_update = setTimeout(updateView, 10000);   
+                }
+            });
+        };
+        
+        init();
+        updateView();
+        mk_photo_get();
+
+        //timerID = setInterval(updateView, 2000);
+        //console.log(timerID);
+        
+        function reload_view(){
+            clearTimeout(timerID_reload);
+            var url = "/line-status";    
+            $(location).attr('href',url);
+            
+        }
+        
+        $('#logo').click(function(){
+            var url = "/select-line";    
+            $(location).attr('href',url);
+        });
+    });
+    /*
+    $(window).on("beforeunload", function(){
+        clearInterval(timerID);
+    });
+    */
+</script>
+
+{{/section}}

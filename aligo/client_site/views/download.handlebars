@@ -1,0 +1,55 @@
+{{#section 'head'}} 
+<style>
+    .process{
+        width:400px;
+        margin-top:10px;
+        margin-left: 20px;
+        padding-bottom: 25px;
+    }
+    
+    .send_button{
+        width : 130px;
+        height: 50px;
+        margin-top:10px;
+        margin-left: 20px;  
+    }
+    
+    .radio_button{
+        margin-top:15px;
+    }
+</style>
+{{/section}}  
+<fieldset class="process">
+    <legend >Download Software</legend>
+<!--    <a href="/download/Opera_41.0.2353.46_Setup.exe">Opera Browser ( recommand )</a>
+    <br><br>
+    <a href="/download/ChromeStandaloneSetup32 eng.exe">Chrome Browser (32bit) </a>
+    <br><br>
+    <a href="/download/ChromeStandaloneSetup64 eng.exe">Chrome Browser (64bit) </a>-->
+    <br><br>
+    <a href="/download/clientSW/publish.htm">ALIGO Client S/W </a>
+    <br><br>
+    <a href="/download/dotNetFx40_Full_x86_x64.exe">.NET Framework 4.0 </a>
+</fieldset>   
+
+<fieldset class="process">
+    <legend >Download Mobile Software</legend>
+    <a href="/download/mobile/ALIGO_mobile.apk">ALIGO MFM</a>
+    <br><br>
+</fieldset>   
+
+
+
+{{#section 'jquery'}} 
+<script>
+    menu.setActive(7);
+    $(document).ready(function(){
+        $("a#menu6").addClass("current");
+        header.setTitle('');
+        //$('#title').text('');            
+        //$('.imgsamsung').remove();
+        $("footer").remove();
+        $('#logo').css('width','170');    
+    });
+</script> 
+{{/section}}

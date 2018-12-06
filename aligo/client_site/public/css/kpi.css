@@ -1,0 +1,109 @@
+.kpi-content {
+    width: 100%;
+    padding-top: 15px;
+    height: calc(100% - 128px);
+    overflow-y: auto;
+}
+
+.kpi-content .content-part {
+    width: 100%;
+    min-width: 700px;
+}
+
+.content-part:nth-child(1) {
+    height: 45px;
+}
+
+.content-part:nth-child(2) {
+    height: auto;
+    /* background: #00BCD4; */
+    margin-top: 60px;
+    overflow-y: hidden;
+    min-width: 1350px;
+}
+
+.content-part:nth-child(3) {
+    height: 45px;
+    /* background: #CDDC39; */
+    margin-top: 78px;
+    min-width: 1200px;
+}
+
+.content-part .item {
+    width: calc(33.33% - 20px);
+    height: 100%;
+    float: left;
+    background-color: white;
+    font-family: inherit;
+    margin-left: 15px;
+    position: relative;
+}
+
+.content-part:nth-child(2) .item {
+    width: calc(25% - 37.5px);
+    margin-left: 30px;
+}
+
+.content-part .item div {
+    height: 100%;
+}
+
+.content-part .name {
+    float: left;
+    margin-left: 15px;
+    font-size: 18px;
+    color: black;
+}
+
+.content-part .value {
+    float: right;
+    margin-right: 15px;
+    font-size: 30px;
+    color: #194e7a;
+}
+
+.content-part:nth-child(2) .name {
+    float: left;
+    width: 100%;
+    font-size: 48px;
+    margin-left: 0;
+    height: 86px;
+    background-color: #ffae00;
+}
+
+.content-part:nth-child(2) .item:nth-child(4) .name {
+    background-color: #529d1e;
+}
+
+.content-part:nth-child(2) .item:nth-child(4) .value {
+    box-shadow: 10px 0 0 #529d1e inset, -10px 0 0 #529d1e inset, 0 10px 0 #529d1e inset, 0 -10px 0 #529d1e inset;
+}
+
+.content-part:nth-child(2) .value {
+    float: left;
+    margin-right: 0;
+    font-size: 200px;
+    color: #d50000;
+    height: 600px;
+    width: 100%;
+    margin: 15px 0 0 0;
+    box-shadow: 10px 0 0 #ffae00 inset, -10px 0 0 #ffae00 inset, 0 10px 0 #ffae00 inset, 0 -10px 0 #ffae00 inset;
+}
+
+.content-part:nth-child(2) .orange .name {
+    background-color: #ffae00;
+}
+
+.content-part:nth-child(2) .green .name {
+    background-color: #529d1e;
+}
+
+.content-part:nth-child(2) .orange .value {
+    color: red;
+    box-shadow: 10px 0 0 #ffae00 inset, -10px 0 0 #ffae00 inset, 0 10px 0 #ffae00 inset, 0 -10px 0 #ffae00 inset;
+}
+
+.content-part:nth-child(2) .green .value {
+    color: rgb(90, 90, 90);
+    box-shadow: 10px 0 0 #529d1e inset, -10px 0 0 #529d1e inset, 0 10px 0 #529d1e inset, 0 -10px 0 #529d1e inset;
+}

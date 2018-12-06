@@ -1,0 +1,1008 @@
+FORMAT: 1A
+
+# Group Home
+
+## Changes
+Document is updated with the following changes:
+* 2018-05-30 : [Pat] New Token logic
+
+## Base url
+The secure base URL for the API is: https://api.crewlounge.center/v1/...
+
+## Authentication
+All requests except the ones starting with **/public** must be done by sending the Access Token along in the request. This can be done with THREE methods:
+1. **VIA QUERY** by setting a query parameter in the url 'token={Access Token}'
+2. **VIA HEADER** by setting the request header 'x-api-token: {Access Token}'
+3. **VIA BASIC AUTH** by setting the username is {Access Token} and password is none.
+
+## Tokens
+The API generates an access token and a refresh token:
+
+1. `Access Token` is valid for 7 days - Used for all sync / communication with the API that requires authentication.
+2. `Refresh Token` is valid for 30 days - Only used for obtaining a new access token, as explained below.
+
+***Access token***
+
+The **/connect** call returns a new `Access Token` and a new `Refresh Token`. The device will save both tokens to some local encrypted file. The encryption technique is inherent to (and different per) OS system (Windows-Mac / iOS / Android).
+
+***Refresh token***
+
+When the `Access Token` has expired, the API returns response **TOKEN_EXPIRED** (message: "Token has expired").
+
+The device will then call the API with the `Refresh Token`, in order to obtain new tokens:
+
+**`POST` /public/get-new-token**
+
+If the `Refresh Token` is still valid, the API will reply with a ***new*** `Access Token` (valid for 7 days) and a ***new*** `Refresh Token` (valid for 30 days). The device will then update (replace) both tokens in the local encrypted file.
+
+If the `Refresh Token` has expired, the API will return with **TOKEN_EXPIRED**. The device will then follow the steps as outlined below in TOKEN_INVALID.
+
+***TOKEN_INVALID***
+
+When the `Access Token` or the `Refresh Token` is not valid, the API returns response TOKEN_INVALID (message: "Token not found").
+
+The device will then display message in the app, as follows :
+
+```
+[Connection Error]
+
+Your connection with CrewLounge got broken. You must login again.
+
+[OK]
+```
+
+After which the application will display the Login page for input of Email / Password.
+* preload the email address
+* leave password box empty (we do not store that on device !!)
+* offer Forget Password option
+
+## Signatures
+
+Certain requests require a signature when not accessing from a developer account. A signature is created with the following code.
+1. Pick a random letter in range 'ABCD'
+2. Set the multiplier for the letter:
+    * A: multiplier = 19
+    * B: multiplier = 11
+    * C: multiplier = 27
+    * D: multiplier  = 7
+3. var timestamp = {unix timestamp + 19821967};
+4. var sum = ((timestamp * multiplier) + userId) * (multiplier - 5);
+5. var signature = MD5(sum) + ‘:’ + timestamp + '|' + random letter;
+
+You add it as a header field - 'X-SIGN' or in the upload body as 'x-sign'
+
+```
+userid 73018127
+random B
+multiplier 11
+timestamp plus addition 1530824107
+sum 101472499824
+--------------------------------
+X-SIGN = 60685da65cf71961497c50a2d36587a7:1530824107|B
+```
+
+This signature is sent along in the request with header `X-SIGN` = `60685da65cf71961497c50a2d36587a7:1530824107|B`;
+If you modify the signature, for instance, change 'B' to 'A' then you will get a failed (401) response.
+
+## Possible responses
+There is a variety of responses that can be send back from the API.
+An overview is displayed in the table below.
+
+| Status| Code              | Description
+|-------|-------------------|------------
+| `200` | OK                | Request was processed satisfactory
+| `201` | OK                | Request was processed satisfactory
+| `401` | LOGIN_DENIED      | Password does not match the provided account
+| `402` | LICENSE_REQUIRED  | User needs a valid license to perform this request
+| `403` | NOT_AUTHORIZED    | User does not have authorization to perform this request
+| `404` | NOT_FOUND         | The requested Record was not found
+| `405` | ROUTE_UNKNOWN     | The requested Record was not found
+| `419` | CONFLICT          | An entity wit this primary key already exists
+| `422` | MISSING_DATA      | Not enough data to complete this request
+| `901` | TOKEN_INVALID     | The used Token is not valid, do a /connect call
+| `902` | TOKEN_EXPIRED     | The used Token has expired, do a /get-new-token call to renew token or do a /connect call to get another new token
+| `903` | INVALID_SIGNATURE | Provided signature is not satisfactory
+
+# Group Enumerations
+There are a few enumerations used in crewLounge Responses. Below is a list of them
+
+## Airport Cat
+Used in Facility calls and identify the type of airport
+
+| Enum    | Explanation
+|-------|-------------------
+| `1` | -none- |
+| `2` | Airforce base/Coast guard |
+| `3` | Ballooning site, Glider strip, STOL-ULM strip |
+| `4` | Seaplane, Hidroport |
+| `5` | Heliport, Medical strip |
+| `6` | Small landing strip |
+| `7` | Small airfield |
+| `8` | Medium aerodrome |
+| `9` | Major international airport |
+| `10` | Train station |
+| `11` | Populated area |
+| `12` | Training Facility |
+| `13` | Hotel |
+| `14` | Safari Lodge |
+
+## Employee Function
+| Enum    | Explanation
+|-------|-------------------
+| `0` | Not Specified |
+| `1` | Flight Crew |
+| `2` | Cabin Crew |
+| `3` | Other |
+
+## Gender
+| Enum    | Explanation
+|-------|-------------------
+| `0` | Not Specified |
+| `1` | Male |
+| `2` | Female |
+
+## Modules
+Returned as part of the user profile under the `privacy` section.
+
+| Enum      | explanation
+|-------    |-------------------
+| `cvTU76`  | API ACCESS
+| `7hYRGy`  | CONNECT
+| `TYH654`  | PILOTLOG
+| `uG3TWe`  | PILOTLOG PRO
+| `yU47Gt`  | PILOTLOG ENT
+| `LcR4WF`  | PILOTLOG ENT+
+| `h6Tg76`  | WEB PORTAL
+
+## Platform
+Used in the /connect call and returned in user device information
+
+| Enum    | explanation
+|-------|-------------------
+| `0`   | Web platform
+| `1`   | Mobile iOs
+| `2`   | Mobile Android
+| `3`   | Mobile Windows
+| `4`   | Dektop PC
+| `5`   | Mobile Mac
+
+## Privacy
+Returned as part of the user profile under the `privacy` section.
+
+| Enum    | explanation
+|-------|-------------------
+| `0`   | Hide for all users
+| `1`   | Show to all users
+| `2`   | Show to colleagues (same company)
+| `3`   | Show to colleagues (same company and same function)
+
+## Contact
+Returned as part of the user profile under the `privacy` section.
+
+| Enum    | explanation
+|-------|-------------------
+| `1`   | Phone
+| `2`   | Email
+| `3`   | Work Phone
+| `4`   | Work Email
+| `5`   | Telegram
+| `6`   | WeChat
+| `7`   | Snapchat
+| `8`   | LinkedIn
+| `9`   | Facebook
+
+# Group Public Calls
+API calls starting with /public do not need authentication.
+
+## Register [/public/register]
+When registering, the API will return http code 200, 409 or 419. An http code of 200 means registration succesful, any other code means it has failed.
+A notification email will be sent to the user's email if they have registered successful.
+
+### Register a new user to the server [POST]
++ Request (application/x-www-form-urlencoded)
+    + Attributes
+        - accountEmail: ron@aircrew.center (string) Email to be used for the account
+        - password: ##### (string) password for the account
+        - firstName: Ron (string) First name of User
+        - lastName: Wondaal (string) Last Name of user
++ Response 200
+    + Attributes
+        - data: OK (string) Registration succesful
++ Response 419
+    + Attributes
+        - code: CONFLICT (string) A conflict occurs on primary key
+        - key: EMAIL (string) Indicator where the conflict occurs
++ Response 429
+        Request is missing certain parameters
+
+## Connect [/public/connect]
+When we do a connect call, we are actually registering a device and a 'module' to the server.
+Connect by sending along a moduleId, platform and deviceId. If non of those are set, the server will handle the request as a connect call from the web portal, and register as such.
+
+### Connect a user to the application [POST]
++ Request (application/x-www-form-urlencoded)
+  + Attributes
+      - username: ron@aircrew.center (string) username (email or userId) to your account
+      - password: ###### (string) - Password to your account
+      - platform: 1 (number, required) - Platform identifier;
+      - moduleId: web (string, optional) - Use '7hYRGy' for CONNECT or 'TYH654' for PILOTLOG
+      - deviceId: web (string, optional) - DeviceId generated on the device. deviceId may only be omitted when platfrom is set to 'web' or '0';
++ Response 200
+    + Attributes
+        - data (User)
+        - jwt: Json Web token (string) - This part is returned only when a new JWT is created
+        - jwtRefresh: JWT Refresh (string) - It only uses for API /public/get-new-token
++ Response 401
++ Response 403
++ Response 404
++ Response 422
+
+## Get new access token [/public/get-new-token]
+When the `Access Token` has expired, we can get a new access token base on a valid `Refresh Token`.
+
+### Renew Access Token [POST]
++ Request (application/x-www-form-urlencoded)
+  + Attributes
+      - token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6ImV5SjBlWEFpT2lKS1YxUWlMQ0poYkdjaU9pSklVekkxTmlKOS5leUoxYzJWeVNXUWlPalV6T0RJd01EWTRMQ0pqYjIxd1lXNTVTV1FpT2lJaUxDSnBiblJsY21aaFkyVkpaQ0k2TUN3aWNtbG5hSFJ6SWpwYkltTnliRHBoWkcxcGJqcDNjbWwwWlNJc0ltTnliRHBoWkcxcGJqcHlaV0ZrSWl3aVkzSnNPbVJsZG1Wc2IzQmxjanAzY21sMFpTSXNJbU55YkRwa1pYWmxiRzl3WlhJNmNtVmhaQ0lzSW1OeWJEcHpkWEJ3YjNKME9uZHlhWFJsSWl3aVkzSnNPbk4xY0hCdmNuUTZjbVZoWkNJc0ltTnliRHB0YjJScFpua2lMQ0pqY213NlpHVnNaWFJsSWl3aVkzSnNPbk4xY0hCdmNuUWlMQ0pqYjIxd1lXNTVPbUZrYldsdUlpd2lZMjl0Y0dGdWVUcHliMnhsY3lKZExDSnliMnhsYzB4cGMzUWlPbHNpS2lJc2JuVnNiQ3d4TERJc015dzBMRFVzTmwwc0luUnZhMlZ1SWpvaU1UWTRZVE14T0dNNE16Y3dNVEZsT0RsaU16QmlNRFpsWW1aaFpETmlNallpTENKa1pYWnBZMlZKWkNJNklqQWlMQ0p3YkdGMFptOXliU0k2TVN3aWRHOXJaVzVGZUhCcGNtRjBhVzl1SWpveE5UTXhOelF5TkRNM2ZRLl9DbW1qTkxVU1JDZE1UemRGWlZlUjdKUUJDcFJTb2tMUExsM2pWd3hWZlEiLCJ0b2tlbkV4cGlyYXRpb24iOjE1MzM3Mjk2Mzd9.D43cmauxRX2U3ueMrHo2Am-2xzWzRxDxmfNrWDETRRY (string) - Refresh JWT
++ Response 200
+    + Attributes
+        - data (User)
+        - jwt: Json Web token (string) - This part is returned only when a new JWT is created
+        - jwtRefresh: JWT Refresh (string) - It only uses for API /public/get-new-token
++ Response 404
++ Response 422
+
+## Password Reset [/public/forgot/{email}]
+A user may sometimes forget his or her password. This request will send a random password to the user's email. They can use it to login to apps.
+
+### Password Reset [GET]
++ Parameters
+      + email: ron@aircrew.center (string) - Email used as primary address for the users account
+
++ Response 200
+    + Attributes
+        - data: OK (string) - A password reset has been sent
+
++ Response 404
+
+# Group Places
+Places are points of interest we use in our app, it can be an airfield, train station, training center, hotel, etc.
+They can belong to the general database (ids 1 - 500.000) or company specific (ids 500.001 - above)
+
+## Places [/places]
+Download a list of places modified after the timestamp
+
+### Single [GET /places/{airfieldIcao}]
++ Parameters
+    + airfieldIcao: MMUN (string) - Get a specific facility
++ response 200
+    + Attributes
+        - data (array[FacilityModel])
+
++ Response 404
+
+### Multiple [GET /places{?from}{&limit}{&page}]
++ Parameters
+    + from: 12234374 (number) - All facilities updated after the specific timestamp
+    + limit: 50 (number) - Number of results returned at once, maximum is 250, default is 100
+    + page: 2 (number) - Page of returned results, default is 1
+
++ response 200
+    + Attributes
+        - data (FacilityModel)
+        - next: url (string) Next url to download facilities
+        - previous: url (string) Previous url to download facilities
+
++ Response 422
+
+## Forecast [/places/forecast/{airfieldIcao}]
+Retrieve a forecast for a place. Forecasts are refreshed once a day. So there is no need to get a forecast for a specific place more then once a day.
+For more specific information about icon and weather code data have look at: http://openweathermap.org/weather-conditions and http://openweathermap.org/forecast5
+
+### Get forecast [GET]
++ Parameters
+    + airfieldIcao: EHAM (number) - All facilities updated after the specific timestamp
+
++ response 200 (application/json)
+    + Attributes
+        - data (array)
+            + Attributes
+                - date: 2017-11-09 (string) - Date of the forecast day
+                - weatherCode: 500 (number) - Numerical identifier of the weather
+                - maxTemp: 5 (number) - Maximum temperature
+                - minTemp: 3 (number) - Minimum temperature
+                - description: light rain (string) - Short description of weather
+                - precipitation: 0 (number) - mm of precipitation
+                - precipitationType: rain (string) - Type of precipitation
+                - qnh: 1015 (number) - Sea level pressure
+                - windDirection: 205 (number) - Magnetic direction of wind
+                - windSpeed: 1 (number) - Wind in meters/sec
+                - wind: Light Breeze from South-South-East (string) - Textual version of wind
+                - clouds: Broken Clouds (string) - Textual version of clouds
+                - cloudsOcta: 6 (number) - number of 8ths of sky covered. So this is 6/8;
+                - onlineIcon: http://openweathermap.org/img/w/10n.png (string) - Link to online icon
+                - image: 01.png (string) - name of image in CONNECT app
+                - sunrise: 1511060255 (number) - Unix Timstamp of sunrise
+                - sunset: 1511104942 (number) - Unix Timestamp of sunset
+                - moonPhase: 0.04 (number) - Phase of current Moon
+                - moonPhaseName: New Moon (string) - Name of the moon phase
+
+# Group Events
+Events can be uploaded by a user directly to the api, or they are inserted when a user parses a roster via one of the apps or the web portal.
+
+::: warning
+Events from the shared events pool between crewlounge apps are **read-only** for PILOTLOG.
+:::
+
+## Single Event [GET /events/{id}]
+Get a single object. Returns an object or 404 if not found
+
++ Parameters
+    - id: `9845bc18-6ddf-4a33-ace4-35a78d21c273` (string, required) - GUID or eventId of the object
+
++ Response 200 (application/json)
+    + Attributes
+        - data (EventsObject)
+
++ Response 404
+
+## Events List [GET /events{?from}]
+Get a list of objects modified after a specific timestamp. Returns an array or an empty array when no events found.
+
++ Parameters
+    - from: 12738478 (number) - Get objects modified after this timestamp
+
++ Response 200 (application/json)
+    + Attributes
+        - data (array[EventsObject])
+
+## Events Range [GET /events?between={from},{to}]
+Get a list of objects with the **start time** between the specified range. Returns an array or an empty array if no events are found.
+
++ Parameters
+    - from: 12738478 (number) - Start of the range
+    - to: 18339384 (number) - End of the range
+
++ Response 200 (application/json)
+    + Attributes
+        - data (array[EventsObject])
+
+
+# Group Interfaces
+Interfaces are the entry point to a company.
+A company can have multiple interfaces, but interfaces can have only one company.
+An interface has information about the company, login information, roster data and more.
+
+There are a few important parts:
+* options: This is a list of what we need to ask from the user. For instance,
+  * options->base == false, we need to ask the user for their homebase, if this is yes then homebase is displayed on the roster.
+  * options->faa == true, user works with FAA airport codes, otherwise they use IATA airport codes
+  * options->duties == false, roster does not publish duty periods, so we ask the user for a signIn and signOut time
+  * options->inputs: An array of user inputs required from the user for the login script. See the Response Schema for more information
+* viewOptions: What options will the user have behind the download button. See the Response Schema for more information.
+
+## Get one [GET /interfaces/{id}]
+This will return a single object of the requested interface. If it does not exists, error 404 is returned
+
++ Parameters
+  + id: 3 (number, optional) - Id of the interface you would like to request
+
++ Response 200 (application/json)
+    + Attributes
+        - data (Interface)
++ Response 404 (application/json)
+
+## Get list [GET /interfaces{?from}]
+This will return a an array of interfaces modified since the `from` timestamp. If nothing has changed, an empty array is returned.
+
++ Parameters
+  + from: 1455655454 (number, optional) - Timestamp of the last translation download. Only translations modified after this timestamp are sent along in the download
+
++ Response 200 (application/json)
+    + Attributes
+        - data (array[Interface])
+
+## Group Modules
+Modules are the parts of the portal that a user actually uses, either free or paid. CONNECT is a module, PILOTLOG is a module, the WEB PORTAL is a module. And Modules come with licenses, which can be bought by users.
+
+# Modules [/modules/{moduleId}]
+Get a list of all or a specific module.
+
+## Download all or specific module [GET]
++ Parameters
+    + moduleId: id (string, optional) - id of the module to get
+
++ Response 200
+    + Attributes
+        - data (array[ModuleObject])
+
+# Purchase [/modules/purchase/{moduleId}]
+Purchase a module and link it to the users account. A signature is needed when sending this request, this is to prevent unauthorized users from modifying license dates.
+
+So the signature is a formula based on timestamp and userId, then the result is encoded with MD5. Then a string is formed with the code and the timestamp, separated by a semi-colon.
+
+## Purchase the module [POST]
++ Parameters
+    + moduleId: TYH654 (string, optional) - Id of the module to purchase
++ Request
+    + Attributes
+        - x-sign: #### (string) - Signature to verify the authenticity of the request. Can be set in the request body or in the header with X-SIGN.
+        - licenseDate: `2200-09-09` (string) - YYYY-MM-DD or ISO format expiration date of the license. If not provided, the standard license days will be added to the existing license.
++ Response 200
+    + Attributes
+        - data: `2019-08-09T13:17:48.000Z` (string) ISO date of the new license
++ Response 403
++ Response 903
+
+# Group Javascripts/Crawling
+Downloading and viewing crawling files
+
+## Javascript/Crawling [/js/{id}]
+This request will download a specific javascript file and all it's dependencies. A javascript login can exists out of several files if the main javascript is linking to other login files.
+When someone other then a developer does a call for javascript files, you need to sign the request with header [X-SIGN](#header-signatures).
+
+The name of a javascript file is in format [controller]_[company]~[timestamp last changed], where the timestamp could be checked to see if there is a new version of the file.
+
++ Parameters
+  + id: 10_7~1500502519 (number, optional) - Id of the javascript you would like to request
+
+### Get a Javascript Download Collection [GET]
++ Response 200 (application/json)
+    + Attributes
+        - data (array[JavascriptObject])
+
+## Group Users
+View and edit various user information
+
+# Users [/users/{userId}]
+Profile of the current logged in user.
+
+## View [GET]
+
++ Response 200
+    + Attributes
+        + data (User)
+
+## Update [POST]
+Update a user profile.
+It must be updated the way it is downloaded. There are a few items you can set on the main object, other items must be prepended with `contact.`, `privacy.`, `profile.` or `settings.`. Settings can contain anything you want, and there is no check on the uploaded data.
+
+If you want to delete a value from settings section, then you can upload an empty string '', this will translate into deletion of the settings object
+
++ Request (application/json)
+    + Attributes
+        - firstName: Ron (string)
+        - lastName: Wondaal (string)
+        - companyId: TFL (string)
+        - employeeId: RWD (string)
+        - employeeFunction: 1 (number)
+        - `privacy.age`: 1 (number)
+        - `privacy.profile`: 1 (number)
+        - `privacy.country`: 1 (number)
+        - `privacy.picture`: 1 (number)
+        - `privacy.layover`: 1 (number)
+        - `profile.dob`: `1982-12-02` (string)
+        - `profile.about`: Love to fly (string)
+        - `profile.country`: 54 (number)
+        - `profile.city`: Castricum (string)
+        - `profile.gender`: 1 (number) - gender enum
+        - `profile.likes`: 1,4,6,7,8 (string) - Comma seperated list of likes
+        - `profile.carpoolStatus`: 0 (number)
+        - `profile.carpoolText`: `` (string)
+        - `profile.carpoolGps`: `0,0` (string)
+        - `settings.signIn`: 75 (number) - Minutes before event to sign in
+        - `settings.signOut`: 0 (number) - Minutes after event to sign out
+        - `settings.{any}`: any (string) - Any other data can be specified in the settings section
+        - `settings.faulty_data`: `` (string) - Deletes item `faulty_data` because the uploaded value is empty
+
++ Response 200 (application/json)
+    + Attributes
+        + data (User)
+
+## Change password [POST /users/change/password]
+Change password of current user. An email will be sent to user's email when done.
+This will disconnect all connections in other devices. The user needs to re-login apps.
+
++ Request (application/json)
+    + Attributes
+        - password: password1 (string)
+        - newPass: password2 (string)
+
++ Response 200 (application/json)
+    + Attributes
+        - data: OK (string)
++ Response 922
+
+## Select Interface [POST /users/interface/select/{id}]
+Select an interface for a user. It will link the user to this interface, but set the `verified` flag to false, because the interface needs to be verified after a login. It will return the entire Interface Model back to the user, including translations and javascript login file.
+
++ Parameters
+  + id: 3 (number, required) - Interface ID of the competed auto login.
+
++ Response 200 (application/json)
+    + Attributes
+        + data (Interface)
+
+## Verify Company [POST /users/interface/verify/{id}]
+Verify a user works for a specific company. Call this endpoint when a user succesfully completes an automatic login for the first time. It will update the database and display the user at the correct company.
+
+::: warning
+Only call this endpoint when a user has succesfully passed an auto-login **AND** the company of the user is not yet `verified`.
+:::
+
++ Parameters
+  + id: 3 (number, required) - Interface ID of the completed auto login.
+
++ Response 200 (application/json)
+    + Attributes
+        - data: OK (string)
+
+## Disconnect [POST /users/disconnect]
+Disconnect current user from the device.
+
++ Request (application/json)
+    + Attributes
+        - deviceId: web (string, optional) - DeviceId generated on the device. deviceId may only be omitted when platfrom is set to 'web' or '0';
+
++ Response 200 (application/json)
+    + Attributes
+        - data: OK (string)
++ Response 404
+
+# Group CONNECT endpoint
+
+::: note
+For CONNECT only
+:::
+
+## Rooms [/social/rooms/{eventId}]
+Crew members can insert hotel rooms into the app, with this data we can build a hotel room list
+
+### Get rooms for event [GET]
+Get the rooms for an event
+
++ Parameters
+    + eventId: 20160722:HTSID (string) - The id of the hotel event you want to get rooms for, on the api side it is automatically cross-checked and verified for users at the same company.
+
++ Response 200 (application/json)
+    + Attributes
+        - data (array)
+            + Attributes
+                - room: 1 (string) - Room number
+                - firstName: Ron (string) - User's first name
+                - lastName: Wondaal (string) - User's last name
+                - userId: 82727283 (number) - User's userId
+                - employeeID: RWD (string) - User's company employee ID
+
+### Set Room for event [POST]
+Set the hotel room for a specific event
+
++ Parameters
+    + eventId: 20160722:HTSID (string) - The id of the hotel event you want to get rooms for
+
++ Request
+    + Attributes
+        - room: 1 (string) - The hotel room of the user
+
++ Response 200 (application/json)
+    + Attributes
+        - data: OK (string) - Request was successful
+
+## Layover [/social/layover]
+
+### Layover Status [POST /social/layover/status/{eventId}]
+
++ Parameters
+    + eventId: 20160722:HTSID (string) - The id of the hotel event you want to set the status for. An enum of available statuses will be published in this document.
+
++ Request
+    + Attributes
+        - status: 1 (number) - Your preferred status
+
++ Response 200 (application/json)
+    + Attributes
+        - data: OK (string) - Request was successful
+
+### Layover privacy [POST /social/layover/privacy/{eventId}]
+A user can have privacy.layover set to something different then 1. In which case he is not viewable for other crew members. If a user wants to see crew at a layover, he or she must accept that he or she is viewable by other crew members on that same layover. In that case, change privacy for this layover and allow the user to be seen and to get list of users.
+
++ Parameters
+    + eventId: 20160722:HTSID (string) - The id of the hotel event you want to set the privacy for.
+
++ Response 200 (application/json)
+    + Attributes
+        - data: OK (string) - Request was successful
+
+## Event Crew [/social/crew/event/{eventId}]
+Get a list of crewmembers on the same flight/sim/hotel as you. Only use this endpoint for flights and sim if the roster does not return crew names. In which case you should use the names published on the roster.
+
+### Get Event crew [GET]
+Retrieve the list of crew members on a specific event, works for event type 1 (flight), 2 (sim) and 6 (hotel).
+Only use for types 1 and 2 if the roster does not return any crew member names.
+
++ Parameters
+    + eventId: 20160101:HTCUNTFL (string, required) - Event Id of the requested event
+
++ Response 200 (application/json)
+    + Attributes
+        - data (array)
+            + Attributes
+                - firstName: Ron (string) - User's first name
+                - lastName: Wondaal (string) - User's last name
+                - userId: 82727283 (number) - User's userId
+                - employeeID: RWD (string) - User's company employee ID
+                - layoverStatus (number) - User set status for this layover
+                - start: 1451001600 (number) - Start of when the user is at that location
+                - end: 1451001600 (number) - Start of when the user is at that location
+
+# Group PILOTLOG endpoints
+
+::: note
+For PILOTLOG only
+:::
+
+## Static Tables [/pilotlog/static/{table}/{id}]
+zTables are PILOTLOG specific read-only tables.
+
+### Get Object [GET]
+Get a specific object from the table. Returns an object or 404 if not found.
+
++ Parameters
+    + table: zApproach (string) - table name
+    + id: `117` (number) - id (number) of the object to get
+
++ Response 200 (application/json)
+    + Attributes
+        - data (PilotlogStaticObject)
+
+### Get List [GET /pilotlog/static/{table}/*{?from}]
+Get an array of objects changed since the timestamp. It will return an array of objects or an empty array if nothing has been found. You can use the wildcard at the place of the table or at the place of the id. Like /pilotlog/static/* or /pilotlog/static/{table}/*
+
++ Parameters
+    + table: zApproach or `*` (string) - table name or wildcard
+    + from: 700 (number) Retrieve events modified AFTER the timestamp
+
++ Response 200 (application/json)
+    + Attributes
+        - data (array[PilotlogStaticObject])
+
+## User Tables [/pilotlog/user/{table}/{guid}]
+User tables are the same as static tables above, but hold user data, so the are linked to user accounts.
+They can be used to hold user specific airport, events or other data.
+
+::: note
+Unlike static tables, users without developer rights are allowed to upload and change data in the user tables.
+:::
+
+### Get List [GET /pilotlog/user/{table}/*{?from}]
+Get a user table object by modified timestamp
+
++ Parameters
+    + table: airfields (string) - table name or wildcard
+    + from: 1526354 (number) - unix timestamp
+
++ Response 200 (application/json)
+    + Attributes
+        - data (array[PilotlogUserObject])
+
+### Get Object [GET]
+Get a user table object by id
+
++ Parameters
+    + table: airfields (string) - table name
+    + guid: `1aaefd53-7ddc-42b8-b00a-3a4dedd50722` (sting, required) Retrieve objects modified after the timestamp
+
++ Response 200 (application/json)
+    + Attributes
+        - data (array[PilotlogUserObject])
+
+### Create/Update object [POST]
+Create or update a user table object
+
++ Parameters
+    + table: airfields (string) - table name
+    + guid: `1aaefd53-7ddc-42b8-b00a-3a4dedd50722` (string, optional) - Update the user table object, if no guid is provided, a new **GUID** will be created
+
++ Request (application/json)
+    + Attributes
+        + meta: {`name`: `New Name`} (object) - The object to upload to the table
+        + user_id: 1627364 (number, optional) - If no user_id is sent along, the userId belonging to the user of the current request is used.
+
++ Response 200 (application/json)
+    + Attributes
+        - data: airfield/`1aaefd53-7ddc-42b8-b00a-3a4dedd50722` (string) The guid that has been inserted into the database
+
+### Delete Object [DELETE]
+Flag an object in the database as deleted.
+
++ Parameters
+    + table: airfields (string, required) - table of object to be deleted
+    + guid: `1aaefd53-7ddc-42b8-b00a-3a4dedd50722` (string, required) - Id of the object to be deleted
+
++ Request (application/json)
+    + Attributes
+        + user_id: 1627364 (number, optional) - If no user_id is sent along, the userId belonging to the user of the current request is used.
+
++ Response 200 (application/json)
+    + Attributes
+        - data: OK (string) Object has been flagged for deletion
+
+## AWS Upload [/pilotlog/uploadurl]
+Obtain a new url to upload a file to Amazon S3.
+
+::: warning
+* Uploads to AWS must be done with a `PUT` request. During upload to AWS, you **must** set `Content-Type` in the PUT header, otherwise the file will not hold the correct data.
+* Downloads from AWS must be done with a `GET` request.
+* Can use `DELETE` request with that link download to **DELETE** a file/image from AWS.
+:::
+
+::: warning
+Be aware, the API does not do anything with the url, it just provides it for upload. The PILOTLOG apps must take own care of storing the URL by use of the /pilotlog/user/{table} endpoint.
+:::
+
+### Get Signed URL [POST]
+It returns a one-time signed url, which is valid for use 240 seconds after creation. After that time the url can not be requested.
+
++ Request (application/json)
+    + Attributes
+        - mimeType: image/png (string, optional) - MimeType of the file to upload
+        - extension: png (string, optional) - Extension of the file to upload, either mimeType or extension must be set during the request.
+
++ Response 200 (application/json)
+    + Attributes
+        + data (object)
+            - upload:  `https://s3.eu-central-1.amazonaws.com/media.crewlounge.center/pilotlog/users/7/3/0/1/73018127/5ea41810-468b-4ae8-b816-4ace35b3f42e.png?Content-Type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJRQRYRFD7FGBAQKA%2F20171119%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20171119T005155Z&X-Amz-Expires=240&X-Amz-Signature=b326a40cdbd47009c26d41eb33a3f57203f20e4d15a5e45a2026691b9f3a4312&X-Amz-SignedHeaders=host%3Bx-amz-acl&x-amz-acl=public-read` (string) - AWS URL to upload to.
+        - download: `https://s3.eu-central-1.amazonaws.com/media.crewlounge.center/pilotlog/users/7/3/0/1/73018127/5ea41810-468b-4ae8-b816-4ace35b3f42e.png` (string) - After upload, the file is retrievable via this URL.
+        - contentType: image/png (string) - `Content-Type` to set while uploading the file to AWS.
+
++ Response 422
+
+# Group DEV endpoints
+
+::: warning
+!!! **These endpoints are for documentation reference only, it should not be used in any app** !!!
+:::
+
+::: warning
+User must have developer rights to upload or change something in these endpoints
+:::
+
+## PILOTLOG table [/pilotlog/table]
+Working on entire static PILOTLOG tables.
+
+### Import Table [POST]
+Import an entire static table by uploading a CSV
+
++ Request (multipart/form-data)
+    + Attributes
+        + file: ---csv to upload--- (string, required) - The file object to upload
+        + table: zApproach (string, required) - Table to overwrite
+        + generateId: 0 (number, optional) - Let the API generate GUIDs for insert
+        + idIndex: 0 (number, optional) - Index of the id column
+        + idName: OpsCode (string, optional) - The name of the column to use as primary ID for the table entries
+
++ Response 200 (application/json)
+    + Attributes
+        - data: OK (string) Request processed with success
+
+## Static Tables [/pilotlog/static/{table}/{id}]
+zTables are PILOTLOG specific read-only tables.
+
+### Create/Update object [POST]
+Create or update a static table entry.
+
++ Parameters
+    + table: zApproach (string, required) - Update the static table entry, if no id is provided, a new **auto incremented** id will be created
+    + id: 1 (string, optional) - Update the static table entry, if no id is provided, a new **auto incremented** id will be created
+
++ Request (application/json)
+    + Attributes
+        + meta: {`name`: `New Name`} (object) - The object to upload to the table
+
++ Response 200 (application/json)
+    + Attributes
+        - data: zApproach/1 (string) The id that has been inserted into the database
+
+### Delete Object [DELETE]
+Flag an object in the database as deleted.
+
++ Parameters
+    + table: zApproach (string, required) - table of object to be deleted
+    + id: zApproach/1 (string, required) - Id of the object to be deleted
+
++ Response 200 (application/json)
+    + Attributes
+        - data: OK (string) Object has been flagged for deletion
+
+## Objects [/objects/static/{id}{?limit}{&fields}{&from}]
+Request will download all records from a collection which has been changed since the 'from' timestamp
+
+### Get the objects [GET]
++ Parameters
+    + id: enum/likes/* (string) id of a record, or when ending in * it will find all records belonging to that particular collection.
+    + limit: 50 (number) Limit the number of records returned at once
+    + fields: short (string) - Options for formatting the return.
+        * short - Ids are trimmed so that the preceding table identifier is not returned
+        * grouped - Objects are grouped by table -> subtable, etc.
+    + from: 145564759 (number, optional) - Find records only modified since the timestamp
+
++ Response 200 (application/json)
+    + Attributes
+        - data (array[ObjectModel])
+        - next: url (string) Next url to download facilities
+        - previous: url (string) Previous url to download facilities
+
+### Update or create new Object [POST]
+Use the URL to set the id of the object. If the url ends with '/' then a new id is automatically generated and appended to the path of the object.
+
++ Parameters
+    + id: packages/tfl/aircraft/ (string) id of a record, or when ending in * it will find all records belonging to that particular collection.
++ Request
+    + Attributes
+        - object: `{id:hello}` (string) - String, numer or JSON object to save to the database
++ Response 200 (application/json)
+    + Attributes
+        - data: `packages/tfl/aircraft/097c77ffca9646e4a38d4f2a2c96b1b0` (string) - id of the object that has been saved.
+
+
+
+# Data Structures
+
+## FacilityModel
++ id: 18602 (number) - Numerical id of the airport
++ icao: MMUN (string) - 4 alphanumerical ICAO identifier
+- iata: CUN (string) - 3 letter IATA identifier
+- faa: CUN (string) - 3 letter FAA identifier
+- name: Cancun International (string) - Name of the airport
+- cat: `9` (number) - Category of the airport
+- latitude: `21.0367` (number) - Decimal latitude
+- longitude: `-86.8767` - Decimal Longitude
+- timezone: "America/Rio_Branco" (string) - Timezone name
+- timezoneCode: 174 (number) - Code of timezone in our database
+- country: 141 (number) - Code of country in our database
+- countryName: "Mexico" (string) - Name of country
+- continent: "NA" (string) - Continent Code
+- city: "Cancun" (string) - City Name
+- address: null (string) - Address of place
+- elevationFt: 22 (number) - Elevation of place in feet
+- companyId: null (string) - Company Id this place belongs to
+- uuid: `7c1ed59a-7332-4c3a-bcdd-932d0fa69d76` (string) - Unique identifier of place
+
+## Interface (object)
++ id: 3 (number, required) - Id of the interface
++ companyIcao: TFL (string) - 3 letter identifier of company
++ companyIata: OR (string) - 2 letter identifier of the company
++ companyName: TUI fly Netherlands (string) - name of the company
++ name: TUI OpsMan (string) - Name of the interface, it will show controllerName or Interface subtitle if it is set.
++ controller: 37 (number) - Id of the controller
++ controllerName: TUI OpsMan (string) - Name of the controller linked to this interface
++ options (InterfaceOptions) - Options specific for this interface
++ viewOptions (InterfaceViewOptions) - Available options for crawling/login
++ loginUrl: https://intranet.hlf.de (string) - Initial url for use in crawler
++ uuid: standard uuid format (string) - UUID for this interface, this may be used for commenting systems
++ image: https://blabla.com/bla.jpg (string) - URL to an image for the logo of this airline
++ translations (array[InterfaceTranslation]) - Array of translations for this company, returned if they are newer then the :from timestamp in the query. Only Returned of an :id is sent in the url.
++ status: 1 (number) - Status of the Controller e.g. 0 is Offline, 1 is Online, 2 is Work in Progress
++ released: {"ios": 1,"android": 0,"desktop": 0,"developer": 0} (object) - Platform release information
+
+## InterfaceOptions (object)
++ faa: 0 (number) - Roster uses FAA codes as airport identifiers
++ base: 1 (number) - Roster has homebase published
++ duties: 0 (number) - Roster has Sign-in and Sign-out published
++ ranks: {"FO": 2,"PU": 4,"CPT": 1} (object) - Identifiers for different ranks on the roster
++ inputs (array[InterfaceInputs]) - parameters needed from the user for download of roster
++ offline: 0 (number) - This interface is for offline files only, no crawling/downloads possible
++ timezones: (array) - Array of timezones that are available in the crawling
++ usDateFormat: 0 (number) - Roster/Crawler uses US Date Format for dates
++ javascript: 3 (string) - Name of the javascript file that contains the javascript crawling information
+
+## InterfaceInputs (object)
++ id: username (string) - Id of the parameter when saved or requested from the device
++ label: hlf.de username (string) - Label of the parameter, show this as the label when displaying to the user
++ type: text (string) - Either text, password, label, link or switch
++ value: '' (string) - A default value, or in case of type == 'link' then it is the URL to open when the user presses
++ on: show:password,show:username (string) When type == 'switch', this will give instructions if we need to show/hide inputs when the switch is on.
++ off: hide:password,hide:username (string) When type == 'switch', this will give instructions if we need to show/hide inputs when the switch is off.
+
+## InterfaceViewOptions (object)
++ viewPortal: 1 (number) - Crawler can login to portal and display homepage
++ viewRoster: 1 (number) - crawler can login and browse to roster, then display
++ current: 1 (number) - Crawler is able to download current roster
++ history: 1 (number) - Crawler is able to download historic roster
++ signin: 0 (number) - Crawler is able to login to portal and sign user in for current duty
++ signout: 0 (number) - Crawler is able to login to portal and sign user out of current duty
+
+## InterfaceTranslation (object)
++ delete: 0 (number) - Delete this translation from the database
++ off: 1 (number) - This is an off day
++ sim: 1 (number) - This is a simulator
++ code: W (string) - This is the code
++ translation: Off Day (string) - This is the translation of the code
++ explanation: Standard Weekend day off (number) - Explanation about the event
+
+## ObjectModel (object)
++ _id: aircraft/b738 (string) - Id for the record
++ meta: Any item uploaded to the object (string, number, json) - Will return as uploaded
++ _del: 1 (number) - Wheter to delete this object or not.
+
+##JavascriptObject (object)
++ name: `10_7~1500502519` (string) - Name of the JS file and the timestamp of last modify for version checking
++ script: The script (string) - The script of the login file
+
+## ModuleObject (object)
++ id: 7hYRGy (string)
++ name: CONNECT (string)
++ licenseDays: 365 (number) standard license length
++ priceEur: `7.99` (number) standard license price in Euro with decimal **point**
++ description: Test module (string) Description of module
++ minimumBuild (minimumBuildObject)
+
+##minimumBuildObject
++ platform: 1 (number) identification of the platform
++ version: 20170101 (number) Minimum version of the database that can be used
+
+## User
++ userId: 73018127 (string) - ID of the user
++ firstName: Ron (string)
++ lastName: Wondaal
++ companyId: TFL (string)
++ employeeId: RWD (string)
++ employeeFunction: 1 (number)
++ picture: http://pictureurl (string)
++ thumbnail: http://pictureurl (string)
++ privacy (Privacy)
++ profile (Profile)
++ settings (Settings)
++ interfaceId: 3 (number)
++ licenseDate: `2017-03-01` (string) Day until the license of the module is valid
++ licenseDays: 1 (number) Days remaining on the license
++ minimumDatabase: 20170101 (number) Minimum version of the database that can be used for the module
+
+## Privacy
++ age: 0 (number) - Show age. Otherwise Hide the birth year
++ profile: 0 (number) - Show profile information: This is about, birthdate and gender
++ country: 0 (number) - Show country
++ picture: 1 (number) - show profile picture
++ layover: 1 (number) - show layover information (display in find and meet)
+
+## Settings
++ anystring: anyvalue
+
+## Profile
++ dob: `1982-12-02` (string)
++ about: Love to fly (string)
++ country: 54 (number)
++ city: Castricum (string)
++ gender: 1 (number) - Gender enum
++ likes: 1,4,6,7,8 (string) Comma seperated list of likes
+
+## PilotlogUserObject
++ guid: `3b7f4151-9513-4025-97ca-e081b47582b2` (string) - id of the object
++ table: airfields (string) - table name of the object
++ meta (object)
+    - anything
++ modf: 1510964856 (number) - timestamp when changed on the server
++ del: 0 (number) - Wheter or not this object must be deleted from the database
+
+## PilotlogStaticObject
++ id: 1 (number) - numerical id of the object
++ table: zApproach (string) - table name of the object
++ meta (object)
+    - anything
++ modf: 1510964856 (number) - timestamp when changed on the server
++ del: 0 (number) - Wheter or not this object must be deleted from the database
+
+## EventsObject
+- uuid: `9845bc18-6ddf-4a33-ace4-35a78d21c273` (string) - uuid of the object
+- _id: 20160113:W (string) - Api generated Id. It is used to search for duplicates in the events table
+- c: W (string) - Code: Code of the event
+- d: Day Off (string) - Description: Description of the event
+- t: 5 (number) - Type: Type of the event
+- `s_utc`: 1452643200 (number) - start_UTC: Start of the event
+- `e_utc`: 1452643200 (number) - end_UTC: End of the event
+- `s_tz`: Europe/Brussels (string) - start_timezone: Timezone in which the event starts,
+- `e_tz`: Europe/Brussels (string) - end_timezone: Timezone in which the event ends
+- m: {} (object) - Metadata: Concatenation of metadata provided by the roster and data uploaded by the user
+- del: 0 (number) - delete: When this number is higher then 0, delete the event from the database
+- dep: BRU (string) - departure: Airfield identifier of departure airfield
+- des: BRU (string) - departure: Airfield identifier of destination airfield

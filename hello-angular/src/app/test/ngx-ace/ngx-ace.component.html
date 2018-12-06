@@ -1,0 +1,2 @@
+<!-- <ace [config]="config" [value]="'Some example content'"></ace> -->
+<ace [config]="config" [disabled]="isViewMode" [value]="scriptText" (valueChange)="scriptCodeChange($event)"></ace>

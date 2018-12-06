@@ -1,0 +1,486 @@
+{{#section 'head'}} 
+    <script type="text/javascript" src="/vendor/d3.min.js"></script>    
+    <script type="text/javascript" src="/vendor/colorbrewer.js"></script>    
+
+    <style>
+    .t_summary {
+        border: 2px solid #0088dd;
+        width : 99.3%;
+        height: 71px;
+        margin-top : 18px;
+        margin-bottom: 12px;
+
+        margin-left: 0.3%;
+        margin-right:auto;
+        empty-cells: show;
+        font-size: 26px;
+    }
+    
+     .t_header{
+        background-color: steelblue;
+        width: 200px;
+        text-align: center;
+        font-weight: bold;
+        color:white;
+        
+    }
+     .t_data{
+        background-color: rgba(204, 236, 255, 0.4);
+        text-align: right;
+        font-size: 30px;
+        font-weight: bold;
+        width: 190px;
+        padding-right: 8px;   
+    }
+    </style>
+    
+    
+    <style>
+        .d3_div{
+            border: 2px solid #0088dd;
+            width : 99%;
+            height: 800px;
+            margin-left: 0.3%;
+            margin-top: 5px; 
+            margin-bottom: 10px;
+          
+        }
+        .svg_box{
+            width : 99%;
+            height: 100%;
+        }
+       
+    </style>
+    
+ {{/section}}
+
+<!-- <table class="t_summary">
+    <tr>
+        <td class="t_header">Prod</td>      <td id='total-prod'     class="t_data">358</td>         
+        <td class="t_header">Prod/Line</td> <td id='total-prod-line'     class="t_data">358</td>      
+        <td class="t_header">CNC Util</td>  <td id='total-line-util'  class="t_data">-</td>
+        <td class="t_header">Robot Util</td><td id='total-robot-util' class="t_data">-</td>
+        <td class="t_header">vs. Manual</td><td id='total-handwork' class="t_data">-</td>
+        <td class="t_header">Running Line</td><td id='total-run-line' class="t_data">-</td>
+    </tr>
+</table>-->
+ 
+ 
+<div id="vizcontainer" class="d3_div"> </div>
+
+{{#section 'jquery'}} 
+<script>
+    var timerID_update;
+     
+    $(document).ready(function(){
+        $("a#menu9").addClass("current");
+        $('#title').text('VISA+ Vibration data') ;
+        $("div.line_button_div").remove();
+        
+        timerID_reload = setTimeout(reload_view, 1*10*60*1000); // 10분에 한번씩 화면 Reload
+        
+        var updateView = function(){
+            var window_w = $(document).width(); 
+            var window_h = $(document).height();
+            var range_y_util = 730;
+//            var barchart_width = 50;
+            
+            var fill_summary = function(data){
+//                var prod_data = data[1];
+//                var util_data = data[2];
+//                var total_prod=0, total_handwork=0, total_util_cnc=0, total_util_robot=0, total_run_line=0;
+//                var data_cnt = util_data.length;
+//                
+//                for(var i in prod_data){
+//                    total_prod += prod_data[i].sum_prod;
+//                    total_util_cnc += util_data[i].cnc_util;
+//                    total_util_robot += util_data[i].robot_util;
+//                    total_run_line += util_data[i].run_line_cnt;
+//                    total_handwork += prod_data[i].sum_prod_handwork;
+//                }
+                
+                //console.log(total_prod+ '/'+total_run_line)
+              
+//                $("#total-prod").text(total_prod);
+//                $("#total-prod-line").text((total_prod/(total_run_line/2)).toFixed(0));
+//                $("#total-line-util").text((total_util_cnc/data_cnt).toFixed(1) + '%');
+//                $("#total-robot-util").text((total_util_robot/data_cnt).toFixed(1) + '%');
+//                $("#total-run-line").text((total_run_line/(data_cnt*2)).toFixed(1));
+//                $("#total-handwork").text((total_prod/total_handwork*100).toFixed(1)+ '%');
+                
+                
+            };
+                    
+            var draw_chart= function(data){
+                $('#cur_datetime').text(data[0][0].last_update);
+                
+                $("svg").remove();
+                d3.select("div#vizcontainer").append("svg").attr("class", "svg_box");
+                
+                legend();
+                
+                var line_name = data[1];
+                
+                var prod_data = data[2];
+                var line_data2 = data[3];
+                var line_data3 = data[4];
+                
+                prod_data.reverse();
+                line_data2.reverse();
+                line_data3.reverse();
+                
+                /// #1 차트 
+                var date = [];
+                for(var i in prod_data){
+                    
+                    date.push(prod_data[i].Time);
+                }
+                /// #2 차트 
+                var date2 = [];
+                for(var i in line_data2){
+                    
+                    date2.push(line_data2[i].Time);
+                }
+                /// #3 차트 
+                var date3 = [];
+                for(var i in line_data3){
+                    
+                    date3.push(line_data3[i].Time);
+                }
+              
+                
+                // #1 차트 축 범위 설정
+                var line_data1_min_max = d3.extent(prod_data, function(el){ return el.RmsValue;});
+                // #2 차트 축 범위 설정
+                var line_data2_min_max = d3.extent(line_data2, function(el){ return el.RmsValue;});
+                // #3 차트 축 범위 설정
+                var line_data3_min_max = d3.extent(line_data3, function(el){ return el.RmsValue;});
+                
+                
+                // 차트 축 폭
+                // #1
+                xScale = d3.scalePoint().domain(date).range([100,window_w/2-100]);
+                // #2
+                xScale2 = d3.scalePoint().domain(date2).range([window_w/2+100, window_w-100]);
+                // #3
+                xScale3 = d3.scalePoint().domain(date3).range([100,window_w/2-100]);
+                //xScale3 = d3.scaleLinear().domain(date3).range([100,window_w/2-200]);
+
+                // Y축 스케일
+                // #1 
+                yScale_Util = d3.scaleLinear().domain([0, line_data1_min_max[1]]).range([range_y_util/2,150]);
+                // #2
+                yScale2 = d3.scaleLinear().domain([0, line_data2_min_max[1]]).range([range_y_util/2,150]);
+                // #3
+                yScale3 = d3.scaleLinear().domain([0, line_data3_min_max[1]]).range([range_y_util, range_y_util/2+150]);
+                
+                // #1 x축
+                xAxis = d3.axisBottom(xScale).ticks(3).tickSize(-4);
+                //축 위치
+                d3.select("svg").append("g")
+                        .attr("id", "xAxisG")
+                        .call(xAxis)
+                        .style("stroke-width", "2")
+                        .attr("transform", "translate(0,"+ (range_y_util/2)+")"); 
+                d3.select("g#xAxisG")
+                        .selectAll("text").remove();
+//                        .style("font-size", "20px")
+//                        .attr("transform","translate(0,10)");
+                
+                // #2 x축
+                xAxis2 = d3.axisBottom(xScale2).ticks(3).tickSize(-4);
+                // 축 위치
+                d3.select("svg").append("g")
+                        .attr("id", "xAxisG2")
+                        .call(xAxis2)
+                        .style("stroke-width", "2")
+                        .attr("transform", "translate(0,"+ (range_y_util/2)+")"); 
+                d3.select("g#xAxisG2")
+                        .selectAll("text").remove();
+//                        .style("font-size", "20px")
+//                        .attr("transform","translate(0,10)");        
+
+                // #3 x축
+                xAxis3 = d3.axisBottom(xScale3).ticks(10).tickSize(-4);
+                // 축 위치
+                d3.select("svg").append("g")
+                        .attr("id", "xAxisG3")
+                        .call(xAxis3)
+                        .style("stroke-width", "2")
+                        .attr("transform", "translate(0,"+ (range_y_util)+")"); 
+                d3.select("g#xAxisG3")
+                        .selectAll("text").remove();
+                        //.style("font-size", "20px")
+                        //.attr("transform","translate(0,10)"); 
+                
+                
+
+                // #1 Y축
+                yAxis = d3.axisRight(yScale_Util).ticks(5).tickSize(-4);
+                // 축 위치
+                d3.select("svg").append("g")
+                        .attr("id","yAxisG")
+                        .call(yAxis)
+                        .style("stroke-width", "2")
+                        .attr("transform", "translate(100,0)");
+                // 라벨 위치
+                d3.select("g#yAxisG")
+                        .selectAll("text")
+                        .style("font-size", "20px")
+                        .attr("transform","translate(-60,0)");
+                
+                // #2 Y축
+                yAxis2 = d3.axisRight(yScale2).ticks(5).tickSize(-4);
+                // 축 위치
+                d3.select("svg").append("g")
+                        .attr("id","yAxisG2")
+                        .call(yAxis2)
+                        .style("stroke-width", "2")
+                        .attr("transform", "translate("+(window_w/2+100)+",0)");
+                // 라벨 위치
+                d3.select("g#yAxisG2")
+                        .selectAll("text")
+                        .style("font-size", "20px")
+                        .attr("transform","translate(-60,0)");
+ 
+                // #3 Y축
+                yAxis3 = d3.axisRight(yScale3).ticks(5).tickSize(-4);
+                // 축 위치
+                d3.select("svg").append("g")
+                        .attr("id","yAxisG3")
+                        .call(yAxis3)
+                        .style("stroke-width", "2")
+                        .attr("transform", "translate(100,0)");
+                // 라벨 위치
+                d3.select("g#yAxisG3")
+                        .selectAll("text")
+                        .style("font-size", "20px")
+                        .attr("transform","translate(-60,0)");
+
+                // 하단 요일 표시 -> 차트 이름으로 변경
+                // #1
+                d3.select("svg").selectAll("text.week_name")
+                        .data(line_name).enter()
+                        .append("text")
+                        .attr("class","week_name")
+                        .style("font-size", "20px")
+                        .attr("text-anchor", "middle")
+                        .text("AOR-18")
+                        .attr("x", window_w/4)
+                        .attr("y", range_y_util/2+ 50);
+                
+                d3.select("svg").selectAll("text.start1")
+                        .data(line_name).enter()
+                        .append("text")
+                        .attr("class","week_name")
+                        .style("font-size", "20px")
+                        .attr("text-anchor", "middle")
+                        .text(date[0])
+                        .attr("x", 100)
+                        .attr("y", range_y_util/2+ 25);
+                d3.select("svg").selectAll("text.end1")
+                        .data(line_name).enter()
+                        .append("text")
+                        .attr("class","week_name")
+                        .style("font-size", "20px")
+                        .attr("text-anchor", "middle")
+                        .text(date[199])
+                        .attr("x",  window_w*2/5 + 90)
+                        .attr("y", range_y_util/2+ 25);
+                
+                // #2
+                d3.select("svg").selectAll("text.week_name2")
+                        .data(line_name).enter()
+                        .append("text")
+                        .attr("class","week_name")
+                        .style("font-size", "20px")
+                        .attr("text-anchor", "middle")
+                        .text("AOR-19")
+                        .attr("x", window_w*3/4)
+                        .attr("y", range_y_util/2+ 50);
+                
+                d3.select("svg").selectAll("text.start2")
+                        .data(line_name).enter()
+                        .append("text")
+                        .attr("class","week_name")
+                        .style("font-size", "20px")
+                        .attr("text-anchor", "middle")
+                        .text(date2[0])
+                        .attr("x", window_w*3/5- 90)
+                        .attr("y", range_y_util/2+ 25);
+                d3.select("svg").selectAll("text.end2")
+                        .data(line_name).enter()
+                        .append("text")
+                        .attr("class","week_name")
+                        .style("font-size", "20px")
+                        .attr("text-anchor", "middle")
+                        .text(date2[199])
+                        .attr("x", window_w - 100)
+                        .attr("y", range_y_util/2 + 25);
+                
+                // #3
+                d3.select("svg").selectAll("text.week_name3")
+                        .data(line_name).enter()
+                        .append("text")
+                        .attr("class","week_name")
+                        .style("font-size", "20px")
+                        .attr("text-anchor", "middle")
+                        .text("APR-32")
+                        .attr("x", window_w/4)
+                        .attr("y", range_y_util+ 50);
+                
+                d3.select("svg").selectAll("text.start1")
+                        .data(line_name).enter()
+                        .append("text")
+                        .attr("class","week_name")
+                        .style("font-size", "20px")
+                        .attr("text-anchor", "middle")
+                        .text(date3[0])
+                        .attr("x", 100)
+                        .attr("y", range_y_util+ 25);
+                d3.select("svg").selectAll("text.end3")
+                        .data(line_name).enter()
+                        .append("text")
+                        .attr("class","week_name")
+                        .style("font-size", "20px")
+                        .attr("text-anchor", "middle")
+                        .text(date3[199])
+                        .attr("x", window_w*2/5 + 90)
+                        .attr("y", range_y_util + 25);
+                
+                line_chart(); 
+                
+                function line_chart(){
+                    
+                    // #1
+                    var prodLine = d3.line()
+                            .x(function(d){ return xScale(d.Time);})
+                            .y(function(d){return yScale_Util(d.RmsValue);})
+                            .curve(d3.curveCatmullRom);
+                    d3.select("svg").append("path")
+                          //  .transition()
+                          //  .duration(3000)
+                            .attr("d", prodLine(prod_data))
+                            .attr("fill", "none")
+                            .attr("stroke", "darkred")
+                            .attr("stroke-width", 2);
+
+
+                    d3.select("svg").selectAll("cicle.prod")
+                            .data(prod_data).enter()
+                            .append("circle")
+                            .attr("class", "prod")
+                            .attr("r", 2)
+                            .attr("cx", function(d){return xScale(d.Time);})
+                            .attr("cy", function(d){return yScale_Util(d.RmsValue);})
+                            .style("fill", "blue")
+                            .style("stroke", "red");
+                    
+                    // #2
+                    var Line2 = d3.line()
+                            .x(function(d){ return xScale2(d.Time);})
+                            .y(function(d){return yScale2(d.RmsValue);})
+                            .curve(d3.curveCatmullRom);
+                    d3.select("svg").append("path")
+                          //  .transition()
+                          //  .duration(3000)
+                            .attr("d", Line2(line_data2))
+                            .attr("fill", "none")
+                            .attr("stroke", "darkred")
+                            .attr("stroke-width", 2);
+
+
+                    d3.select("svg").selectAll("cicle.prod")
+                            .data(line_data2).enter()
+                            .append("circle")
+                            .attr("class", "prod")
+                            .attr("r", 2)
+                            .attr("cx", function(d){return xScale2(d.Time);})
+                            .attr("cy", function(d){return yScale2(d.RmsValue);})
+                            .style("fill", "blue")
+                            .style("stroke", "red");
+                    
+                    // #3
+                    var Line3 = d3.line()
+                            .x(function(d){ return xScale3(d.Time);})
+                            .y(function(d){return yScale3(d.RmsValue);})
+                            .curve(d3.curveCatmullRom);
+                    d3.select("svg").append("path")
+                          //  .transition()
+                          //  .duration(3000)
+                            .attr("d", Line3(line_data3))
+                            .attr("fill", "none")
+                            .attr("stroke", "darkred")
+                            .attr("stroke-width", 2);
+
+
+                    d3.select("svg").selectAll("cicle.prod")
+                            .data(line_data3).enter()
+                            .append("circle")
+                            .attr("class", "prod")
+                            .attr("r", 2)
+                            .attr("cx", function(d){return xScale3(d.Time);})
+                            .attr("cy", function(d){return yScale3(d.RmsValue);})
+                            .style("fill", "blue")
+                            .style("stroke", "red");
+                };
+
+                // 전체 공통
+                function legend(){
+                    d3.select("svg").append("line")
+                            .attr("x1", 30)
+                            .attr("x2", 70)
+                            .attr("y1", 25)
+                            .attr("y2", 25)
+                            .style("stroke", "darkred")
+                            .style("stroke-width", 2);
+                    d3.select("svg").append("circle")
+                            .attr("r", 5)
+                            .attr("cx", 50)
+                            .attr("cy", 25)
+                            .style("fill", "blue")
+                            .style("stroke", "red");
+                    d3.select("svg").append("text")
+                            .attr("x", 80)
+                            .attr("y", 32)
+                            .style("font-size", "18px")
+                            .text("Vibration RMS"); 
+                };
+            };
+
+            $.ajax({
+                url: '/ajax/visa',
+                type: 'GET',
+                timeout:60000,
+                success: function(data){
+                    fill_summary(data);  
+                    draw_chart(data); 
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        };
+        
+        updateView();
+        
+        function reload_view(){
+            clearTimeout(timerID_reload);
+            var url = "/visa";    
+            $(location).attr('href',url);
+            
+        }
+        //timerID = setInterval(updateView, 60*60*1000);  //1시간
+    });
+    
+    /*
+    $(window).on("beforeunload", function(){
+        clearInterval(timerID);
+    });
+    */
+        
+
+</script> 
+
+{{/section}}
+

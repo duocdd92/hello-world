@@ -1,0 +1,5 @@
+process 1 start
+[ 'C:\\Program Files\\nodejs\\node.exe',
+  'D:\\projects\\hello-world\\hello-node\\src\\child_process\\process1.js' ]
+Process 1 is running... 1
+Process 1 is running... 2

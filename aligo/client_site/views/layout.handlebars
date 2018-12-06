@@ -1,0 +1,844 @@
+{{#section 'head'}}
+
+<style>
+    .t_summary {
+        /*border: 2px solid rgb(100, 100, 100);*/
+        border: 2px solid #0088dd;
+        width: 99.3%;
+        height: 90px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+
+        margin-left: 0.3%;
+        margin-right: auto;
+        empty-cells: show;
+        font-size: 40px;
+    }
+
+    .t_header {
+        /*background-color: rgb(100, 100, 100);*/
+        background-color: steelblue;
+        width: 200px;
+        text-align: center;
+        font-weight: bold;
+        color: white;
+    }
+
+    .t_data {
+        /*background-color: rgba(204, 236, 255, 0.4);*/
+        text-align: right;
+        font-size: 40px;
+        font-weight: bold;
+        width: 190px;
+        padding-right: 8px;
+    }
+</style>
+
+
+<style>
+    .d3_div {
+        border: 2px solid #0088dd;
+        width: 1895px;
+        height: 890px;
+        margin-left: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        background-image: url("../img/layout_all.png");
+    }
+</style>
+
+
+
+<style>
+    .circle_div {
+        position: absolute;
+        border: 3px solid gray;
+        background-color: black;
+        padding: 2px;
+    }
+
+    .circle {
+        float: left;
+        width: 16px;
+        height: 16px;
+        background: darkgray;
+        border: 2px solid black;
+        -moz-border-radius: 8px;
+        -webkit-border-radius: 8px;
+        border-radius: 8px;
+    }
+
+    .button_div {
+        clear: left;
+    }
+
+    .button {
+        width: 60px;
+        font-weight: bold;
+    }
+</style>
+
+{{/section}}
+
+<div class="d3_div">
+
+    <!-- ############################################################################# -->
+    <!-- AMR -->
+    <!-- ############################################################################# -->
+    <div id="box1001" class="circle_div" style="left: 593px; top: 322px;">
+        <div id="r1001" class="circle"></div>
+        <div id="y1001" class="circle"></div>
+        <div id="g1001" class="circle"></div>
+        <div class="button_div"><input id="1001" class="button" type="button" disabled value="15(3)" /></div>
+    </div>
+    <div id="box1063" class="circle_div" style="left: 593px; top: 416px;">
+        <div id="r1063" class="circle"></div>
+        <div id="y1063" class="circle"></div>
+        <div id="g1063" class="circle"></div>
+        <div class="button_div"><input id="1063" class="button" type="button" disabled value="08(5)" /></div>
+    </div>
+    <div id="box1064" class="circle_div" style="left: 593px; top: 510px;">
+        <div id="r1064" class="circle"></div>
+        <div id="y1064" class="circle"></div>
+        <div id="g1064" class="circle"></div>
+        <div class="button_div"><input id="1064" class="button" type="button" disabled value="01(5)" /></div>
+    </div>
+
+
+    <div id="box1011" class="circle_div" style="left: 501px; top: 322px;">
+        <div id="r1011" class="circle"></div>
+        <div id="y1011" class="circle"></div>
+        <div id="g1011" class="circle"></div>
+        <div class="button_div"><input id="1011" class="button" type="button" disabled value="16(3)" /></div>
+    </div>
+    <div id="box1061" class="circle_div" style="left: 501px; top: 416px;">
+        <div id="r1061" class="circle"></div>
+        <div id="y1061" class="circle"></div>
+        <div id="g1061" class="circle"></div>
+        <div class="button_div"><input id="1061" class="button" type="button" disabled value="09(5)" /></div>
+    </div>
+    <div id="box1062" class="circle_div" style="left: 501px; top: 510px;">
+        <div id="r1062" class="circle"></div>
+        <div id="y1062" class="circle"></div>
+        <div id="g1062" class="circle"></div>
+        <div class="button_div"><input id="1062" class="button" type="button" disabled value="02(5)" /></div>
+    </div>
+
+    <div id="box1012" class="circle_div" style="left: 409px; top: 322px;">
+        <div id="r1012" class="circle"></div>
+        <div id="y1012" class="circle"></div>
+        <div id="g1012" class="circle"></div>
+        <div class="button_div"><input id="1012" class="button" type="button" disabled value="17(3)" /></div>
+    </div>
+    <div id="box1059" class="circle_div" style="left: 409px; top: 416px;">
+        <div id="r1059" class="circle"></div>
+        <div id="y1059" class="circle"></div>
+        <div id="g1059" class="circle"></div>
+        <div class="button_div"><input id="1059" class="button" type="button" disabled value="10(5)" /></div>
+    </div>
+    <div id="box1060" class="circle_div" style="left: 409px; top: 510px;">
+        <div id="r1060" class="circle"></div>
+        <div id="y1060" class="circle"></div>
+        <div id="g1060" class="circle"></div>
+        <div class="button_div"><input id="1060" class="button" type="button" disabled value="03(5)" /></div>
+    </div>
+
+    <div id="box1013" class="circle_div" style="left: 330px; top: 322px;">
+        <div id="r1013" class="circle"></div>
+        <div id="y1013" class="circle"></div>
+        <div id="g1013" class="circle"></div>
+        <div class="button_div"><input id="1013" class="button" type="button" disabled value="18(3)" /></div>
+    </div>
+    <div id="box1057" class="circle_div" style="left: 330px; top: 416px;">
+        <div id="r1057" class="circle"></div>
+        <div id="y1057" class="circle"></div>
+        <div id="g1057" class="circle"></div>
+        <div class="button_div"><input id="1057" class="button" type="button" disabled value="11(5)" /></div>
+    </div>
+    <div id="box1058" class="circle_div" style="left: 330px; top: 510px;">
+        <div id="r1058" class="circle"></div>
+        <div id="y1058" class="circle"></div>
+        <div id="g1058" class="circle"></div>
+        <div class="button_div"><input id="1058" class="button" type="button" disabled value="04(5)" /></div>
+    </div>
+
+    <div id="box1014" class="circle_div" style="left: 240px; top: 322px;">
+        <div id="r1014" class="circle"></div>
+        <div id="y1014" class="circle"></div>
+        <div id="g1014" class="circle"></div>
+        <div class="button_div"><input id="1014" class="button" type="button" disabled value="19(3)" /></div>
+    </div>
+    <div id="box1055" class="circle_div" style="left: 240px; top: 416px;">
+        <div id="r1055" class="circle"></div>
+        <div id="y1055" class="circle"></div>
+        <div id="g1055" class="circle"></div>
+        <div class="button_div"><input id="1055" class="button" type="button" disabled value="12(5)" /></div>
+    </div>
+    <div id="box1056" class="circle_div" style="left: 240px; top: 510px;">
+        <div id="r1056" class="circle"></div>
+        <div id="y1056" class="circle"></div>
+        <div id="g1056" class="circle"></div>
+        <div class="button_div"><input id="1056" class="button" type="button" disabled value="05(5)" /></div>
+    </div>
+
+    <div id="box1015" class="circle_div" style="left: 144px; top: 322px;">
+        <div id="r1015" class="circle"></div>
+        <div id="y1015" class="circle"></div>
+        <div id="g1015" class="circle"></div>
+        <div class="button_div"><input id="1015" class="button" type="button" disabled value="20(3)" /></div>
+    </div>
+    <div id="box1053" class="circle_div" style="left: 144px; top: 416px;">
+        <div id="r1053" class="circle"></div>
+        <div id="y1053" class="circle"></div>
+        <div id="g1053" class="circle"></div>
+        <div class="button_div"><input id="1053" class="button" type="button" disabled value="13(5)" /></div>
+    </div>
+    <div id="box1054" class="circle_div" style="left: 144px; top: 510px;">
+        <div id="r1054" class="circle"></div>
+        <div id="y1054" class="circle"></div>
+        <div id="g1054" class="circle"></div>
+        <div class="button_div"><input id="1054" class="button" type="button" disabled value="06(5)" /></div>
+    </div>
+
+    <div id="box1016" class="circle_div" style="left: 44px; top: 322px;">
+        <div id="r1016" class="circle"></div>
+        <div id="y1016" class="circle"></div>
+        <div id="g1016" class="circle"></div>
+        <div class="button_div"><input id="1016" class="button" type="button" disabled value="21(3)" /></div>
+    </div>
+    <div id="box1051" class="circle_div" style="left: 44px; top: 416px;">
+        <div id="r1051" class="circle"></div>
+        <div id="y1051" class="circle"></div>
+        <div id="g1051" class="circle"></div>
+        <div class="button_div"><input id="1051" class="button" type="button" disabled value="14(5)" /></div>
+    </div>
+    <div id="box1052" class="circle_div" style="left: 44px; top: 510px;">
+        <div id="r1052" class="circle"></div>
+        <div id="y1052" class="circle"></div>
+        <div id="g1052" class="circle"></div>
+        <div class="button_div"><input id="1052" class="button" type="button" disabled value="07(5)" /></div>
+    </div>
+
+
+    <!-- ############################################################################# -->
+    <!-- ANR -->
+    <!-- ############################################################################# -->
+    <div id="box1029" class="circle_div" style="left: 593px; top: 598px;">
+        <div id="r1029" class="circle"></div>
+        <div id="y1029" class="circle"></div>
+        <div id="g1029" class="circle"></div>
+        <div class="button_div"><input id="1029" class="button" type="button" disabled value="13(5)" /></div>
+    </div>
+    <div id="box1030" class="circle_div" style="left: 593px; top: 690px;">
+        <div id="r1030" class="circle"></div>
+        <div id="y1030" class="circle"></div>
+        <div id="g1030" class="circle"></div>
+        <div class="button_div"><input id="1030" class="button" type="button" disabled value="07(5)" /></div>
+    </div>
+    <div id="box1084" class="circle_div" style="left: 593px; top: 785px;">
+        <div id="r1084" class="circle"></div>
+        <div id="y1084" class="circle"></div>
+        <div id="g1084" class="circle"></div>
+        <div class="button_div"><input id="1084" class="button" type="button" disabled value="01(4)" /></div>
+    </div>
+
+    <div id="box1027" class="circle_div" style="left: 501px; top: 598px;">
+        <div id="r1027" class="circle"></div>
+        <div id="y1027" class="circle"></div>
+        <div id="g1027" class="circle"></div>
+        <div class="button_div"><input id="1027" class="button" type="button" disabled value="14(5)" /></div>
+    </div>
+    <div id="box1028" class="circle_div" style="left: 501px; top: 690px;">
+        <div id="r1028" class="circle"></div>
+        <div id="y1028" class="circle"></div>
+        <div id="g1028" class="circle"></div>
+        <div class="button_div"><input id="1028" class="button" type="button" disabled value="08(5)" /></div>
+    </div>
+    <div id="box1085" class="circle_div" style="left: 501px; top: 785px;">
+        <div id="r1085" class="circle"></div>
+        <div id="y1085" class="circle"></div>
+        <div id="g1085" class="circle"></div>
+        <div class="button_div"><input id="1085" class="button" type="button" disabled value="02(4)" /></div>
+    </div>
+
+    <div id="box1025" class="circle_div" style="left: 409px; top: 598px;">
+        <div id="r1025" class="circle"></div>
+        <div id="y1025" class="circle"></div>
+        <div id="g1025" class="circle"></div>
+        <div class="button_div"><input id="1025" class="button" type="button" disabled value="15(5)" /></div>
+    </div>
+    <div id="box1026" class="circle_div" style="left: 409px; top: 690px;">
+        <div id="r1026" class="circle"></div>
+        <div id="y1026" class="circle"></div>
+        <div id="g1026" class="circle"></div>
+        <div class="button_div"><input id="1026" class="button" type="button" disabled value="09(5)" /></div>
+    </div>
+    <div id="box1086" class="circle_div" style="left: 409px; top: 785px;">
+        <div id="r1086" class="circle"></div>
+        <div id="y1086" class="circle"></div>
+        <div id="g1086" class="circle"></div>
+        <div class="button_div"><input id="1086" class="button" type="button" disabled value="03(4)" /></div>
+    </div>
+
+    <div id="box1023" class="circle_div" style="left: 330px; top: 598px;">
+        <div id="r1023" class="circle"></div>
+        <div id="y1023" class="circle"></div>
+        <div id="g1023" class="circle"></div>
+        <div class="button_div"><input id="1023" class="button" type="button" disabled value="16(5)" /></div>
+    </div>
+    <div id="box1024" class="circle_div" style="left: 330px; top: 690px;">
+        <div id="r1024" class="circle"></div>
+        <div id="y1024" class="circle"></div>
+        <div id="g1024" class="circle"></div>
+        <div class="button_div"><input id="1024" class="button" type="button" disabled value="10(5)" /></div>
+    </div>
+    <div id="box1083" class="circle_div" style="left: 330px; top: 785px;">
+        <div id="r1083" class="circle"></div>
+        <div id="y1083" class="circle"></div>
+        <div id="g1083" class="circle"></div>
+        <div class="button_div"><input id="1083" class="button" type="button" disabled value="04(4)" /></div>
+    </div>
+
+    <div id="box1021" class="circle_div" style="left: 240px; top: 598px;">
+        <div id="r1021" class="circle"></div>
+        <div id="y1021" class="circle"></div>
+        <div id="g1021" class="circle"></div>
+        <div class="button_div"><input id="1021" class="button" type="button" disabled value="17(5)" /></div>
+    </div>
+    <div id="box1022" class="circle_div" style="left: 240px; top: 690px;">
+        <div id="r1022" class="circle"></div>
+        <div id="y1022" class="circle"></div>
+        <div id="g1022" class="circle"></div>
+        <div class="button_div"><input id="1022" class="button" type="button" disabled value="11(5)" /></div>
+    </div>
+    <div id="box1018" class="circle_div" style="left: 240px; top: 785px;">
+        <div id="r1018" class="circle"></div>
+        <div id="y1018" class="circle"></div>
+        <div id="g1018" class="circle"></div>
+        <div class="button_div"><input id="1018" class="button" type="button" disabled value="05(4)" /></div>
+    </div>
+
+    <div id="box1019" class="circle_div" style="left: 144px; top: 598px;">
+        <div id="r1019" class="circle"></div>
+        <div id="y1019" class="circle"></div>
+        <div id="g1019" class="circle"></div>
+        <div class="button_div"><input id="1019" class="button" type="button" disabled value="18(5)" /></div>
+    </div>
+    <div id="box1020" class="circle_div" style="left: 144px; top: 690px;">
+        <div id="r1020" class="circle"></div>
+        <div id="y1020" class="circle"></div>
+        <div id="g1020" class="circle"></div>
+        <div class="button_div"><input id="1020" class="button" type="button" disabled value="12(5)" /></div>
+    </div>
+    <div id="box1017" class="circle_div" style="left: 144px; top: 785px;">
+        <div id="r1017" class="circle"></div>
+        <div id="y1017" class="circle"></div>
+        <div id="g1017" class="circle"></div>
+        <div class="button_div"><input id="1017" class="button" type="button" disabled value="06(4)" /></div>
+    </div>
+
+    <!-- ############################################################################# -->
+    <!-- AOR -->
+    <!-- ############################################################################# -->
+    <div id="box1070" class="circle_div" style="left: 1793px; top: 510px;">
+        <div id="r1070" class="circle"></div>
+        <div id="y1070" class="circle"></div>
+        <div id="g1070" class="circle"></div>
+        <div class="button_div"><input id="1070" class="button" type="button" disabled value="01(5)" /></div>
+    </div>
+    <div id="box1069" class="circle_div" style="left: 1793px; top: 416px;">
+        <div id="r1069" class="circle"></div>
+        <div id="y1069" class="circle"></div>
+        <div id="g1069" class="circle"></div>
+        <div class="button_div"><input id="1069" class="button" type="button" disabled value="04(5)" /></div>
+    </div>
+    <div id="box1099" class="circle_div" style="left: 1793px; top: 322px;">
+        <div id="r1099" class="circle"></div>
+        <div id="y1099" class="circle"></div>
+        <div id="g1099" class="circle"></div>
+        <div class="button_div"><input id="1099" class="button" type="button" disabled value="07(3)" /></div>
+    </div>
+
+    <div id="box1068" class="circle_div" style="left: 1718px; top: 510px;">
+        <div id="r1068" class="circle"></div>
+        <div id="y1068" class="circle"></div>
+        <div id="g1068" class="circle"></div>
+        <div class="button_div"><input id="1068" class="button" type="button" disabled value="02(5)" /></div>
+    </div>
+    <div id="box1067" class="circle_div" style="left: 1718px; top: 416px;">
+        <div id="r1067" class="circle"></div>
+        <div id="y1067" class="circle"></div>
+        <div id="g1067" class="circle"></div>
+        <div class="button_div"><input id="1067" class="button" type="button" disabled value="05(5)" /></div>
+    </div>
+    <div id="box1098" class="circle_div" style="left: 1718px; top: 322px;">
+        <div id="r1098" class="circle"></div>
+        <div id="y1098" class="circle"></div>
+        <div id="g1098" class="circle"></div>
+        <div class="button_div"><input id="1098" class="button" type="button" disabled value="08(3)" /></div>
+    </div>
+
+    <div id="box1066" class="circle_div" style="left: 1638px; top: 510px;">
+        <div id="r1066" class="circle"></div>
+        <div id="y1066" class="circle"></div>
+        <div id="g1066" class="circle"></div>
+        <div class="button_div"><input id="1066" class="button" type="button" disabled value="03(5)" /></div>
+    </div>
+    <div id="box1065" class="circle_div" style="left: 1638px; top: 416px;">
+        <div id="r1065" class="circle"></div>
+        <div id="y1065" class="circle"></div>
+        <div id="g1065" class="circle"></div>
+        <div class="button_div"><input id="1065" class="button" type="button" disabled value="06(5)" /></div>
+    </div>
+    <div id="box1097" class="circle_div" style="left: 1638px; top: 322px;">
+        <div id="r1097" class="circle"></div>
+        <div id="y1097" class="circle"></div>
+        <div id="g1097" class="circle"></div>
+        <div class="button_div"><input id="1097" class="button" type="button" disabled value="09(3)" /></div>
+    </div>
+
+    <div id="box1096" class="circle_div" style="left: 1549px; top: 322px;">
+        <div id="r1096" class="circle"></div>
+        <div id="y1096" class="circle"></div>
+        <div id="g1096" class="circle"></div>
+        <div class="button_div"><input id="1096" class="button" type="button" disabled value="10(3)" /></div>
+    </div>
+    <div id="box1095" class="circle_div" style="left: 1441px; top: 322px;">
+        <div id="r1095" class="circle"></div>
+        <div id="y1095" class="circle"></div>
+        <div id="g1095" class="circle"></div>
+        <div class="button_div"><input id="1095" class="button" type="button" disabled value="11(3)" /></div>
+    </div>
+    <div id="box1094" class="circle_div" style="left: 1360px; top: 322px;">
+        <div id="r1094" class="circle"></div>
+        <div id="y1094" class="circle"></div>
+        <div id="g1094" class="circle"></div>
+        <div class="button_div"><input id="1094" class="button" type="button" disabled value="12(3)" /></div>
+    </div>
+    <div id="box1093" class="circle_div" style="left: 1285px; top: 322px;">
+        <div id="r1093" class="circle"></div>
+        <div id="y1093" class="circle"></div>
+        <div id="g1093" class="circle"></div>
+        <div class="button_div"><input id="1093" class="button" type="button" disabled value="13(3)" /></div>
+    </div>
+    <div id="box1092" class="circle_div" style="left: 1192px; top: 322px;">
+        <div id="r1092" class="circle"></div>
+        <div id="y1092" class="circle"></div>
+        <div id="g1092" class="circle"></div>
+        <div class="button_div"><input id="1092" class="button" type="button" disabled value="14(3)" /></div>
+    </div>
+    <div id="box1091" class="circle_div" style="left: 1094px; top: 322px;">
+        <div id="r1091" class="circle"></div>
+        <div id="y1091" class="circle"></div>
+        <div id="g1091" class="circle"></div>
+        <div class="button_div"><input id="1091" class="button" type="button" disabled value="15(3)" /></div>
+    </div>
+    <div id="box1090" class="circle_div" style="left: 1003px; top: 322px;">
+        <div id="r1090" class="circle"></div>
+        <div id="y1090" class="circle"></div>
+        <div id="g1090" class="circle"></div>
+        <div class="button_div"><input id="1090" class="button" type="button" disabled value="16(3)" /></div>
+    </div>
+    <div id="box1089" class="circle_div" style="left: 925px; top: 322px;">
+        <div id="r1089" class="circle"></div>
+        <div id="y1089" class="circle"></div>
+        <div id="g1089" class="circle"></div>
+        <div class="button_div"><input id="1089" class="button" type="button" disabled value="17(3)" /></div>
+    </div>
+    <div id="box1088" class="circle_div" style="left: 836px; top: 322px;">
+        <div id="r1088" class="circle"></div>
+        <div id="y1088" class="circle"></div>
+        <div id="g1088" class="circle"></div>
+        <div class="button_div"><input id="1088" class="button" type="button" disabled value="18(3)" /></div>
+    </div>
+    <div id="box1087" class="circle_div" style="left: 736px; top: 322px;">
+        <div id="r1087" class="circle"></div>
+        <div id="y1087" class="circle"></div>
+        <div id="g1087" class="circle"></div>
+        <div class="button_div"><input id="1087" class="button" type="button" disabled value="19(3)" /></div>
+    </div>
+
+
+    <!-- ############################################################################# -->
+    <!-- APR -->
+    <!-- ############################################################################# -->
+    <div id="box1049" class="circle_div" style="left: 1793px; top: 598px;">
+        <div id="r1049" class="circle"></div>
+        <div id="y1049" class="circle"></div>
+        <div id="g1049" class="circle"></div>
+        <div class="button_div"><input id="1049" class="button" type="button" disabled value="23(5)" /></div>
+    </div>
+    <div id="box1050" class="circle_div" style="left: 1793px; top: 690px;">
+        <div id="r1050" class="circle"></div>
+        <div id="y1050" class="circle"></div>
+        <div id="g1050" class="circle"></div>
+        <div class="button_div"><input id="1050" class="button" type="button" disabled value="13(5)" /></div>
+    </div>
+    <div id="box9999" class="circle_div" style="left: 1793px; top: 785px;">
+        <div id="r9999" class="circle"></div>
+        <div id="y9999" class="circle"></div>
+        <div id="g9999" class="circle"></div>
+        <div class="button_div"><input id="9999" class="button" type="button" disabled value="Manual" /></div>
+    </div>
+
+    <div id="box1047" class="circle_div" style="left: 1718px; top: 598px;">
+        <div id="r1047" class="circle"></div>
+        <div id="y1047" class="circle"></div>
+        <div id="g1047" class="circle"></div>
+        <div class="button_div"><input id="1047" class="button" type="button" disabled value="24(5)" /></div>
+    </div>
+    <div id="box1048" class="circle_div" style="left: 1718px; top: 690px;">
+        <div id="r1048" class="circle"></div>
+        <div id="y1048" class="circle"></div>
+        <div id="g1048" class="circle"></div>
+        <div class="button_div"><input id="1048" class="button" type="button" disabled value="14(5)" /></div>
+    </div>
+    <div id="box1082" class="circle_div" style="left: 1718px; top: 785px;">
+        <div id="r1082" class="circle"></div>
+        <div id="y1082" class="circle"></div>
+        <div id="g1082" class="circle"></div>
+        <div class="button_div"><input id="1082" class="button" type="button" disabled value="01(4)" /></div>
+    </div>
+
+    <div id="box1045" class="circle_div" style="left: 1638px; top: 598px;">
+        <div id="r1045" class="circle"></div>
+        <div id="y1045" class="circle"></div>
+        <div id="g1045" class="circle"></div>
+        <div class="button_div"><input id="1045" class="button" type="button" disabled value="25(5)" /></div>
+    </div>
+    <div id="box1046" class="circle_div" style="left: 1638px; top: 690px;">
+        <div id="r1046" class="circle"></div>
+        <div id="y1046" class="circle"></div>
+        <div id="g1046" class="circle"></div>
+        <div class="button_div"><input id="1046" class="button" type="button" disabled value="15(5)" /></div>
+    </div>
+    <div id="box1081" class="circle_div" style="left: 1638px; top: 785px;">
+        <div id="r1081" class="circle"></div>
+        <div id="y1081" class="circle"></div>
+        <div id="g1081" class="circle"></div>
+        <div class="button_div"><input id="1081" class="button" type="button" disabled value="02(4)" /></div>
+    </div>
+
+    <div id="box1043" class="circle_div" style="left: 1549px; top: 598px;">
+        <div id="r1043" class="circle"></div>
+        <div id="y1043" class="circle"></div>
+        <div id="g1043" class="circle"></div>
+        <div class="button_div"><input id="1043" class="button" type="button" disabled value="26(5)" /></div>
+    </div>
+    <div id="box1044" class="circle_div" style="left: 1549px; top: 690px;">
+        <div id="r1044" class="circle"></div>
+        <div id="y1044" class="circle"></div>
+        <div id="g1044" class="circle"></div>
+        <div class="button_div"><input id="1044" class="button" type="button" disabled value="16(5)" /></div>
+    </div>
+    <div id="box1080" class="circle_div" style="left: 1549px; top: 785px;">
+        <div id="r1080" class="circle"></div>
+        <div id="y1080" class="circle"></div>
+        <div id="g1080" class="circle"></div>
+        <div class="button_div"><input id="1080" class="button" type="button" disabled value="03(4)" /></div>
+    </div>
+
+    <div id="box1041" class="circle_div" style="left: 1441px; top: 598px;">
+        <div id="r1041" class="circle"></div>
+        <div id="y1041" class="circle"></div>
+        <div id="g1041" class="circle"></div>
+        <div class="button_div"><input id="1041" class="button" type="button" disabled value="27(5)" /></div>
+    </div>
+    <div id="box1042" class="circle_div" style="left: 1441px; top: 690px;">
+        <div id="r1042" class="circle"></div>
+        <div id="y1042" class="circle"></div>
+        <div id="g1042" class="circle"></div>
+        <div class="button_div"><input id="1042" class="button" type="button" disabled value="17(5)" /></div>
+    </div>
+    <div id="box1079" class="circle_div" style="left: 1441px; top: 785px;">
+        <div id="r1079" class="circle"></div>
+        <div id="y1079" class="circle"></div>
+        <div id="g1079" class="circle"></div>
+        <div class="button_div"><input id="1079" class="button" type="button" disabled value="04(4)" /></div>
+    </div>
+
+    <div id="box1039" class="circle_div" style="left: 1360px; top: 598px;">
+        <div id="r1039" class="circle"></div>
+        <div id="y1039" class="circle"></div>
+        <div id="g1039" class="circle"></div>
+        <div class="button_div"><input id="1039" class="button" type="button" disabled value="28(5)" /></div>
+    </div>
+    <div id="box1040" class="circle_div" style="left: 1360px; top: 690px;">
+        <div id="r1040" class="circle"></div>
+        <div id="y1040" class="circle"></div>
+        <div id="g1040" class="circle"></div>
+        <div class="button_div"><input id="1040" class="button" type="button" disabled value="18(5)" /></div>
+    </div>
+    <div id="box1078" class="circle_div" style="left: 1360px; top: 785px;">
+        <div id="r1078" class="circle"></div>
+        <div id="y1078" class="circle"></div>
+        <div id="g1078" class="circle"></div>
+        <div class="button_div"><input id="1078" class="button" type="button" disabled value="05(4)" /></div>
+    </div>
+
+    <div id="box1037" class="circle_div" style="left: 1285px; top: 598px;">
+        <div id="r1037" class="circle"></div>
+        <div id="y1037" class="circle"></div>
+        <div id="g1037" class="circle"></div>
+        <div class="button_div"><input id="1037" class="button" type="button" disabled value="29(5)" /></div>
+    </div>
+    <div id="box1038" class="circle_div" style="left: 1285px; top: 690px;">
+        <div id="r1038" class="circle"></div>
+        <div id="y1038" class="circle"></div>
+        <div id="g1038" class="circle"></div>
+        <div class="button_div"><input id="1038" class="button" type="button" disabled value="19(5)" /></div>
+    </div>
+    <div id="box1077" class="circle_div" style="left: 1285px; top: 785px;">
+        <div id="r1077" class="circle"></div>
+        <div id="y1077" class="circle"></div>
+        <div id="g1077" class="circle"></div>
+        <div class="button_div"><input id="1077" class="button" type="button" disabled value="06(4)" /></div>
+    </div>
+
+    <div id="box1035" class="circle_div" style="left: 1192px; top: 598px;">
+        <div id="r1035" class="circle"></div>
+        <div id="y1035" class="circle"></div>
+        <div id="g1035" class="circle"></div>
+        <div class="button_div"><input id="1035" class="button" type="button" disabled value="30(5)" /></div>
+    </div>
+    <div id="box1036" class="circle_div" style="left: 1192px; top: 690px;">
+        <div id="r1036" class="circle"></div>
+        <div id="y1036" class="circle"></div>
+        <div id="g1036" class="circle"></div>
+        <div class="button_div"><input id="1036" class="button" type="button" disabled value="20(5)" /></div>
+    </div>
+    <div id="box1076" class="circle_div" style="left: 1192px; top: 785px;">
+        <div id="r1076" class="circle"></div>
+        <div id="y1076" class="circle"></div>
+        <div id="g1076" class="circle"></div>
+        <div class="button_div"><input id="1076" class="button" type="button" disabled value="07(4)" /></div>
+    </div>
+
+    <div id="box1033" class="circle_div" style="left: 1094px; top: 598px;">
+        <div id="r1033" class="circle"></div>
+        <div id="y1033" class="circle"></div>
+        <div id="g1033" class="circle"></div>
+        <div class="button_div"><input id="1033" class="button" type="button" disabled value="31(5)" /s></div>
+    </div>
+    <div id="box1034" class="circle_div" style="left: 1094px; top: 690px;">
+        <div id="r1034" class="circle"></div>
+        <div id="y1034" class="circle"></div>
+        <div id="g1034" class="circle"></div>
+        <div class="button_div"><input id="1034" class="button" type="button" disabled value="21(5)" /></div>
+    </div>
+    <div id="box1075" class="circle_div" style="left: 1094px; top: 785px;">
+        <div id="r1075" class="circle"></div>
+        <div id="y1075" class="circle"></div>
+        <div id="g1075" class="circle"></div>
+        <div class="button_div"><input id="1075" class="button" type="button" disabled value="08(4)" /></div>
+    </div>
+
+    <div id="box1031" class="circle_div" style="left: 1003px; top: 598px;">
+        <div id="r1031" class="circle"></div>
+        <div id="y1031" class="circle"></div>
+        <div id="g1031" class="circle"></div>
+        <div class="button_div"><input id="1031" class="button" type="button" disabled value="32(5)" /></div>
+    </div>
+    <div id="box1032" class="circle_div" style="left: 1003px; top: 690px;">
+        <div id="r1032" class="circle"></div>
+        <div id="y1032" class="circle"></div>
+        <div id="g1032" class="circle"></div>
+        <div class="button_div"><input id="1032" class="button" type="button" disabled value="22(5)" /></div>
+    </div>
+    <div id="box1074" class="circle_div" style="left: 1003px; top: 785px;">
+        <div id="r1074" class="circle"></div>
+        <div id="y1074" class="circle"></div>
+        <div id="g1074" class="circle"></div>
+        <div class="button_div"><input id="1074" class="button" type="button" disabled value="09(4)" /></div>
+    </div>
+
+    <div id="box1073" class="circle_div" style="left: 925px; top: 785px;">
+        <div id="r1073" class="circle"></div>
+        <div id="y1073" class="circle"></div>
+        <div id="g1073" class="circle"></div>
+        <div class="button_div"><input id="1073" class="button" type="button" disabled value="10(4)" /></div>
+    </div>
+
+    <div id="box1072" class="circle_div" style="left: 836px; top: 785px;">
+        <div id="r1072" class="circle"></div>
+        <div id="y1072" class="circle"></div>
+        <div id="g1072" class="circle"></div>
+        <div class="button_div"><input id="1072" class="button" type="button" disabled value="11(4)" /></div>
+    </div>
+
+    <div id="box1071" class="circle_div" style="left: 736px; top: 785px;">
+        <div id="r1071" class="circle"></div>
+        <div id="y1071" class="circle"></div>
+        <div id="g1071" class="circle"></div>
+        <div class="button_div"><input id="1071" class="button" type="button" disabled value="12(4)" /></div>
+    </div>
+</div>
+
+
+
+
+
+{{#section 'jquery'}}
+<script>
+    menu.setActive(2);
+    var list= document.getElementsByClassName("circle_div")
+    for (var i = 0; i < list.length; i++) {
+        var ele = list[i];
+        var currentTop = ele.style.top;
+        currentTop = parseInt(currentTop.replace("px", ""));
+        ele.style.top = (currentTop - 42) + "px";
+    }
+    var timerID_update, timerID_reload;
+
+    $(document).ready(function () {
+        $("a#menu8").addClass("current");
+        header.setTitle('CNC Robot Line Status');
+        footer.setTitle();
+        //$('#title').text('CNC Robot Line Status');
+        $("div.line_button_div").remove();
+
+        timerID_reload = setTimeout(reload_view, 1 * 60 * 60 * 1000); // 1시간에 한번씩 화면 Reload
+
+        $(document).on('click', 'input.button', function () {
+            $.ajax({
+                url: '/ajax/select-line/' + $(this).attr('id'),
+                type: 'GET',
+                timeout: 3000,
+                success: function (data) {
+                    let url = '/line-status/' + data.groupId + '/' + data.line_code;
+                    window.location.href = url;
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+            //window.location.href = '/line-status/' + $(this).attr('id');
+        });
+
+        btn_enable();
+        updateView();
+
+        function btn_enable() {
+            $.ajax({
+                url: '/ajax/layout-get',
+                type: 'GET',
+                timeout: 60000,
+                success: function (data) {
+                    var btnID;
+                    for (var i = 0; i < data[1].length; i++) {
+                        btnID = '#' + data[1][i].RobotLineCode;
+                        $(btnID).prop('disabled', false);
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+
+        function updateView() {
+            clearTimeout(timerID_update);
+
+            function lightDisplay(data) {
+                var main_title = data.title;
+                var prod_data = data.summary;
+                var robot_util_data = data.robotRunRate;
+                var cnc_util_data = data.cncRunRate;
+
+                //$('#cur_datetime').text(main_title.cur_datetime + ' [T : 10sec]');
+                footer.setTitle(main_title.cur_datetime + ' [T : 10sec]');
+
+                var status = "";
+                for (var i = 0; i < prod_data.length; i++) {
+                    $('#box' + prod_data[i].RobotLineCode).css('border-color', 'darkgray');
+                    $('#g' + prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                    $('#y' + prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                    $('#r' + prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+
+                    // Border 부분
+                    //달성률이 95% 미만이면 빨간불
+                    if (prod_data[i].prod_cnt / prod_data[i].target_cnt * 100 < 95) {
+                        $('#box' + prod_data[i].RobotLineCode).css('border-color', 'red');
+                        //$('#g'+prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                        //$('#y'+prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                        //$('#r'+prod_data[i].RobotLineCode).css('background-color', 'red');
+                    }
+                    //로봇 가동률이나 CNC 가동률이 95% 미만이면 노란불
+                    else if (cnc_util_data[i].cnc_run_rate < 95 || robot_util_data[i].robot_run_rate < 95) {
+                        // console.log(prod_data[i].RobotLineCode + ' / ' + cnc_util_data[i].cnc_run_rate+ ' / '+robot_util_data[i].robot_run_rate);
+                        $('#box' + prod_data[i].RobotLineCode).css('border-color', 'yellow');
+                        //$('#g'+prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                        //$('#y'+prod_data[i].RobotLineCode).css('background-color', 'yellow');
+                        //$('#r'+prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                    }
+                    //그외 녹색불
+                    else {
+                        $('#box' + prod_data[i].RobotLineCode).css('border-color', 'green');
+                        //$('#g'+prod_data[i].RobotLineCode).css('background-color', 'green');
+                        //$('#y'+prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                        //$('#r'+prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                    }
+
+                    //RSS 상태 부분
+                    // 0: RUN
+                    status = status + "_" + robot_util_data[i].robot_status;
+                    if (robot_util_data[i].robot_status == 0) {
+                        $('#g' + prod_data[i].RobotLineCode).css('background-color', 'green');
+                        $('#y' + prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                        $('#r' + prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                    }
+                    // 1: READY
+                    else if (robot_util_data[i].robot_status == 1) {
+                        $('#g' + prod_data[i].RobotLineCode).css('background-color', 'green');
+                        $('#y' + prod_data[i].RobotLineCode).css('background-color', 'orange');
+                        $('#r' + prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                    }
+                    // 2: STOP
+                    else if (robot_util_data[i].robot_status == 2) {
+                        $('#g' + prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                        $('#y' + prod_data[i].RobotLineCode).css('background-color', 'orange');
+                        $('#r' + prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                    }
+                    // 3: ALARM
+                    else if (robot_util_data[i].robot_status == 3) {
+                        $('#g' + prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                        $('#y' + prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                        $('#r' + prod_data[i].RobotLineCode).css('background-color', 'red');
+                    }
+                    // 4: MANUAL
+                    else if (robot_util_data[i].robot_status == 4) {
+                        $('#g' + prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                        $('#y' + prod_data[i].RobotLineCode).css('background-color', 'yellow');
+                        $('#r' + prod_data[i].RobotLineCode).css('background-color', 'darkgray');
+                    }
+                }
+
+                //console.log(status + "_" + prod_data.length);
+
+            }
+
+            $.ajax({
+                url: '/ajax/layout-get',
+                type: 'GET',
+                timeout: 60000,
+                success: function (data) {
+                    lightDisplay(data);
+                    timerID_update = setTimeout(updateView, 300);
+                },
+                error: function (err) {
+                    console.log(err);
+                    timerID_update = setTimeout(updateView, 10000);
+                }
+            });
+        };
+
+        function reload_view() {
+            clearTimeout(timerID_reload);
+            var url = "/layout";
+            $(location).attr('href', url);
+        }
+    });
+
+</script>
+
+{{/section}}

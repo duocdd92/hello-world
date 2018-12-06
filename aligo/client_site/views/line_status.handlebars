@@ -1,0 +1,156 @@
+{{#section 'head'}}
+    <script type="text/javascript" src="/vendor/d3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/line-status.css">
+{{/section}}
+
+<div class="line-status-content">
+    <div id="line-status-content">
+        <div class="line-summary">
+            <div class="box">
+                <h3>Plan</h3>
+                <h2 id="plan_cnt">4000</h2>
+            </div>
+            <div class="box">
+                <h3>Target</h3>
+                <h2 id="target_cnt">345</h2>
+            </div>
+            <div class="box">
+                <h3>Prod</h3>
+                <h2 id="total_prod">358</h2>
+            </div>
+            <div class="box">
+                <h3>Achieve</h3>
+                <h2 id="achieved_rate">104%</h2>
+            </div>
+            <div class="box">
+                <h3>CNC Util</h3>
+                <h2 id="cnc_run_rate">82.5%</h2>
+            </div>
+        </div>
+
+
+        <div class="cnc-sign">
+            <ul class="cnc-alarm">
+                <li><h4>CNC Status</h4></li>
+                <li><span class="process">Process</span></li>
+                <li><span class="standby">Standby</span></li>
+                <li><span class="warmup">Warmup</span></li>
+                <li><span class="tool-change">Tool change</span></li>
+                <li><span class="alarm">Alarm</span></li>
+                <li><span class="robot-alarm">Rotbot Alarm</span></li>
+                <li><span class="nosignal">No Signal</span></li>
+                <li><span class="jig-setup">Jig Setup</span></li>
+                <li><span class="warning">Warning</span></li>
+            </ul>
+
+            <ul class="cnc-event">
+                <li><span class="nocall">No Call</span></li>
+                <li><span class="last-machin">Last Machining</span></li>
+                <li><span class="probe-err">Probe Error</span></li>
+                <li><span class="robot-call">Robot Call</span></li>
+                <li><span class="pre-call">PreCall</span></li>
+                <li><span class="normal">Normal</span></li>
+                <li><h4>Event</h4></li>
+            </ul>
+        </div>
+
+
+        <div class="line-layout">
+            <div class="line-left">
+                <ul class="cnc-boxes" id="line-left"></ul>
+            </div>
+
+            <div class="line-mid">
+                <div class="line-troke">
+                    <div class="line-str"></div>
+                    <div class="line-col"></div>
+                    <div id="robot-transfer">
+                        <div id="robot-img"></div>
+                        <div class="robot-state">
+                            <div id="trans-state">RUN</div>
+                            <div id="trans-stay-time">[AM4-G07] 00:00:05</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="line-right">
+                <ul class="cnc-boxes" id="line-right"></ul>
+            </div>
+        </div>
+
+
+        <div class="cnc-summary">
+            <div class="box">
+                <h3>Recipe</h3>
+                <h2 id="process">DREAM1-CNC05</h2>
+            </div>
+            <div class="box">
+                <h3>Cycle Time</h3>
+                <h2 id="cycle_time">123</h2>
+            </div>
+            <div class="box">
+                <h3>Run CNC</h3>
+                <h2 id="cnc_run">8/8 (0)</h2>
+            </div class="box">
+            <div class="box">
+                <h3>Prod/CNC</h3>
+                <h2 id="cnc_prod">66.5</h2>
+            </div>
+            <div class="box">
+                <h3>Robot Util</h3>
+                <h2 id="eqp_run_rate">90%</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="robot-infor">
+            <div class="line-bottom line-chart">
+                <div id="d3title" class="d3Title title">Robot Alarm : 0 </div>
+                <div id="d3div" class="d3Content bottom-content"></div>
+            </div>
+            <div class="line-bottom line-status">
+                <div class="line-owner">
+                    <div class="title">PIC (MK)</div>
+                    <div class="owner-pics bottom-content">
+                        <ul id="keeper-ava"></ul>
+                    </div>
+                </div>
+                <div class="robot">
+                    <div id="robot-status" class="title">RTU stay at [ AM4-G07 ]</div>
+                    <iframe id="line-camera" class="bottom-content"  src=""></iframe>
+                </div>
+            </div>
+
+            <div class="line-bottom line-motion bd-r bd-b bd-l">
+                <div class="col col1 bd-r">
+                    <div class="motion bd-b">
+                        <div class="txt-ver-mid bd-b">Motion</div>
+                        <div class="txt-ver-mid bd-b">Motion Begin</div>
+                        <div class="txt-ver-mid">Motion End</div>
+                    </div>
+                    <div class="tray tray-no bd-b">
+                        <ul id="tray-list"></ul>
+                    </div>
+                    <div class="txt-ver-mid tray-tit tray-height">Tray height</div>
+                </div>
+
+                <div class="col col2">
+                    <div class="motion bd-b d-l">
+                        <div id="teaching" class="txt-ver-mid bd-b">Mogion begin</div>
+                        <div id="motion-begin" class="txt-ver-mid bd-b">Mogion begin</div>
+                        <div id="motion-end" class="txt-ver-mid">Mogion begin</div>
+                    </div>
+                    <div class="tray tray-pos bd-b d-l">
+                        <ul id="tray-pos"></ul>
+                    </div>
+                    <div class="txt-ver-mid tray-tit tray-position d-l">Tray Position</div>
+                </div>
+            </div>
+        </div>
+</div>
+{{#section 'jquery'}}
+    <script type="text/javascript" src="../js/static-data.js"></script>
+    <script type="text/javascript" src="../js/line-status.js"></script>
+{{/section}}

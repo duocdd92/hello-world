@@ -1,0 +1,48 @@
+<!-- <b>Classes of name element: {{name1?.className}}</b> -->
+<!-- <b>ngForm.form.valid:</b> <span>{{myForm.form.valid | json}}</span> -->
+<br>
+<form #myForm="ngForm" (ngSubmit)="submit()">
+    <label for="name1">Name 1: </label>
+    <input type="text" id="name1" [(ngModel)]="test.name1" name="name1" required>
+
+    <br>
+
+    <label for="name2">Name 2: </label>
+    <input id="name2" required minlength="4" appCheckName="duocdd" name="name2" [(ngModel)]="test.name2" #name2="ngModel">
+
+    <div *ngIf="name2.invalid && (name2.dirty || name2.touched)">
+        <div *ngIf="name2.errors.required">
+            Name is required.
+        </div>
+        <div *ngIf="name2.errors.forbiddenName">
+            Name cannot be duocdd.
+        </div>
+        <div *ngIf="name2.errors.minlength">
+            Name must be at least 4 characters long.
+        </div>
+    </div>
+
+    <!-- <br>
+
+    <label for="num1">Number 1: </label>
+    <input type="number" id="num1" required max="4" name="num1" [(ngModel)]="test.num1" #num1="ngModel"> {{num1.errors | json}}
+    <div *ngIf="num1.invalid && (num1.dirty || num1.touched)">
+        <div *ngIf="num1.errors.max">
+            Name is required.
+        </div>
+    </div> -->
+
+    <br>
+
+    <label for="bool">Boolean: </label>
+    <input id="bool" requiredTrue name="bool" [(ngModel)]="test.check" #bool="ngModel"> {{bool.errors | json}}
+    <div *ngIf="bool.invalid && (bool.dirty || bool.touched)">
+        <div *ngIf="bool.errors.requiredTrue">
+            Value must be true.
+        </div>
+    </div>
+
+    <br>
+
+    <button type="submit" [disabled]="!myForm.form.valid">Submit</button>
+</form>

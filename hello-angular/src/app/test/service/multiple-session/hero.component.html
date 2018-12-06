@@ -1,0 +1,31 @@
+<form [formGroup]="heroFormGroup" (ngSubmit)="onSubmit()">
+    <ng-content></ng-content>
+    
+    <div class="input-block">
+        <label>
+            Id:
+            <input formControlName="id" />
+        </label>
+    </div>
+
+    <div class="input-block">
+        <label>
+            Name:
+            <input formControlName="name" />
+        </label>
+    </div>
+
+    <div class="input-block">
+        <label>
+            is flying hero:
+            <input type="checkbox" formControlName="isFlying" />
+        </label>
+    </div>
+
+    <div class="input-block">
+        <button type="submit">Save</button>
+        <button type="button" (click)="restore()">Cancel</button>
+        <button type="button" (click)="changeName()">Change name</button>
+        <button type="button" (click)="showOrigin()">Show origin</button>
+    </div>
+</form>

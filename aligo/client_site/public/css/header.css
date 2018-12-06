@@ -1,0 +1,367 @@
+@font-face {
+    font-family: 'SamsungOne-400';
+    src: url('/fonts/SamsungOne-400.eot');
+    /* IE9 Compat Modes */
+    src: url('/fonts/SamsungOne-400.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('/fonts/SamsungOne-400.woff') format('woff'), /* Modern Browsers */
+    url('/fonts/SamsungOne-400.ttf') format('truetype');
+    /* Safari, Android, iOS */
+    font-style: normal;
+    font-weight: normal;
+    text-rendering: optimizeLegibility;
+}
+
+@font-face {
+    font-family: 'SamsungOne-800';
+    src: url('/fonts/SamsungOne-800.eot');
+    /* IE9 Compat Modes */
+    src: url('/fonts/SamsungOne-800.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('/fonts/SamsungOne-800.woff') format('woff'), /* Modern Browsers */
+    url('/fonts/SamsungOne-800.ttf') format('truetype');
+    /* Safari, Android, iOS */
+    font-style: normal;
+    font-weight: normal;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    margin: 0px;
+    /* background-color: rgba(204, 236, 255, 0.4); */
+    font-family: SamsungOne-800;
+    background: #E9E9E9;
+    height: 100vh;
+}
+
+header {}
+
+
+/*
+#titlebar {
+    background-color: steelblue;
+    height: 100px;
+}
+
+.logo {
+    float: left;
+    width: 12%;
+    height: 100px;
+    background-image: url("../img/aligo_logo.png");
+    background-repeat: no-repeat;
+    background-position: 20px 5px;
+}
+
+.title {
+    float: left;
+    line-height: 100px;
+    width: 76%;
+    text-align: center;
+    color: white;
+    font-family: SamsungOne-800;
+    font-size: 50px;
+}
+
+.imgsamsung {
+    float: left;
+    width: 12%;
+    height: 100px;
+    background-image: url("../img/samsung.png");
+    background-repeat: no-repeat;
+    background-position: 20px 60px;
+}
+
+.datetime {
+    float: right;
+    position: relative;
+    padding-right: 20px;
+    text-align: right;
+    top: 70%;
+    font-size: 22px;
+    width: 300px;
+}
+
+#nav {
+    height: 25px;
+    background-color: rgb(11, 69, 89);
+}
+
+#nav ul {
+    margin: 0px;
+    padding: 0px 0px 5px 30px;
+}
+
+#nav li {
+    display: inline;
+    margin-right: 30px;
+}
+
+#nav li a {
+    color: rgb(128, 128, 128);
+}
+
+#nav li a:hover,
+#nav li a.current {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.bgfooter {
+    clear: left;
+    background-color: steelblue;
+    border-top: solid 5px darkgrey;
+    width: 100%;
+    height: 30px;
+    padding-top: 5px;
+}
+
+.datetime2 {
+    float: right;
+    text-align: right;
+    font-size: 22px;
+    padding-right: 20px;
+}
+
+.line_button {
+    width: 80px;
+    height: 26px;
+    margin-right: 8px;
+    background-color: lightgray;
+}
+
+.line_button_div {
+    float: left;
+    padding-left: 5px;
+} */
+
+
+/*************************************** new header **************************************/
+
+.hidden-header {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.header {
+    height: 83px;
+    background-color: #194e7a;
+    position: relative;
+    min-width: 1000px;
+}
+
+.header .header-item {
+    height: 100%;
+    float: left;
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    -webkit-align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 0;
+}
+
+.header-item {
+    width: 50px;
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    -webkit-align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-icon {
+    width: 20px;
+    transition: 0.2s;
+}
+
+.header-item.aligo-logo {
+    margin-left: 12px;
+    width: 210px;
+    -webkit-justify-content: left;
+    justify-content: flex-start;
+    position: absolute;
+    left: 50px;
+}
+
+.aligo-icon {
+    height: 68%;
+    float: left;
+}
+
+.header-item.title-bar {
+    position: absolute;
+    width: 100%;
+    /* background: green; */
+    /* pointer-events: none; */
+}
+
+.header-item.title-bar .title {
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: bold;
+    font-family: SamsungOne-400;
+    border: none;
+}
+
+.arrow-icon {
+    width: 100%;
+    margin-top: 36px;
+    transition: 0.2s;
+}
+
+.samsung-logo .logo {
+    width: 100%;
+}
+
+.header-item.samsung-logo {
+    float: right;
+    margin-right: 15px;
+    width: 150px;
+    position: relative;
+}
+
+.header .menu {
+    /* width: 100vw; */
+    position: absolute;
+    height: calc(100vh - 83px);
+    top: 0;
+    left: 0;
+    transform: translate3d(-260px, 0, 0);
+    transition: 0.2s;
+    z-index: 25;
+    margin-top: 83px;
+    pointer-events: none;
+    /* background: rgba(0, 0, 0, 0.48); */
+}
+
+.header .menu.open {
+    transform: none;
+    pointer-events: visible;
+}
+
+#menu_icon:hover .menu {
+    transform: none;
+    pointer-events: visible;
+}
+
+#menu_icon:hover .menu-icon {
+    transform: rotate(180deg);
+}
+
+.center {
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    -webkit-align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu .item {
+    color: white;
+    font-size: 18px;
+    height: 56px;
+    -webkit-justify-content: left;
+    justify-content: flex-start;
+    padding-left: 62px;
+    background-color: #194e7a;
+}
+
+.menu .item:active,
+.menu .item:hover {
+    background-color: #143e62;
+}
+
+.menu-container {
+    width: 260px;
+    height: 100%;
+    background-color: #194e7a;
+}
+
+.menu[selected="1"] .item:nth-child(1) {
+    background-color: #143e62;
+}
+
+.menu[selected="2"] .item:nth-child(2) {
+    background-color: #143e62;
+}
+
+.menu[selected="3"] .item:nth-child(3) {
+    background-color: #143e62;
+}
+
+.menu[selected="4"] .item:nth-child(4) {
+    background-color: #143e62;
+}
+
+.menu[selected="5"] .item:nth-child(5) {
+    background-color: #143e62;
+}
+
+.menu[selected="6"] .item:nth-child(6) {
+    background-color: #143e62;
+}
+
+.menu[selected="7"] .item:nth-child(7) {
+    background-color: #143e62;
+}
+
+.menu[selected="8"] .item:nth-child(8) {
+    background-color: #143e62;
+}
+
+.drop-down {
+    width: 26px;
+    height: 100%;
+    margin-left: 10px;
+    position: relative;
+}
+
+.drop-down-list {
+    width: 172px;
+    /* height: 500px; */
+    background: #ffffff;
+    position: absolute;
+    top: 100%;
+    left: -76px;
+    transition: 0.2s;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1000;
+    box-shadow: 3px 3px 12px #4c4848;
+}
+
+.drop-down:hover .drop-down-list {
+    opacity: 1;
+    pointer-events: visible;
+}
+
+.drop-down:hover .arrow-icon {
+    transform: rotate(180deg);
+}
+
+.drop-down-list .drop-down-item {
+    width: 100%;
+    height: 36px;
+    font-size: 14px;
+    font-family: initial;
+}
+
+.drop-down-list .drop-down-item:hover {
+    background: #dadada;
+    color: #194e7a;
+    font-weight: bold;
+}
+
+footer.bgfooter {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #E9E9E9;
+}
+
+#cur_datetime {
+    text-align: center;
+    height: 30px;
+}

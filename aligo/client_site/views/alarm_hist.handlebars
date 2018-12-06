@@ -1,0 +1,108 @@
+{{#section 'head'}} 
+<style>
+   table { 
+        color: #333; /* Lighten up font color */
+        width: 99%; 
+        border-collapse: collapse;
+        border-spacing: 0;
+        margin-top: 20px;
+        margin-left: 10px;
+        font-size: 20px;
+        
+   } /* Make table wider */
+
+   
+    th {
+     background: steelblue; /* Light grey background */
+     font-weight: bold; /* Make sure they're bold */
+     color:white;
+     padding-top: 10px;
+     padding-bottom: 10px;
+     }
+
+    td {
+     background: #FAFAFA; /* Lighter grey background */
+     text-align: center; /* Center our text */
+     padding-top: 15px;
+     padding-bottom: 15px;
+     }
+
+
+
+</style>
+
+<script src="/vendor/handlebars-v4.0.5.js"></script>
+<script id="AlarmHistTemplate" type="text/x-handlebars-template">
+    <tr>
+        <td>\{{StateChangedBeginDateTime}}</td>
+        <td>\{{AlarmTime}}</td>
+        <td>\{{AlarmID}}</td>
+        <td>\{{AlarmDesc}}</td>
+        <td>\{{AlarmType}}</td>
+        <td>\{{CNC}}</td>
+   
+        <td>\{{StateChangedEndDateTime}}</td>
+    </tr>
+</script>
+{{/section}}
+
+
+    <table class = "alarm_hist">
+        <thead class = "alarm_title">
+            <tr>
+                <th>Alarm On</th>
+                <th>OnTime (sec)</th>
+                <th>Alarm ID</th>
+                <th>Alarm Desc</th>
+                <th>Type</th>
+                <th>CNC</th>
+              <!--  <th>RobotMotion</th> -->
+                <th>Alarm Off</th>
+            </tr>
+        </thead>
+        <tbody id="alarm_data" class = "alarm_data">
+          
+        </tbody>
+    </table>
+
+
+{{#section 'jquery'}} 
+<script>
+    $(document).ready(function(){
+        $("a#menu2").addClass("current");
+        
+        $('.bordered tr').mouseover(function(){
+            $(this).addClass('highlight');
+        }).mouseout(function(){
+            $(this).removeClass('highlight');
+        });
+        
+        $("footer").remove();
+        
+        var AlarmHistTemplate = Handlebars.compile(
+                $('#AlarmHistTemplate').html());
+        var $alarm_tbody = $("#alarm_data");
+       
+        $alarm_tbody.html('');
+        $.ajax("",{
+            url: '/ajax/VisionAlarmHist_get',
+            type: 'GET',
+            timeout:3000,
+            success: function(data){
+                $('#title').text(data[0][0].title);
+     
+                
+                $alarm_tbody.html('');
+                
+                for(var i=0; i<data[1].length; i++){
+                    $alarm_tbody.append(AlarmHistTemplate(data[1][i]));
+                }
+                
+                
+            }
+        });
+       
+        
+    });
+</script> 
+{{/section}}

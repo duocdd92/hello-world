@@ -1,0 +1,46 @@
+<div class="sec">
+    <div class="titile">ngFor</div>
+    <ul>
+        <li *ngFor="let item of ngForList; let indx = index">{{indx}} - {{item}}</li>
+    </ul>
+</div>
+
+<div class="sec">
+    <div class="titile">Two-way binding</div>
+    <input [(ngModel)]="twoWayBinding" />
+    <div>{{twoWayBinding}}</div>
+</div>
+
+<div class="sec">
+    <div class="titile">Event Emitter (Out put & Input)</div>
+    <!-- <app-component-template-emitter [title]="'Input title'" (onClickGetValue)="getValue($event)"></app-component-template-emitter> -->
+    <!-- <div>{{emitterValue}}</div> -->
+</div>
+
+<div class="sec">
+    <div class="titile">Ng template</div>
+    <ng-template>a</ng-template>
+    <ng-template [ngIf]="true">
+        <div>b</div>
+    </ng-template>
+    <ng-template>
+        <div>c</div>
+    </ng-template>
+</div>
+
+<div class="sec">
+    <div class="titile">Container</div>
+    <select>
+        <ng-container *ngFor="let opt of options">
+            <option *ngIf="opt.display === true">{{opt.text}}</option>
+        </ng-container>
+    </select>
+</div>
+
+<div class="sec">
+    <div class="titile">Ng-content</div>
+
+    <app-ng-content>
+        <app-ng-content-child></app-ng-content-child>
+    </app-ng-content>
+</div>

@@ -1,0 +1,16 @@
+<div class="file-upload">
+    <input id="custom-input" type="file" (change)="fileChangeListener($event)">
+</div>
+<img-cropper #cropper [image]="data" [settings]="cropperSettings"></img-cropper>
+<br>
+<span class="result rounded" *ngIf="data.image">
+    <img id="cop-img" [src]="data.image" [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight">
+</span>
+<button (click)="decodeBase64()">Decode base64</button>
+
+<!-- <input type="file" (change)="fileChangeEvent($event)" />
+
+<image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1 / 1" [resizeToWidth]="400" format="png" (imageCroppedBase64)="imageCropped($event)" (imageLoaded)="imageLoaded()" (loadImageFailed)="loadImageFailed()"
+    (imageCroppedFile)="imageCroppedFile($event)"></image-cropper>
+
+<img [src]="croppedImage" /> -->

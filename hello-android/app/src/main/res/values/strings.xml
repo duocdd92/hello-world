@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Hello Android</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_toast">Toast</string>
+    <string name="btn_count">Count</string>
+    <string name="txt_count">0</string>
+    <string name="btn_show_variant_layout">Variant Layout</string>
+    <string name="toast_message">Hello!</string>
+    <string name="btn_show_view_scroll">Scroll View</string>
+    <string name="txt_heading">Article Title</string>
+    <string name="txt_subheading">Article Subtitle</string>
+    <string name="txt_article">Article</string>
+</resources>

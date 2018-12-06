@@ -1,0 +1,541 @@
+{{#section 'head'}}
+<script type="text/javascript" src="/vendor/d3.min.js"></script>
+<script type="text/javascript" src="/vendor/colorbrewer.js"></script>
+
+<style>
+        .t_summary {
+                border: 2px solid #0088dd;
+                width: 99.3%;
+                height: 71px;
+                margin-top: 18px;
+                margin-bottom: 12px;
+
+                margin-left: 0.3%;
+                margin-right: auto;
+                empty-cells: show;
+                font-size: 26px;
+        }
+
+        .t_header {
+                background-color: steelblue;
+                width: 200px;
+                text-align: center;
+                font-weight: bold;
+                color: white;
+        }
+
+        .t_data {
+                background-color: rgba(204, 236, 255, 0.4);
+                text-align: right;
+                font-size: 30px;
+                font-weight: bold;
+                width: 190px;
+                padding-right: 8px;
+        }
+</style>
+
+
+<style>
+        .d3_div {
+                border: 2px solid #0088dd;
+                width: 99%;
+                height: 800px;
+                margin-left: 0.3%;
+                margin-top: 5px;
+                margin-bottom: 10px;
+        }
+
+        .svg_box {
+                width: 99%;
+                height: 100%;
+        }
+</style>
+
+{{/section}}
+
+<table class="t_summary">
+        <tr>
+                <td class="t_header">Prod</td>
+                <td id='total-prod' class="t_data">358</td>
+                <td class="t_header">Prod/Line</td>
+                <td id='total-prod-line' class="t_data">358</td>
+                <td class="t_header">CNC Util</td>
+                <td id='total-line-util' class="t_data">-</td>
+                <td class="t_header">Robot Util</td>
+                <td id='total-robot-util' class="t_data">-</td>
+                <td class="t_header">vs. Manual</td>
+                <td id='total-handwork' class="t_data">-</td>
+                <td class="t_header">Running Line</td>
+                <td id='total-run-line' class="t_data">-</td>
+        </tr>
+</table>
+
+
+<div id="vizcontainer" class="d3_div"> </div>
+
+{{#section 'jquery'}}
+<script>
+        var timerID_update;
+        menu.setActive(6);
+        $(document).ready(function () {
+                $("a#menu5").addClass("current");
+                //$('#title').text('Weekly Robot Line Report');
+                header.setTitle('Weekly Robot Line Report');
+                $("div.line_button_div").remove();
+
+                timerID_reload = setTimeout(reload_view, 1 * 60 * 60 * 1000); // 1시간에 한번씩 화면 Reload
+
+                var updateView = function () {
+                        var window_w = $(document).width();
+                        var window_h = $(document).height();
+                        var range_y_util = 730;
+                        var barchart_width = 50;
+
+                        var fill_summary = function (data) {
+                                var prod_data = data[1];
+                                var util_data = data[2];
+                                var total_prod = 0, total_handwork = 0, total_util_cnc = 0, total_util_robot = 0, total_run_line = 0;
+                                var data_cnt = util_data.length;
+
+                                for (var i in prod_data) {
+                                        total_prod += prod_data[i].sum_prod;
+                                        total_util_cnc += util_data[i].cnc_util;
+                                        total_util_robot += util_data[i].robot_util;
+                                        total_run_line += util_data[i].run_line_cnt;
+                                        total_handwork += prod_data[i].sum_prod_handwork;
+                                }
+
+                                //console.log(total_prod+ '/'+total_run_line)
+
+                                $("#total-prod").text(total_prod);
+                                $("#total-prod-line").text((total_prod / (total_run_line / 2)).toFixed(0));
+                                $("#total-line-util").text((total_util_cnc / data_cnt).toFixed(1) + '%');
+                                $("#total-robot-util").text((total_util_robot / data_cnt).toFixed(1) + '%');
+                                $("#total-run-line").text((total_run_line / (data_cnt * 2)).toFixed(1));
+                                $("#total-handwork").text((total_prod / total_handwork * 100).toFixed(1) + '%');
+
+
+                        };
+
+                        var draw_chart = function (data) {
+                                //$('#cur_datetime').text(data[0][0].last_update);
+                                footer.setTitle(data[0][0].last_update);
+
+                                $("svg").remove();
+                                d3.select("div#vizcontainer").append("svg").attr("class", "svg_box");
+
+                                regend();
+
+                                //console.log(data[1]);
+
+                                var prod_data = data[1];
+                                var util_data = data[2];
+
+                                var prod_line = [];
+                                var prod_line_obj;
+                                for (var i in data[1]) {
+                                        prod_line_obj = '{"JobDate":"' + data[1][i].JobDate + '", "prod_line":' + (data[1][i].sum_prod / (data[2][i].run_line_cnt / 2)).toFixed(0) + '}';
+                                        prod_line.push(JSON.parse(prod_line_obj));
+                                }
+
+                                var date = [];
+                                for (var i in prod_data) {
+                                        date.push(prod_data[i].JobDate);
+                                }
+
+                                var prod_min_max = d3.extent(prod_data, function (el) { return el.sum_prod; });
+                                var prod_line_min_max = d3.extent(prod_line, function (el) { return el.prod_line; });
+                                var handwork_ratio_min_max = d3.extent(prod_data, function (el) { return el.sum_prod / el.sum_prod_handwork * 100 });
+                                //console.log(prod_line_min_max);
+
+                                xScale = d3.scalePoint().domain(date).range([210, window_w - 280]);
+                                yScale_Prod = d3.scaleLinear().domain([prod_line_min_max[1], prod_min_max[1]]).range([520, 90]);
+                                yScale_Prod_Line = d3.scaleLinear().domain([prod_line_min_max[0], prod_line_min_max[1]]).range([625, 520]);
+                                yScale_Util = d3.scaleLinear().domain([0, handwork_ratio_min_max[1]]).range([range_y_util, 150]);
+
+                                xAxis = d3.axisBottom(xScale).ticks(prod_data.length).tickSize(4);
+                                d3.select("svg").append("g")
+                                        .attr("id", "xAxisG")
+                                        .call(xAxis)
+                                        .style("stroke-width", "2")
+                                        .attr("transform", "translate(0," + (range_y_util) + ")");
+                                d3.select("g#xAxisG")
+                                        .selectAll("text")
+                                        .style("font-size", "20px")
+                                        .attr("transform", "translate(0,5)");
+
+
+
+                                yAxis = d3.axisRight(yScale_Util).ticks(10).tickSize(-4);
+                                d3.select("svg").append("g")
+                                        .attr("id", "yAxisG")
+                                        .call(yAxis)
+                                        .style("stroke-width", "2")
+                                        .attr("transform", "translate(100,-20)");
+                                d3.select("g#yAxisG")
+                                        .selectAll("text")
+                                        .style("font-size", "20px")
+                                        .attr("transform", "translate(-50,0)");
+
+                                yAxis_Prod_Line = d3.axisRight(yScale_Prod_Line).ticks(2).tickSize(4);
+                                d3.select("svg").append("g")
+                                        .attr("id", "yAxisG_Prod_Line")
+                                        .call(yAxis_Prod_Line)
+                                        .style("stroke-width", "2")
+                                        .attr("transform", "translate(" + (window_w - 170) + ",0)");
+                                d3.select("g#yAxisG_Prod_Line")
+                                        .selectAll("text")
+                                        .style("font-size", "20px")
+                                        .attr("transform", "translate(10,0)");
+
+                                yAxis_Prod = d3.axisRight(yScale_Prod).ticks(7).tickSize(4);
+                                d3.select("svg").append("g")
+                                        .attr("id", "yAxisG_Prod")
+                                        .call(yAxis_Prod)
+                                        .style("stroke-width", "2")
+                                        .attr("transform", "translate(" + (window_w - 170) + ",0)");
+                                d3.select("g#yAxisG_Prod")
+                                        .selectAll("text")
+                                        .style("font-size", "20px")
+                                        .attr("transform", "translate(10,0)");
+
+
+
+
+                                d3.select("svg").selectAll("text.week_name")
+                                        .data(prod_data).enter()
+                                        .append("text")
+                                        .attr("class", "week_name")
+                                        .style("font-size", "20px")
+                                        .attr("text-anchor", "middle")
+                                        .text(function (d) { return '(' + d.WeekName + ')'; })
+                                        .attr("x", function (d) { return xScale(d.JobDate); })
+                                        .attr("y", function (d) { return (range_y_util + 48); });
+
+                                bar_chart();
+                                line_chart();
+                                run_line_cnt();
+
+                                function bar_chart() {
+                                        d3.select("svg").selectAll("rect.rect_cnc_util")
+                                                .data(util_data).enter()
+                                                .append("rect")
+                                                //  .transition()
+                                                //  .duration(800)
+                                                .attr("class", "rect_cnc_util")
+                                                .attr("fill", "lightblue")
+                                                .attr("x", function (d) { return xScale(d.JobDate) - (barchart_width + (barchart_width / 2) + 4); })
+                                                .attr("y", function (d) { return yScale_Util(d.cnc_util); })
+                                                .attr("width", barchart_width)
+                                                .attr("height", function (d) { return (range_y_util - 23) - yScale_Util(d.cnc_util); })
+                                                .attr("stroke", "darkgray")
+                                                .attr("stroke-width", 2);
+                                        // .on("mouseover", function(){d3.select(this).attr("fill", "blue");})
+                                        // .on("mouseout", function(){d3.select(this).attr("fill", "lightblue");});
+
+
+                                        d3.select("svg").selectAll("rect.rect_robot_util")
+                                                .data(util_data).enter()
+                                                .append("rect")
+                                                .attr("class", "rect_robot_util")
+                                                .attr("fill", "lightgreen")
+                                                .attr("x", function (d) { return xScale(d.JobDate) - (barchart_width / 2); })
+                                                .attr("y", function (d) { return yScale_Util(d.robot_util); })
+                                                .attr("width", barchart_width)
+                                                .attr("height", function (d) { return (range_y_util - 23) - yScale_Util(d.robot_util); })
+                                                .attr("stroke", "darkgray")
+                                                .attr("stroke-width", 2);
+
+                                        d3.select("svg").selectAll("rect.rect_handwork")
+                                                .data(prod_data).enter()
+                                                .append("rect")
+                                                .attr("class", "rect_handwork")
+                                                .attr("fill", "yellow")
+                                                .attr("x", function (d) { return xScale(d.JobDate) + (barchart_width / 2 + 4); })
+                                                .attr("y", function (d) { return yScale_Util(d.sum_prod / d.sum_prod_handwork * 100); })
+                                                .attr("width", barchart_width)
+                                                .attr("height", function (d) { return (range_y_util - 23) - yScale_Util(d.sum_prod / d.sum_prod_handwork * 100); })
+                                                .attr("stroke", "darkgray")
+                                                .attr("stroke-width", 2);
+
+                                        d3.select("svg").selectAll("text.cnc_util")
+                                                .data(util_data).enter()
+                                                .append("text")
+                                                .attr("class", "cnc_util")
+                                                .style("font-size", "20px")
+                                                .attr("fill", "gray")
+                                                .attr("font-weight", "bold")
+                                                .attr("text-anchor", "middle")
+                                                .text(function (d) { return d.cnc_util; })
+                                                .attr("x", function (d) { return xScale(d.JobDate) - (barchart_width); })
+                                                .attr("y", function (d) { return yScale_Util(d.cnc_util) - 4; });
+
+                                        d3.select("svg").selectAll("text.robot_util")
+                                                .data(util_data).enter()
+                                                .append("text")
+                                                .attr("class", "robot_util")
+                                                .style("font-size", "20px")
+                                                .attr("fill", "gray")
+                                                .attr("font-weight", "bold")
+                                                .attr("text-anchor", "middle")
+                                                .text(function (d) { return d.robot_util; })
+                                                .attr("x", function (d) { return xScale(d.JobDate); })
+                                                .attr("y", function (d) { return yScale_Util(d.robot_util) - 4; });
+
+                                        d3.select("svg").selectAll("text.handwork")
+                                                .data(prod_data).enter()
+                                                .append("text")
+                                                .attr("class", "handwork")
+                                                .style("font-size", "20px")
+                                                .attr("fill", "gray")
+                                                .attr("font-weight", "bold")
+                                                .attr("text-anchor", "middle")
+                                                .text(function (d) { return (d.sum_prod / d.sum_prod_handwork * 100).toFixed(1); })
+                                                .attr("x", function (d) { return xScale(d.JobDate) + (barchart_width); })
+                                                .attr("y", function (d) { return yScale_Util(d.sum_prod / d.sum_prod_handwork * 100) - 4; });
+                                };
+
+                                function line_chart() {
+
+                                        //var prod_data = data[1];
+
+
+
+                                        var prodLine = d3.line()
+                                                .x(function (d) { return xScale(d.JobDate); })
+                                                .y(function (d) { return yScale_Prod(d.sum_prod); })
+                                                .curve(d3.curveCatmullRom);
+                                        d3.select("svg").append("path")
+                                                //  .transition()
+                                                //  .duration(3000)
+                                                .attr("d", prodLine(prod_data))
+                                                .attr("fill", "none")
+                                                .attr("stroke", "darkred")
+                                                .attr("stroke-width", 2);
+
+
+                                        d3.select("svg").selectAll("cicle.prod")
+                                                .data(prod_data).enter()
+                                                .append("circle")
+                                                .attr("class", "prod")
+                                                .attr("r", 5)
+                                                .attr("cx", function (d) { return xScale(d.JobDate); })
+                                                .attr("cy", function (d) { return yScale_Prod(d.sum_prod); })
+                                                .style("fill", "yellow")
+                                                .style("stroke", "red");
+
+                                        d3.select("svg").selectAll("text.prod_cnt")
+                                                .data(prod_data).enter()
+                                                .append("text")
+                                                .attr("class", "prod_cnt")
+                                                .style("font-size", "20px")
+                                                .attr("font-weight", "bold")
+                                                .attr("text-anchor", "middle")
+                                                .text(function (d) { return d.sum_prod; })
+                                                .attr("x", function (d) { return xScale(d.JobDate); })
+                                                .attr("y", function (d) { return yScale_Prod(d.sum_prod) - 10; });
+
+
+
+
+
+
+
+
+                                        var prodLine2 = d3.line()
+                                                .x(function (d) { return xScale(d.JobDate); })
+                                                .y(function (d) { return yScale_Prod_Line(d.prod_line); })
+                                                .curve(d3.curveCatmullRom);
+                                        d3.select("svg").append("path")
+                                                //  .transition()
+                                                //  .duration(2000)
+                                                .attr("d", prodLine2(prod_line))
+                                                .attr("fill", "none")
+                                                .attr("stroke", "darkred")
+                                                .attr("stroke-width", 2);
+
+
+                                        d3.select("svg").selectAll("cicle.prod_line")
+                                                .data(prod_line).enter()
+                                                .append("circle")
+                                                .attr("class", "prod_line")
+                                                .attr("r", 5)
+                                                .attr("cx", function (d) { return xScale(d.JobDate); })
+                                                .attr("cy", function (d) { return yScale_Prod_Line(d.prod_line); })
+                                                .style("fill", "blue")
+                                                .style("stroke", "red");
+
+                                        d3.select("svg").selectAll("text.text_prod_line")
+                                                .data(prod_line).enter()
+                                                .append("text")
+                                                .attr("class", "text_prod_line")
+                                                .style("font-size", "20px")
+                                                .attr("font-weight", "bold")
+                                                .attr("text-anchor", "middle")
+                                                .text(function (d) { return d.prod_line; })
+                                                .attr("x", function (d) { return xScale(d.JobDate); })
+                                                .attr("y", function (d) { return yScale_Prod_Line(d.prod_line) + 25; });
+                                };
+
+                                function run_line_cnt() {
+
+                                        d3.select("svg").selectAll("rect.rect_run_line")
+                                                .data(util_data).enter()
+                                                .append("rect")
+                                                // .transition()
+                                                // .duration(3000)
+                                                .attr("class", "rect_cnc_util")
+                                                .attr("fill", "lightgray")
+                                                .attr("x", function (d) { return xScale(d.JobDate) - (barchart_width - 4); })
+                                                .attr("y", 660)
+                                                .attr("width", (barchart_width * 2) - 10)
+                                                .attr("height", 40)
+                                                .attr("stroke", "darkred")
+                                                .attr("stroke-width", 4);
+
+                                        d3.select("svg").selectAll("text.text_run_line")
+                                                .data(util_data).enter()
+                                                .append("text")
+                                                // .transition()
+                                                // .duration(3000)
+                                                .attr("class", "cnc_util")
+                                                .style("font-size", "20px")
+                                                .attr("fill", "navy")
+                                                .attr("font-weight", "bold")
+                                                .attr("text-anchor", "middle")
+                                                .text(function (d) { return (d.run_line_cnt / 2).toFixed(1); })
+                                                .attr("x", function (d) { return xScale(d.JobDate); })
+                                                .attr("y", 688);
+                                }
+
+                                function regend() {
+                                        d3.select("svg").append("rect")
+                                                .attr("fill", "lightblue")
+                                                .attr("x", 30)
+                                                .attr("y", 13)
+                                                .attr("width", 60)
+                                                .attr("height", 25)
+                                                .attr("stroke", "darkgray")
+                                                .attr("stroke-width", 2);
+                                        d3.select("svg").append("text")
+                                                .attr("x", 96)
+                                                .attr("y", 32)
+                                                .style("font-size", "18px")
+                                                .text("CNC Util");
+
+                                        d3.select("svg").append("rect")
+                                                .attr("fill", "lightgreen")
+                                                .attr("x", 180)
+                                                .attr("y", 13)
+                                                .attr("width", 60)
+                                                .attr("height", 25)
+                                                .attr("stroke", "darkgray")
+                                                .attr("stroke-width", 2);
+                                        d3.select("svg").append("text")
+                                                .attr("x", 246)
+                                                .attr("y", 32)
+                                                .style("font-size", "18px")
+                                                .text("Robot Util");
+
+                                        d3.select("svg").append("rect")
+                                                .attr("fill", "yellow")
+                                                .attr("x", 350)
+                                                .attr("y", 13)
+                                                .attr("width", 60)
+                                                .attr("height", 25)
+                                                .attr("stroke", "darkgray")
+                                                .attr("stroke-width", 2);
+                                        d3.select("svg").append("text")
+                                                .attr("x", 416)
+                                                .attr("y", 32)
+                                                .style("font-size", "18px")
+                                                .text("vs. Manual");
+
+                                        d3.select("svg").append("rect")
+                                                .attr("fill", "lightgray")
+                                                .attr("x", 530)
+                                                .attr("y", 13)
+                                                .attr("width", 58)
+                                                .attr("height", 23)
+                                                .attr("stroke", "darkred")
+                                                .attr("stroke-width", 4);
+                                        d3.select("svg").append("text")
+                                                .attr("x", 596)
+                                                .attr("y", 32)
+                                                .style("font-size", "18px")
+                                                .text("Running Line");
+
+                                        d3.select("svg").append("line")
+                                                .attr("x1", 740)
+                                                .attr("x2", 780)
+                                                .attr("y1", 25)
+                                                .attr("y2", 25)
+                                                .style("stroke", "darkred")
+                                                .style("stroke-width", 2);
+                                        d3.select("svg").append("circle")
+                                                .attr("r", 5)
+                                                .attr("cx", 760)
+                                                .attr("cy", 25)
+                                                .style("fill", "yellow")
+                                                .style("stroke", "red");
+                                        d3.select("svg").append("text")
+                                                .attr("x", 790)
+                                                .attr("y", 32)
+                                                .style("font-size", "18px")
+                                                .text("Prod");
+
+                                        d3.select("svg").append("line")
+                                                .attr("x1", 850)
+                                                .attr("x2", 890)
+                                                .attr("y1", 25)
+                                                .attr("y2", 25)
+                                                .style("stroke", "darkred")
+                                                .style("stroke-width", 2);
+                                        d3.select("svg").append("circle")
+                                                .attr("r", 5)
+                                                .attr("cx", 870)
+                                                .attr("cy", 25)
+                                                .style("fill", "blue")
+                                                .style("stroke", "red");
+                                        d3.select("svg").append("text")
+                                                .attr("x", 900)
+                                                .attr("y", 32)
+                                                .style("font-size", "18px")
+                                                .text("Prod/Line");
+                                };
+                        };
+
+                        $.ajax({
+                                url: '/ajax/report',
+                                type: 'GET',
+                                timeout: 60000,
+                                success: function (data) {
+                                        fill_summary(data);
+                                        draw_chart(data);
+                                },
+                                error: function (err) {
+                                        console.log(err);
+                                }
+                        });
+                };
+
+                updateView();
+
+                function reload_view() {
+                        clearTimeout(timerID_reload);
+                        var url = "/report";
+                        $(location).attr('href', url);
+
+                }
+                //timerID = setInterval(updateView, 60*60*1000);  //1시간
+        });
+
+    /*
+    $(window).on("beforeunload", function(){
+        clearInterval(timerID);
+    });
+    */
+
+</script>
+
+{{/section}}

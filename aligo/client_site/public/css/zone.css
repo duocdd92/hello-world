@@ -1,0 +1,201 @@
+body {
+    min-width: 1600px !important;
+}
+
+.zone-content {
+    width: 100%;
+    height: calc(100% - 112px);
+    overflow: auto;
+}
+
+.zone-head {
+    padding: 15px 15px 0 15px;
+    background-color: #E9E9E9;
+}
+
+.zone-summary {
+    height: 45px;
+    display: flex;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+}
+
+.box {
+    width: 100%;
+    background-color: #fff;
+    margin-right: 14px;
+    padding: 5px 30px;
+    overflow: hidden;
+}
+
+.box:last-child {
+    margin-right: 0px;
+}
+
+.box h3 {
+    float: left;
+    line-height: 35px;
+    text-align: center;
+    font-size: 18px;
+    color: #000000;
+}
+
+.box h2 {
+    float: right;
+    line-height: 35px;
+    text-align: center;
+    font-size: 30px;
+    color: #184D7A;
+}
+
+.cnc-sign {
+    margin-top: 15px;
+    background-color: #fff;
+    height: 48px;
+    overflow: hidden;
+}
+
+.cnc-sign>div {
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.cnc-sign .cnc-alarm {
+    float: left;
+    width: 60%;
+}
+
+.cnc-sign li h4 {
+    margin-left: 18px;
+}
+
+.cnc-sign ul li {
+    float: left;
+    margin-right: 18px;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.cnc-sign ul li span::before {
+    content: "";
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.cnc-sign .cnc-event {
+    float: left;
+    width: 40%;
+    border-left: 1px solid #d9dee4;
+}
+
+.cnc-sign .cnc-event li {
+    float: right;
+}
+
+.zone-main {
+    background-color: #E9E9E9;
+    padding: 0 5px;
+}
+
+.zone-main>ul>li {
+    float: left;
+    height: 405px;
+    width: calc(100% * (1/5) - 20px);
+    border-width: 4px;
+    border-style: solid;
+    margin: 15px 10px 0 10px;
+}
+
+.box-name {
+    height: 55px;
+    background-color: #607d8b;
+    font-size: 36px;
+    line-height: 55px;
+    vertical-align: middle;
+    text-align: center;
+    color: #ffffff;
+}
+
+.box-name:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.box-row {
+    height: 45px;
+    border-bottom: 1px solid #dce0e5;
+    pointer-events: none;
+}
+
+.box-row:last-child {
+    border: none !important;
+}
+
+.box-row>div {
+    float: left;
+}
+
+.box-row .title {
+    background-color: #def0fe;
+    font-size: 18px;
+    color: #194e7a;
+    padding-left: 14px;
+    width: 35%;
+    border-right: 1px solid #dce0e5;
+    line-height: 44px;
+}
+
+.box-row .value {
+    font-size: 18px;
+    color: #424242;
+    padding-left: 16px;
+    background-color: #ececec;
+    width: 65%;
+    line-height: 44px;
+}
+
+.box-row .robot-state {
+    width: 44px;
+    height: 44px;
+    float: right;
+}
+
+.box-row .value.ng {
+    color: #d50000;
+}
+
+.box-cncs {
+    height: calc(100% - 280px);
+    background-color: #191512;
+    pointer-events: none;
+}
+
+.box-cncs ul {
+    padding: 1px;
+    height: 100%;
+    display: block;
+}
+
+.box-cncs ul li {
+    float: left;
+    color: #ffffff;
+    border-width: 2px 1px;
+    border-style: solid;
+    border-color: #191512;
+    width: calc(100% * (1/12));
+    height: 50%;
+    line-height: 57px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.cnc.empty {
+    background-color: #191512;
+}

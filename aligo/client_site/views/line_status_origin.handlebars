@@ -1,0 +1,1229 @@
+{{#section 'head'}}
+<script type="text/javascript" src="/vendor/d3.min.js"></script>
+
+<style>
+    .t_summary {
+        border: 2px solid #0088dd;
+        width: 99.5%;
+        height: 55px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-left: 0.3%;
+        margin-right: auto;
+        empty-cells: show;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    .t_header {
+        background-color: steelblue;
+        width: 200px;
+        text-align: center;
+        color: white;
+    }
+
+    .t_data {
+        background-color: rgba(204, 236, 255, 0.4);
+        width: 200px;
+        text-align: right;
+        padding-right: 8px;
+    }
+</style>
+
+<!-- CNC 상태 스타일 -->
+<style>
+    .animation {
+        background-color: rgb(100, 100, 100);
+        border: 5px solid rgb(100, 100, 100);
+        margin-right: 4px;
+        margin-left: 0.3%;
+    }
+
+    .layout {
+        background-image: url("../img/layout.png");
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 317px;
+    }
+
+    .transfer {
+        position: absolute;
+        background-image: url("../img/robot_top_view.png");
+        z-index: 10;
+        width: 199px;
+        height: 245px;
+        /*시작: 140px, 간격 : 119px*/
+        top: 268px;
+        left: 714px;
+
+        background-position: -1px 0px;
+        /*background-position: -207px 0px;*/
+        /*background-position: -413px 0px;*/
+    }
+
+    .transfer_state {
+        background-color: transparent;
+        background-image: none;
+        top: 350px;
+        z-index: 11;
+        height: 25px;
+        line-height: 25px;
+        width: auto;
+
+        font-size: 14px;
+        text-align: center;
+        padding-left: 3px;
+        padding-right: 3px;
+        margin-left: 180px;
+
+        color: white
+    }
+
+    .transfer_stay_time {
+        top: 409px;
+    }
+
+    .add_transition {
+        -webkit-transition-duration: 7s;
+    }
+
+    .t_cnc_legend {
+        height: 30px;
+        font-size: 12px;
+        color: white;
+        margin-bottom: 4px;
+    }
+
+    .legend_title {
+        text-align: right;
+        padding-right: 20px;
+        color: darkgray;
+    }
+
+    .legend_item {
+        text-align: left;
+        padding-right: 7px;
+        width: 55px;
+    }
+
+    .t_cnc_status {
+        position: relative;
+        width: 1800px;
+        height: auto;
+        left: 2px;
+        border-spacing: 15px 0px;
+        table-layout: fixed;
+    }
+
+    .t_cnc_status_pos_l {
+        top: 15px;
+    }
+
+    .t_cnc_status_pos_r {
+        top: 134px;
+    }
+
+    .t_cnc_status_data {
+        font-size: 25px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+        color: white;
+        text-align: center;
+        background-color: #111;
+    }
+
+    .t_cnc_status_event {
+        font-size: 18px;
+        color: dimgray;
+        background-color: #111;
+    }
+
+    .t_cnc_status_time {
+        font-size: 11px;
+        color: white;
+        background-color: #111;
+    }
+
+    .t_cnc_summary {
+        width: 100%;
+        height: 55px;
+        empty-cells: show;
+
+        border: 2px solid rgb(204, 236, 255);
+    }
+
+    .t_cnc_summary_header {
+        width: 140px;
+        text-align: center;
+        font-size: 23px;
+        color: white;
+        background-color: dimgray;
+    }
+
+    .t_cnc_summary_data {
+        background-color: rgb(204, 236, 255);
+        text-align: right;
+        font-size: 21px;
+        width: 170px;
+        padding-right: 8px;
+    }
+</style>
+
+<!-- D3.js 스타일 -->
+<style>
+    div.d3box {
+        float: left;
+        margin-top: 4px;
+        margin-left: 0.3%;
+        width: 23%;
+        height: 415px;
+        border: 5px solid rgb(100, 100, 100);
+    }
+
+    div.d3Title {
+        padding-top: 5px;
+        padding-bottom: 10px;
+        padding-left: 8px;
+        background-color: rgb(100, 100, 100);
+        color: white;
+        font-size: 25px;
+    }
+
+    div.d3Content {
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 5px;
+        padding-bottom: 10px;
+        background-image: -webkit-linear-gradient(#FFFFFF, #98DFFF);
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+    }
+
+    .axis text {
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+
+<style>
+    div.center_info {
+        float: left;
+        margin-top: -5px;
+        margin-left: 0.2%;
+        width: 54.4%;
+        height: 424px;
+        border: 5px solid rgb(100, 100, 100);
+    }
+
+    .worker_box {
+        float: left;
+        margin-left: 4px;
+        margin-top: 4px;
+        margin-bottom: 4px;
+        background-image: -webkit-linear-gradient(#FFFFFF, lightgreen);
+        width: 311px;
+        height: 104px;
+        border: 5px solid green;
+        padding-left: 3px;
+        padding-top: 4px;
+    }
+
+    .worker_img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .message {
+        float: left;
+        margin-top: 4px;
+        width: 67%;
+        height: 104px;
+        font-size: 18px;
+        background-color: lightgreen;
+        border-top: 5px;
+        border-bottom: 5px;
+        border-right: 5px;
+        border-left: 0px;
+        border-style: solid;
+        border-color: green;
+        padding-top: 4px;
+        padding-left: 8px;
+        overflow: auto;
+        color: navy;
+    }
+
+    ul#msg {
+        margin-top: -2px;
+    }
+
+    li.move_msg {}
+
+    li.alarm_msg {
+        color: red;
+    }
+
+    li.robot_alarm_msg {
+        color: hotpink;
+    }
+
+    li.tool_change_msg {
+        color: blue;
+    }
+
+    li.warning_msg {
+        color: blueviolet;
+    }
+
+    .robot_img_table {
+        clear: left;
+        margin-top: 4px;
+        margin-left: 4px;
+        margin-right: 2px;
+    }
+
+    .tray_height_table {
+        float: left;
+        margin-bottom: 4px;
+        width: 8.2%;
+        height: 297px;
+        border: 6px solid #0088dd;
+        empty-cells: show;
+        text-align: center;
+        font-size: 12px;
+        color: white;
+    }
+
+    .robotimage {
+        float: left;
+        margin-bottom: 4px;
+        width: 34.6%;
+        height: 293px;
+        background-image: url("../img/robot_motion.png");
+        background-position: -3px -3px;
+        border-style: solid;
+        border-color: #0088dd;
+        border-width: 2px 0px 2px 2px;
+    }
+
+    .tray_position_table {
+        float: left;
+        margin-bottom: 4px;
+        width: 17%;
+        height: 297px;
+        border-style: solid;
+        border-color: #0088dd;
+        border-width: 2px 0px 2px 2px;
+        empty-cells: show;
+        text-align: center;
+        font-size: 18px;
+        color: white;
+    }
+
+    .robot_table {
+        float: left;
+        margin-bottom: 4px;
+        width: 40%;
+        height: 297px;
+        border: 2px solid #0088dd;
+        empty-cells: show;
+        font-size: 20px;
+        text-align: left;
+    }
+
+    .robot_table_header {
+        background-color: steelblue;
+        width: 130px;
+        color: white;
+        padding-left: 5px;
+    }
+
+    .robot_table_data {
+        background-color: skyblue;
+        color: black;
+        padding-left: 5px;
+    }
+
+    .cctv {
+        float: left;
+        width: 20%;
+        height: 415px;
+        border: 5px solid rgb(100, 100, 100);
+        margin-left: 0.3%;
+        margin-top: 4px;
+    }
+
+    .motion_eye {
+        width: 99%;
+        height: 99%;
+    }
+
+    .motion_eye_title {
+        position: absolute;
+        width: 200px;
+        background-color: green;
+        height: 50px;
+        line-height: 50px;
+        font-size: 18px;
+        color: white;
+        z-index: 10;
+        text-align: center;
+        left: 1528px;
+        top: 621px;
+    }
+</style>
+
+<style>
+    .infor_box {
+        position: absolute;
+        top: 300px;
+        left: 100px;
+        width: 100px;
+        height: auto;
+        background-color: yellow;
+        border: 3px solid #0088dd;
+        opacity: 0.7;
+        visibility: visible;
+        z-index: 20;
+        border-radius: 5px;
+        -webkit-boder-radius: 5px;
+    }
+</style>
+
+{{/section}}
+
+<!-- 생산 종합현황 -->
+<table class="t_summary">
+    <tr>
+        <td class="t_header">Plan</td>
+        <td id="plan_cnt" class="t_data">4000</td>
+        <td class="t_header">Target</td>
+        <td id='target_cnt' class="t_data">345</td>
+        <td class="t_header">Prod</td>
+        <td id='total_prod' class="t_data">358</td>
+        <td class="t_header">Achieve</td>
+        <td id='achieved_rate' class="t_data">104%</td>
+        <td class="t_header">CNC Util</td>
+        <td id='cnc_run_rate' class="t_data">82.5%</td>
+    </tr>
+</table>
+
+<!-- CNC 현황 에니메이션 -->
+<div class="animation">
+    <table class="t_cnc_legend">
+        <tr>
+            <td class="legend_title" width="111">CNC Status</td>
+            <td width="40" bgcolor="green"></td>
+            <td class="legend_item">PROCESS</td>
+            <td width="40" bgcolor="lightgreen"></td>
+            <td class="legend_item">STANDBY</td>
+            <td width="40" bgcolor="orange"></td>
+            <td class="legend_item">WARMUP</td>
+            <td width="40" bgcolor="blue"></td>
+            <td class="legend_item">TOOL CHANGE</td>
+            <td width="40" bgcolor="red"></td>
+            <td class="legend_item">ALARM</td>
+            <td width="40" bgcolor="hotpink"></td>
+            <td class="legend_item">ROBOT ALARM</td>
+            <td width="40" bgcolor="gray"></td>
+            <td class="legend_item">NOSIGNAL</td>
+            <td width="40" bgcolor="cyan"></td>
+            <td class="legend_item">JIG SETUP</td>
+            <td width="40" bgcolor="blueviolet"></td>
+            <td class="legend_item">WARNING</td>
+
+
+            <td width="250"> </td>
+            <td class="legend_title" width="100">Event</td>
+            <td width="40" bgcolor="aqua"></td>
+            <td class="legend_item">PreCall</td>
+            <td width="40" bgcolor="yellow"></td>
+            <td class="legend_item"> RobotCall</td>
+            <td width="40" bgcolor="mediumblue"></td>
+            <td class="legend_item">Probe Error</td>
+            <td width="40" bgcolor="brown"></td>
+            <td class="legend_item">Last Machining</td>
+            <td width="40" bgcolor="fuchsia"></td>
+            <td class="legend_item">NoCall</td>
+        </tr>
+    </table>
+
+    <div class="layout">
+        <table class="t_cnc_status t_cnc_status_pos_l">
+            <tr>
+                <td id='l_0' class="t_cnc_status_data"></td>
+                <td id='l_1' class="t_cnc_status_data"></td>
+                <td id='l_2' class="t_cnc_status_data"></td>
+                <td id='l_3' class="t_cnc_status_data"></td>
+                <td id='l_4' class="t_cnc_status_data"></td>
+                <td id='l_5' class="t_cnc_status_data"></td>
+                <td id='l_6' class="t_cnc_status_data"></td>
+                <td id='l_7' class="t_cnc_status_data"></td>
+                <td id='l_8' class="t_cnc_status_data"></td>
+                <td id='l_9' class="t_cnc_status_data"></td>
+                <td id='l_10' class="t_cnc_status_data"></td>
+                <td id='l_11' class="t_cnc_status_data"></td>
+                <td id='l_12' class="t_cnc_status_data"></td>
+            </tr>
+            <tr>
+                <td id='l_0_2' class="t_cnc_status_time"></td>
+                <td id='l_1_2' class="t_cnc_status_time"></td>
+                <td id='l_2_2' class="t_cnc_status_time"></td>
+                <td id='l_3_2' class="t_cnc_status_time"></td>
+                <td id='l_4_2' class="t_cnc_status_time"></td>
+                <td id='l_5_2' class="t_cnc_status_time"></td>
+                <td id='l_6_2' class="t_cnc_status_time"></td>
+                <td id='l_7_2' class="t_cnc_status_time"></td>
+                <td id='l_8_2' class="t_cnc_status_time"></td>
+                <td id='l_9_2' class="t_cnc_status_time"></td>
+                <td id='l_10_2' class="t_cnc_status_time"></td>
+                <td id='l_11_2' class="t_cnc_status_time"></td>
+                <td id='l_12_2' class="t_cnc_status_time"></td>
+            </tr>
+            <tr>
+                <td id='l_0_1' class="t_cnc_status_event">AM4-E</td>
+                <td id='l_1_1' class="t_cnc_status_event"></td>
+                <td id='l_2_1' class="t_cnc_status_event"></td>
+                <td id='l_3_1' class="t_cnc_status_event"></td>
+                <td id='l_4_1' class="t_cnc_status_event"></td>
+                <td id='l_5_1' class="t_cnc_status_event"></td>
+                <td id='l_6_1' class="t_cnc_status_event"></td>
+                <td id='l_7_1' class="t_cnc_status_event"></td>
+                <td id='l_8_1' class="t_cnc_status_event"></td>
+                <td id='l_9_1' class="t_cnc_status_event"></td>
+                <td id='l_10_1' class="t_cnc_status_event"></td>
+                <td id='l_11_1' class="t_cnc_status_event"></td>
+                <td id='l_12_1' class="t_cnc_status_event"></td>
+            </tr>
+        </table>
+
+        <div class="transfer"></div>
+        <div id="tran_state" class="transfer transfer_state">OK</div>
+        <div id="tran_stay_time" class="transfer transfer_state transfer_stay_time">00:00:00</div>
+
+        <table class="t_cnc_status t_cnc_status_pos_r">
+            <tbody class="cnc2-tbody">
+                <tr>
+                    <td id='r_0_1' class="t_cnc_status_event">AM4-F</td>
+                    <td id='r_1_1' class="t_cnc_status_event"></td>
+                    <td id='r_2_1' class="t_cnc_status_event"></td>
+                    <td id='r_3_1' class="t_cnc_status_event"></td>
+                    <td id='r_4_1' class="t_cnc_status_event"></td>
+                    <td id='r_5_1' class="t_cnc_status_event"></td>
+                    <td id='r_6_1' class="t_cnc_status_event"></td>
+                    <td id='r_7_1' class="t_cnc_status_event"></td>
+                    <td id='r_8_1' class="t_cnc_status_event"></td>
+                    <td id='r_9_1' class="t_cnc_status_event"></td>
+                    <td id='r_10_1' class="t_cnc_status_event"></td>
+                    <td id='r_11_1' class="t_cnc_status_event"></td>
+                    <td id='r_12_1' class="t_cnc_status_event"></td>
+                </tr>
+                <tr>
+                    <td id='r_0_2' class="t_cnc_status_time"></td>
+                    <td id='r_1_2' class="t_cnc_status_time"></td>
+                    <td id='r_2_2' class="t_cnc_status_time"></td>
+                    <td id='r_3_2' class="t_cnc_status_time"></td>
+                    <td id='r_4_2' class="t_cnc_status_time"></td>
+                    <td id='r_5_2' class="t_cnc_status_time"></td>
+                    <td id='r_6_2' class="t_cnc_status_time"></td>
+                    <td id='r_7_2' class="t_cnc_status_time"></td>
+                    <td id='r_8_2' class="t_cnc_status_time"></td>
+                    <td id='r_9_2' class="t_cnc_status_time"></td>
+                    <td id='r_10_2' class="t_cnc_status_time"></td>
+                    <td id='r_11_2' class="t_cnc_status_time"></td>
+                    <td id='r_12_2' class="t_cnc_status_time"></td>
+                </tr>
+                <tr>
+                    <td id='r_0' class="t_cnc_status_data"></td>
+                    <td id='r_1' class="t_cnc_status_data"></td>
+                    <td id='r_2' class="t_cnc_status_data"></td>
+                    <td id='r_3' class="t_cnc_status_data"></td>
+                    <td id='r_4' class="t_cnc_status_data"></td>
+                    <td id='r_5' class="t_cnc_status_data"></td>
+                    <td id='r_6' class="t_cnc_status_data"></td>
+                    <td id='r_7' class="t_cnc_status_data"></td>
+                    <td id='r_8' class="t_cnc_status_data"></td>
+                    <td id='r_9' class="t_cnc_status_data"></td>
+                    <td id='r_10' class="t_cnc_status_data"></td>
+                    <td id='r_11' class="t_cnc_status_data"></td>
+                    <td id='r_12' class="t_cnc_status_data"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <table class="t_cnc_summary">
+        <tr>
+            <td class="t_cnc_summary_header">Recipe</td>
+            <td id="process" class="t_cnc_summary_data">27/28</td>
+            <td class="t_cnc_summary_header">Cycle Time</td>
+            <td id="cycle_time" class="t_cnc_summary_data">1216</td>
+            <td class="t_cnc_summary_header">Run CNC</td>
+            <td id="cnc_run" class="t_cnc_summary_data">13</td>
+            <td class="t_cnc_summary_header">Prod/CNC</td>
+            <td id="cnc_prod" class="t_cnc_summary_data">GRACE</td>
+            <td class="t_cnc_summary_header">Robot Util</td>
+            <td id="eqp_run_rate" class="t_cnc_summary_data">??%</td>
+        </tr>
+    </table>
+</div>
+
+<!-- D3 -->
+<div class="d3box">
+    <div id="d3title" class="d3Title">Robot Alarm : 2 </div>
+    <div id="d3div" class="d3Content"></div>
+</div>
+
+
+
+
+<!-- robot -->
+<div class="center_info">
+    <div class="worker_box">
+        <img id="mk0" class="worker_img" src="" />
+        <img id="mk1" class="worker_img" src="" />
+        <img id="mk2" class="worker_img" src="" />
+    </div>
+    <div class="message">
+        <ul id="msg">
+            <li id="mk_name"></li>
+        </ul>
+    </div>
+
+    <div class="robot_img_table">
+        <table class="tray_height_table">
+            <!--<tr><td id='tray11'>12</td></tr>
+                <tr><td id='tray10'>11</td></tr> -->
+            <tr>
+                <td id='tray9'>10</td>
+            </tr>
+            <tr>
+                <td id='tray8'>9</td>
+            </tr>
+            <tr>
+                <td id='tray7'>8</td>
+            </tr>
+            <tr>
+                <td id='tray6'>7</td>
+            </tr>
+            <tr>
+                <td id='tray5'>6</td>
+            </tr>
+            <tr>
+                <td id='tray4'>5</td>
+            </tr>
+            <tr>
+                <td id='tray3'>4</td>
+            </tr>
+            <tr>
+                <td id='tray2'>3</td>
+            </tr>
+            <tr>
+                <td id='tray1'>2</td>
+            </tr>
+            <tr>
+                <td id='tray0'>1</td>
+            </tr>
+            <tr>
+                <td bgcolor="gray">Tray Height</td>
+            </tr>
+        </table>
+        <div class="robotimage"></div>
+        <table class="tray_position_table">
+            <tr>
+                <td id='tray_pos00'>00</td>
+                <td id='tray_pos01'>01</td>
+                <td id='tray_pos02'>02</td>
+            </tr>
+            <tr>
+                <td id='tray_pos10'>10</td>
+                <td id='tray_pos11'>11</td>
+                <td id='tray_pos12'>12</td>
+            </tr>
+            <!--  <tr><td id='tray_pos20'>20</td><td id='tray_pos21'>21</td><td id='tray_pos22'>22</td></tr> -->
+
+            <tr>
+                <td colspan='3' bgcolor="gray">Tray Position</td>
+            </tr>
+        </table>
+
+        <table class="robot_table">
+            <tr>
+                <td class="robot_table_header">Motion Group</td>
+                <td id="motion" class="robot_table_data">app_washer_and_up_right</td>
+            </tr>
+            <tr>
+                <td class="robot_table_header">Motion</td>
+                <td id="teaching" class="robot_table_data">app_washer_and_up_right</td>
+            </tr>
+            <tr>
+                <td class="robot_table_header">Motion Begin</td>
+                <td id="motion_begin" class="robot_table_data">2016-08-09 12:53:47</td>
+            </tr>
+            <tr>
+                <td class="robot_table_header">Motion End</td>
+                <td id="motion_end" class="robot_table_data">4 (2016-08-09 12:53:51)</td>
+            </tr>
+            <tr>
+                <td class="robot_table_header">Mode</td>
+                <td id="mode" class="robot_table_data">Auto</td>
+            </tr>
+            <tr>
+                <td class="robot_table_header">Program</td>
+                <td id="program" class="robot_table_data">active</td>
+            </tr>
+            <!--<tr><td class="robot_table_header">TP</td>      <td id="tp" class="robot_table_data">Not Connected</td></tr>-->
+        </table>
+    </div>
+
+</div>
+
+<!-- CCTV -->
+<!--<iframe id="cctv" class="cctv" src="http://10.240.246.40:8765/" > </iframe>-->
+<div class="cctv">
+    <div id="t_motion_eye" class="motion_eye_title">Robot Status : RUN</div>
+    <iframe id="blackbox_ip" class="motion_eye" src=""></iframe>
+
+</div>
+
+
+<!--
+<div class="infor_box">
+    <div >aaaaaaaaa</div>
+    <div >bbbb</div>
+    <div >cccc</div>
+</div>
+-->
+
+
+
+{{#section 'jquery'}}
+<!-- ajax begin-->
+<script>
+    var timerID_update, timerID_reload;
+
+    var w = 400;
+    var h = 349;
+    var svg;
+
+    $(document).ready(function () {
+        $("a#menu1").addClass("current");
+
+        $('#l_0').css('background-color', 'transparent');
+        $('#l_0_1').css('background-color', 'transparent').css('text-align', 'right');
+        $('#l_0_2').css('background-color', 'transparent');
+        $('#r_0').css('background-color', 'transparent');
+        $('#r_0_1').css('background-color', 'transparent').css('text-align', 'right');
+        $('#r_0_2').css('background-color', 'transparent');
+
+        $.ajax({
+
+            url: '/ajax/btn-line',
+            type: 'GET',
+            timeout: 60000,
+            success: function (data) {
+                //console.log(data);
+
+
+                var line_code;
+                for (var i = 0; i < data.length; i++) {
+                    if (i === 0) {
+                        line_code = '#' + data[i].line_code;
+                    }
+
+                    $('#btn_div').append($('<input/>', {
+                        id: data[i].id,
+                        class: "line_button",
+                        type: "button",
+                        name: "line2",
+                        value: data[i].name
+                    }));
+                }
+
+                $(line_code).css('background-color', 'green');
+
+                //var line_code = '#'+data.line_code;
+                //$(line_code).css('background-color','green');
+
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+
+        $(document).on('click', 'input.line_button', function () {
+            $.ajax({
+                url: '/ajax/select-line',
+                type: 'POST',
+                timeout: 3000,
+                data: { line_code: $(this).attr('id') },
+                success: function (data) {
+                    //console.log(data);
+                    var url = "line-status";
+                    $(location).attr('href', url);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+
+
+
+        timerID_reload = setTimeout(reload_view, 2 * 60 * 60 * 1000); // 2시간에 한번씩 화면 Reload
+
+        svg = d3.select("#d3div").append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+        // blackbox_ip_set();
+        //updateView();
+        // mk_photo_get();
+        timerID_update = setTimeout(updateView, 300);
+        setTimeout(mk_photo_get, 500);
+        setTimeout(blackbox_ip_set, 500);
+
+        function mk_photo_get() {
+            $.ajax({
+                url: '/ajax/mk-photo-get',
+                type: 'GET',
+                timeout: 5000,
+                success: function (data) {
+
+                    //console.log(data);
+                    var mkID = '#mk';
+                    var mkName = 'Machine Keeper : ';
+                    for (var i in data) {
+                        //console.log(i);
+                        $(mkID + i).attr('src', 'data:image;base64,' + data[i].photo);
+                        if (i < 2) mkName += data[i].name + ' / ';
+                        else if (i > 2) break;
+                        else mkName += data[i].name;
+                    }
+                    $('#mk_name').text(mkName);
+                    //console.log(mkName);
+
+                    //$('#mk2').attr('src', 'data:image/png;base64,'+data);
+
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        };
+
+        function updateView() {
+            clearTimeout(timerID_update);
+            var NG_def = 95;
+
+            $.ajax({
+                url: '/ajax/line-status-get',
+                type: 'GET',
+                timeout: 60000,
+                success: function (data) {
+
+
+                    diplayLineStatus(data);
+
+                    timerID_update = setTimeout(updateView, 1000);
+                },
+                error: function (err) {
+                    console.log(err);
+                    timerID_update = setTimeout(updateView, 10000);
+                }
+            });
+
+            function diplayLineStatus(data) {
+                lineStatus(data[0]);
+                transferStatus(data[1]);
+                robotStatus(data[2]);
+                cncStatus(data);
+                drawD3(data);
+
+                data = null;
+                function lineStatus(data) {
+                    if (data.length === 0) return;
+                    var data = data[0];
+
+                    $('#title').text(data.title);
+                    $('#cur_datetime').text(data.cur_datetime);
+                    $('#plan_cnt').text(data.plan_cnt);
+                    $('#target_cnt').text(data.target_cnt);
+                    $('#cnc_run_rate').text(data.cnc_run_rate + '% (' + data.cnc_run_rate_process + ')');
+                    $('#eqp_run_rate').text(data.eqp_run_rate + '%');
+                    $('#cycle_time').text(data.cycle_time);
+                    $('#process').text(data.process);
+
+                    if (data.cnc_run_rate < NG_def) {
+                        $('#cnc_run_rate').css('color', 'red');
+                    } else {
+                        $('#cnc_run_rate').css('color', 'black');
+                    }
+
+                    var tray_id, tray_pos_id;
+                    for (var i = 0; i < 12; i++) {
+                        tray_id = '#tray' + i;
+                        if (i < data.TrayNo)
+                            $(tray_id).css('background-color', 'blue');
+                        else
+                            $(tray_id).css('background-color', 'white');
+                    }
+
+                    for (var r = 0; r < 3; r++)
+                        for (var c = 0; c < 3; c++) {
+                            tray_pos_id = '#tray_pos' + r + c;
+                            $(tray_pos_id).css('background-color', 'white');
+                        }
+
+                    console.log('data.RowPosition= ' + data.RowPosition + "|data.ColumnPosition=" + data.ColumnPosition + "|data.TrayNo-" + data.TrayNo);
+                    tray_pos_id = '#tray_pos' + data.RowPosition + data.ColumnPosition;
+                    $(tray_pos_id).css('background-color', 'blue');
+
+                    //data = null;
+                };
+
+                function transferStatus(data) {
+                    var Transfer = data[0];
+
+                    // modified by quoccuong
+                    //Transfer.robot_top_view = Math.floor(Math.random() * 3);
+                    //console.log(Transfer.robot_top_view);
+                    // end
+
+                    var transfer_img_x = -1 - (206 * Number(Transfer.robot_top_view));
+                    $('.transfer').css('background-position-x', transfer_img_x + 'px');
+
+                    function getPos(index) {
+                        return 110 + (index - 1) * 137; // 136 : 1번 위치, 119 : 등간격, db 내 index는 1번부터 시작
+                    };
+
+                    var pos = getPos(Number(Transfer['Arrival']));
+
+                    //var pos = getPos(Number(12));
+
+
+                    if (Transfer.IsMoving === 'N') {
+                        $('.transfer').removeClass('add_transition');
+                        $('.transfer').css('left', pos + 'px');
+
+                    }
+                    else {
+                        if ($('.transfer').css('background-position-x') === '-1px') {
+                            $('.transfer').addClass('add_transition')
+                                .css('left', pos + 'px');
+                        }
+                    }
+
+
+                    var stateColor = ['green', 'lightgreen', 'orange', 'red', 'gray', 'gray'];
+
+                    function setTimeStr() {
+                        var strNum;
+                        var hh, mm, ss;
+
+                        hh = parseInt(Transfer.tran_stay_time / 3600);
+                        if (hh < 10) hh = '0' + hh;
+                        mm = parseInt((Transfer.tran_stay_time % 3600) / 60);
+                        if (mm < 10) mm = '0' + mm;
+                        ss = parseInt(Transfer.tran_stay_time % 60);
+                        if (ss < 10) ss = '0' + ss;
+
+                        strNum = Transfer.WorkingPos + ' ' + hh + ':' + mm + ':' + ss;
+
+                        return strNum;
+                    };
+
+                    var stayTime = setTimeStr();
+
+                    var state = Transfer.CurState;
+
+                    if (state === 'OK') state = 'Run';
+
+                    $('#t_motion_eye').css('background-color', stateColor[Transfer.CurStateCode])
+                        .text(Transfer.moving_desc);
+
+                    if (state === 'ALARM') state += ' ' + Transfer.AlarmDesc;
+
+                    $('#tran_state').css('background-color', stateColor[Transfer.CurStateCode])
+                        .text(state);
+                    $('#tran_stay_time').text(stayTime);
+
+
+
+                    //$('li.move_msg' ).remove();
+                    $('li.alarm_msg').remove();
+                    $('li.robot_alarm_msg').remove();
+                    $('li.tool_change_msg').remove();
+                    $('li.warning_msg').remove();
+                    //$('ul[id = "msg"]').append('<li class="move_msg">'+Transfer.moving_desc+'</li>');
+                };
+
+                function robotStatus(data) {
+                    var data = data[0];
+                    var ImageIdxX = Number(data.MotionNo) % 5;
+                    var ImageIdxY = parseInt(Number(data.MotionNo) / 5);
+
+                    var imagePosX = -3 - (363 * ImageIdxX);
+                    var imagePosY = -3 - (297 * ImageIdxY);
+
+                    $('.robotimage').css('background-position-x', imagePosX + 'px')
+                        .css('background-position-y', imagePosY + 'px');
+
+                    $('#motion').text(data.motion);
+                    $('#teaching').text(data.teaching);
+                    $('#mode').text(data.mode);
+                    $('#tp').text(data.tp);
+                    $('#program').text(data.program);
+                    $('#motion_begin').text(data.motion_begin);
+                    $('#motion_end').text(data.motion_end);
+
+                    var robot_mode = ['gray', 'green', 'orange', 'red', 'yellow'];
+                    var robot_mode_idx;
+
+                    switch (data.program) {
+                        case "FREE": robot_mode_idx = 0; break;
+                        case "ACTIVE": robot_mode_idx = 1; break;
+                        case "RESET": robot_mode_idx = 2; break;
+                        case "STOP": robot_mode_idx = 3; break;
+                        default: robot_mode_idx = 4; break;
+                    }
+
+                    $('#program').css('background-color', robot_mode[robot_mode_idx]);
+
+                    //data = null;
+
+                };
+
+                function cncStatus(data) {
+
+                    var cnc_data = data[3];
+                    var target_cnt = data[0][0].target_cnt;
+                    var cnc;
+
+                    var line_status = data[0][0];
+                    //console.log(line_status);
+
+                    var status_main = ['green', 'orange', 'lightgreen', 'red', 'gray', 'hotpink', 'blue', 'cyan', 'blueviolet'];
+                    var status_sub = ['brown', 'mediumblue', 'fuchsia', 'yellow', 'aqua', 'gray'];
+                    var total_prod = 0, cnc_total = 0, cnc_run = 0;
+
+                    $('.message').css({
+                        'background-color': 'lightgreen'
+                    });
+
+                    for (var i = 0; i < cnc_data.length; i++) {
+                        cnc = cnc_data[i];
+
+                        $(cnc.cnc_id).text(cnc.Prod)
+                            .css('background-color', status_main[Number(cnc.status_main)]);
+                        $(cnc.cnc_id + '_2').text(cnc.OnTime)
+                            .css('background-color', status_main[Number(cnc.status_main)]);
+                        $(cnc.cnc_id + '_1').text(cnc.CNCNo)
+                            .css('background-color', status_sub[Number(cnc.status_sub)]);
+
+                        total_prod += Number(cnc.Prod);
+                        cnc_total++;
+                        if (Number(cnc.status_main) === 0 || Number(cnc.status_main) === 2) cnc_run++;
+
+                        if (cnc.LineDir === 'r') $('#r_0_1').text(cnc.LineName);
+                        else if (cnc.LineDir === 'l') $('#l_0_1').text(cnc.LineName);
+
+                        if (cnc.status_main === 3 || cnc.status_main === 5 || cnc.status_main === 6 || cnc.status_main === 8) {
+                            switch (cnc.status_main) {
+                                case 3: $('ul[id="msg"]').append('<li class="alarm_msg">' + cnc.LineName + cnc.CNCNo.substring(1, 3) + ' : ' + cnc.alarm_msg + '</li>');
+                                    break;
+                                case 5: $('ul[id="msg"]').append('<li class="robot_alarm_msg">' + cnc.LineName + cnc.CNCNo.substring(1, 3) + ' : ' + cnc.alarm_msg + '</li>');
+                                    break;
+                                case 6: $('ul[id="msg"]').append('<li class="tool_change_msg">' + cnc.LineName + cnc.CNCNo.substring(1, 3) + ' : ' + cnc.alarm_msg + '</li>');
+                                    break;
+                                case 8: $('ul[id="msg"]').append('<li class="warning_msg">' + cnc.LineName + cnc.CNCNo.substring(1, 3) + ' : ' + cnc.alarm_msg + '</li>');
+                                    break;
+                            }
+
+
+
+                            $('.message').css({
+                                'background-color': 'orange'
+                            });
+                        }
+
+                    }
+
+                    $('#total_prod').text(total_prod);
+
+                    var achieve = total_prod / target_cnt * 100;
+                    $('#achieved_rate').text(achieve.toFixed(1) + '%');
+                    $('#cnc_prod').text((total_prod / cnc_total).toFixed(1));
+                    $('#cnc_run').text(cnc_run + '/' + cnc_total + ' (' + line_status.maint_cnc_count + ')');
+
+                    if (achieve < NG_def) {
+                        $('#achieved_rate').css('color', 'red');
+                    }
+                    else {
+                        $('#achieved_rate').css('color', 'black');
+                    }
+
+                    //cnc_data = null;
+                    //cnc = null;
+                    //target_cnt = null;
+                };
+
+                function drawD3(data) {
+                    var alarm_cnt = data[4];
+                    var alarm_data = data[5];
+
+
+                    var dataset = [], items = [];
+                    var total_alarm_cnt = 0;
+
+                    for (var i in alarm_cnt) {
+                        items.push(alarm_cnt[i].AlarmType);
+                        dataset.push(alarm_cnt[i].AlarmCnt);
+                        total_alarm_cnt += Number(alarm_cnt[i].AlarmCnt);
+                    }
+
+                    var barPadding = 20;
+                    $('#d3title').text('Robot Alarm : ' + total_alarm_cnt);
+
+                    var alarm_length = $("text.alarm_msg").length;
+
+                    if (alarm_length === 0) {
+                        d3.selectAll("rect").remove();
+                        d3.selectAll("g").remove();
+                        d3.selectAll("text.alarm_cnt").remove();
+
+                        var xScale = d3.scaleLinear()
+                            .domain([0, dataset.length])
+                            .range([10, w]);
+
+                        var yScale = d3.scaleLinear()
+                            .domain([0, d3.max(dataset, function (d) { return d; })])
+                            .range([0, h - 55]);
+
+                        var bar_width = w / dataset.length - barPadding;
+                        //if (bar_width > 40) bar_width=40;
+
+                        svg.selectAll("rect")
+                            .data(alarm_cnt)
+                            .enter()
+                            .append("rect")
+                            .attr("fill", "orange")
+                            .attr("x", function (d, i) { return xScale(i); })
+                            .attr("y", function (d) { return h - yScale(d.AlarmCnt) - 30; })
+                            .attr("width", bar_width)
+                            .attr("height", function (d) { return yScale(d.AlarmCnt); })
+                            .on("mouseover", displayAlarm)
+                            .on("mouseout", function () {
+                                svg.selectAll("text.alarm_msg")
+                                    .data([])
+                                    .exit()
+                                    .remove();
+                            });
+
+                        function displayAlarm(d) {
+
+                            var alarm_msg = alarm_data.filter(function (el) {
+                                return el.AlarmType === d.AlarmType;
+                            });
+
+                            svg.selectAll("text.alarm_msg")
+                                .data(alarm_msg)
+                                .enter()
+                                .append("text")
+                                .style("pointer-events", "none")
+                                .attr("class", "alarm_msg")
+                                .attr("font-size", "15px")
+                                .attr("fill", "red")
+                                .attr("x", 0)
+                                .attr("y", function (d, i) { return i * 20 + 20; })
+                                .text(function (d) { return d.msg; });
+                        };
+
+                        svg.selectAll("text.alarm_cnt")
+                            .data(dataset)
+                            .enter()
+                            .append("text")
+                            .attr("class", "alarm_cnt")
+                            .attr("font-size", "20px")
+                            .attr("font-weight", "bold")
+                            .attr("text-anchor", "middle")
+                            .text(function (d) { return d; })
+                            .attr("x", function (d, i) { return xScale(i) + ((xScale(1) - barPadding) / 2); })
+                            .attr("y", function (d) { return h - yScale(d) - 33; });
+
+                        var x = d3.scalePoint()
+                            .domain(items)
+                            .range([(xScale(1) / 2), w - (xScale(1) / 2)]);
+
+                        var xAxis = d3.axisBottom(x);
+                        svg.append("g")
+                            .attr("class", "axis")
+                            .attr("transform", "translate(0," + (h - 20) + ")")
+                            .call(xAxis);
+                    };
+
+                    //alarm_cnt = null;
+                    //alarm_data = null;
+                    //dataset = null;
+                    //items = null;
+                };
+            }
+
+            var cctv_pos = $(".motion_eye").offset();
+            var cctv_width = $(".motion_eye").width();
+            $(".motion_eye_title").css("left", cctv_pos.left + 2)
+                .css("top", cctv_pos.top + 2)
+                .css("width", cctv_width);
+
+        };
+
+        function blackbox_ip_set() {
+            $.ajax({
+                url: '/ajax/blackbox-ip-get',
+                type: 'GET',
+                timeout: 3000,
+                success: function (data) {
+                    //console.log(data);
+                    var line_code = '#' + data.line_code;
+                    $(line_code).css('background-color', 'green');
+                    $('#blackbox_ip').attr('src', 'http://' + data.blackbox_ip + ':8765');
+                    //console.log(data.blackbox_ip);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        };
+
+        function reload_view() {
+            clearTimeout(timerID_reload);
+            var url = "/line-status";
+            $(location).attr('href', url);
+
+        }
+
+    });
+
+    /*
+    $(window).on("beforeunload", function(){
+        clearInterval(timerID_reload);
+    });
+    */
+    function checkReadyData(data) {
+        if (data.length === 0) return false;
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].length === 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+</script>
+<!-- ajax end -->
+
+{{/section}}

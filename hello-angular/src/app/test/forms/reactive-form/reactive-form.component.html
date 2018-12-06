@@ -1,0 +1,53 @@
+<h2>Hero Detail</h2>
+<h3><i>FormControl in a FormGroup</i></h3>
+<form [formGroup]="heroForm">
+    <div class="form-group">
+        <label for="last-name">Name</label>
+        <input type="text" class="form-control" id="last-name" formControlName="name">
+    </div>
+    <div class="form-group">
+        <label for="age">Age</label>
+        <input type="number" class="form-control" id="age" formControlName="age">
+    </div>
+
+    <angular2-multiselect [data]="dropdownList" formControlName="angular2Multi" [settings]="dropdownSettings" (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeSelectAll($event)"></angular2-multiselect>
+
+
+    <div style="margin-top: 50px; margin-bottom: 50px">
+        <mat-form-field>
+            <mat-select id="multiple" placeholder="Toppings" formControlName="multiselect" multiple>
+                <mat-option *ngFor="let item of dropdownList" [value]="item.id">{{item.itemName}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select placeholder="Select">
+                <mat-option value="option">Option</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <mz-select-container>
+        <select multiple mz-select formControlName="ngxMulti" id="options-select" [label]="'Label'" [placeholder]="'Placeholder'">
+          <optgroup label="Group 1">
+            <option data-icon="assets/select-icon-1.jpg" class="left circle">Option 1</option>
+            <option data-icon="assets/select-icon-2.jpg" class="left circle">Option 2</option>
+          </optgroup>
+          <optgroup label="Group 2">
+            <option data-icon="assets/select-icon-3.jpg" class="left circle">Option 3</option>
+          </optgroup>
+        </select>
+    </mz-select-container>
+
+    <button (click)="reset()">Reset</button>
+</form>
+<br/>
+<hr/>
+<br/>
+<p>Form value: {{heroForm.value | json}}</p>
+<br/>
+<p>Form status: {{ heroForm.status | json }}</p>
+<br/>
+<p>Name status: {{heroForm.get('name').status | json }}</p>
+<br/>
+<p>Name value: {{heroForm.get('name').value | json }}</p>
+<br/>
